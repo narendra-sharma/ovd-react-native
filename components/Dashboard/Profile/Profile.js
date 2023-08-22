@@ -17,7 +17,7 @@ const initialUserData = {
   name: "",
   email: "",
   organization: "OVD",
-  phoneNo: "202 5550111",
+  phonenumber: "202 5550111",
   address: "Indian bank, jhujhar nagar",
   country: "India",
   state: "Punjab",
@@ -47,6 +47,14 @@ const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
     getData();
   }, []);
 
+  const handleSubmit = async () => {
+    try {
+      console.log(userData);
+    } catch (error) {
+      console.log(err);
+    }
+  };
+
   // const handleUploadPhoto = async () => {
   //   const options = {
   //     selectionLimit: 1,
@@ -69,13 +77,6 @@ const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
               onChangeText={(text) => setUserData({ ...userData, name: text })}
               placeholder="Name"
             />
-            <Text>Email:</Text>
-            <TextInput
-              style={styles.input}
-              name="email"
-              value={userData.email}
-              onChangeText={(text) => setUserData({ ...userData, email: text })}
-            />
             <Text>Organization:</Text>
             <TextInput
               style={styles.input}
@@ -88,10 +89,10 @@ const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
             <Text>Phone Number:</Text>
             <TextInput
               style={styles.input}
-              name="phoneNo"
-              value={userData.phoneNo}
+              name="phonenumber"
+              value={userData.phonenumber}
               onChangeText={(text) =>
-                setUserData({ ...userData, phoneNo: text })
+                setUserData({ ...userData, phonenumber: text })
               }
             />
             <Text>Address:</Text>
@@ -102,7 +103,7 @@ const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
               returnKeyType={"search"}
               fetchDetails={true}
               onPress={(data, details = null) => {
-                props.notifyChange(details.geometry.location, data);
+                console.log(details.geometry.location);
               }}
               query={{
                 key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
@@ -112,19 +113,6 @@ const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
               debounce={200}
               styles={placesStyle}
             />
-            {/* 
-            <GooglePlacesAutocomplete
-              style={{ width: 300, minWidth: 80, maxWidth: 300 }}
-              placeholder="Search"
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-              }}
-              query={{
-                key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
-                language: "en",
-              }}
-            /> */}
           </View>
           <View
             style={{
@@ -185,7 +173,7 @@ const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
             </View>
             <View style={styles.fieldContainer}>
               <Text style={styles.fieldName}>Phone Number: </Text>
-              <Text> {userData.phoneNo} </Text>
+              <Text> {userData.phonenumber} </Text>
             </View>
             <View style={styles.fieldContainer}>
               <Text style={styles.fieldName}>Address: </Text>

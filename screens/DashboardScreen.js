@@ -1,21 +1,30 @@
-import React from "react";
-import { Button, View, Text } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useState, useEffect } from "react";
 import About from "../components/Dashboard/About/About";
 import Home from "../components/Dashboard/Home/Home";
 import Profile from "../components/Dashboard/Profile/Profile";
 import RightDrawer from "../components/Dashboard/RightDrawer/RightDrawer";
 import CustomDrawerIcon from "../components/Dashboard/RightDrawer/CustomDrawer";
-
-const Tab = createBottomTabNavigator();
-
-// function HomeTabs() {
-//   return <RightDrawer />;
-// }
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DashboardScreen = ({ navigation }) => {
-  return <RightDrawer navigation={navigation} />;
+  const [userData, setUserData] = useState({ name: "", email: "" });
+
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const user = await AsyncStorage.getItem("async");
+  //       const parsedUser = JSON.parse(user);
+  //       setUserData({ ...userData, ...parsedUser });
+  //       console.log(parsedUser);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   getUserData();
+  //   console.log(userData);
+  // }, []);
+
+  return <RightDrawer navigation={navigation} userData={userData} />;
 };
 
 export default DashboardScreen;

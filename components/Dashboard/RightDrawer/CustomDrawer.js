@@ -15,7 +15,6 @@ const CustomDrawer = () => {
 
 const CustomDrawerIcon = ({ navigation }) => {
   const [isDrawn, setIsDrawn] = useState(false);
-  console.log(navigation);
   return (
     <View>
       <Pressable onPress={() => setIsDrawn(true)}>

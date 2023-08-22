@@ -78,6 +78,7 @@ const AuthScreen = ({ navigation }) => {
       //call the api function
       try {
         const res = await apiAuth(formData);
+        console.log(res.data);
         if (res.status == 200) {
           navigation.navigate("Dashboard");
           ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import {
   DrawerItemList,
@@ -11,17 +11,33 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiLogout } from "../../../apis/auth";
-import Accounts from "../Accounts/Accounts";
+import CompanyStackScreen from "../Companies/CompanyStackScreen";
 
 const Drawer = createDrawerNavigator();
 
+const initialUserData = {
+  name: "",
+  email: "",
+  organization: "OVD",
+  phoneNo: "202 5550111",
+  address: "Indian bank, jhujhar nagar",
+  country: "India",
+  state: "Punjab",
+  zipcode: "160034",
+};
+
 const RightDrawer = ({ navigation }) => {
   const [isEditOn, setIsEditOn] = useState(false);
+  // const [userData, setUserData] = useState({ name: "", email: "" });
+  const [userData, setUserData] = useState(initialUserData);
+
+  console.log(userData);
+
   const handleLogout = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      // const res = await apiLogout(JSON.parse(token));
-      // console.log(res);
+      const res = await apiLogout(JSON.parse(token));
+      console.log(res);
       await AsyncStorage.removeItem("token");
       await AsyncStorage.removeItem("profile");
       navigation.navigate("Login");
@@ -29,6 +45,21 @@ const RightDrawer = ({ navigation }) => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const user = await AsyncStorage.getItem("profile");
+        const parsedUser = JSON.parse(user);
+        setUserData({ ...userData, ...parsedUser });
+        // console.log(userData);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getData();
+  }, []);
 
   return (
     <Drawer.Navigator
@@ -47,8 +78,8 @@ const RightDrawer = ({ navigation }) => {
                 <View style={styles.innerContainer}>
                   <Icon name="user-circle-o" size={35} />
                   <View>
-                    <Text style={styles.textStyle}>John Doe</Text>
-                    <Text style={styles.textStyle}>johndoe@email.com</Text>
+                    <Text style={styles.textStyle}>{userData.name}</Text>
+                    <Text style={styles.textStyle}>{userData.email}</Text>
                   </View>
                 </View>
               </View>
@@ -84,9 +115,11 @@ const RightDrawer = ({ navigation }) => {
           drawerIcon: () => (
             <MaterialIcons name="admin-panel-settings" size={28} />
           ),
+          // headerTitle: () => <></>,
+          headerShown: false,
         }}
-        name="Manage Accounts"
-        component={Accounts}
+        name="Manage Companies"
+        component={CompanyStackScreen}
       />
       <Drawer.Screen
         options={{

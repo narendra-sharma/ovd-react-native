@@ -23,6 +23,17 @@ export const apiLogout = async (token) => {
   return response;
 };
 
+export const apiUpdateProfile = async () => {
+  const response = await request({
+    path: "auth/updateProfile",
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response;
+};
+
 export const apiSendForgotPasswordCode = async () => {
   const response = await request({
     path: "https://jsonplaceholder.typicode.com/todos/1",
