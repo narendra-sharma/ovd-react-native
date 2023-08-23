@@ -23,20 +23,29 @@ export const apiLogout = async (token) => {
   return response;
 };
 
-export const apiUpdateProfile = async () => {
+export const apiUpdateProfile = async (userData) => {
+  console.log("at api ", userData);
   const response = await request({
     path: "auth/updateProfile",
     method: "post",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    body: userData,
   });
   return response;
 };
 
-export const apiSendForgotPasswordCode = async () => {
+export const apiGetProfileDetails = async () => {
+  console.log("At get profile");
   const response = await request({
-    path: "https://jsonplaceholder.typicode.com/todos/1",
+    path: "auth/edit-profile",
+  });
+  return response;
+};
+
+export const apiSendForgotPasswordCode = async (formData) => {
+  const response = await request({
+    path: "auth/reset-password",
+    method: "post",
+    body: formData,
   });
   return response;
 };

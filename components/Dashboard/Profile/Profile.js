@@ -1,144 +1,84 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  Pressable,
-  TextInput,
-  ScrollView,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { View, Text, Button, StyleSheet, Pressable } from "react-native";
+import { apiGetProfileDetails, apiUpdateProfile } from "../../../apis/auth";
+import { useFocusEffect } from "@react-navigation/native";
+
 // import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 const initialUserData = {
-  name: "",
-  email: "",
-  organization: "OVD",
-  phonenumber: "202 5550111",
-  address: "Indian bank, jhujhar nagar",
-  country: "India",
-  state: "Punjab",
-  zipcode: "160034",
+  // name: "",
+  // email: "",
+  // organization: "",
+  // phonenumber: "",
+  // address: "",
+  // country: "",
+  // state: "",
+  // zipcode: "",
+  // latitude: "",
+  // longitude: "",
 };
 
-const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
-  const [firstName, setFirstName] = useState("John");
-  const [lastName, setLastName] = useState("Doe");
-  const [email, setEmail] = useState("John@mail.com");
-
+const Profile = ({ navigation }) => {
   const [userData, setUserData] = useState(initialUserData);
 
-  useEffect(() => {
-    console.log("profile");
-    const getData = async () => {
-      try {
-        const user = await AsyncStorage.getItem("profile");
-        const parsedUser = JSON.parse(user);
-        setUserData({ ...userData, ...parsedUser });
-        console.log(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
 
-    getData();
-  }, []);
+      const fetchUser = async () => {
+        try {
+          const res = await apiGetProfileDetails();
+          // console.log("we got from api: ", res.data);
+          setUserData(res.data.users);
+          // await AsyncStorage.setItem("profile", JSON.stringify(res.data.users));
+          // const user = await AsyncStorage.getItem("profile");
+          // // console.log("local storage: ", user);
+          // const parsedUser = JSON.parse(user);
+          // setUserData({
+          //   ...parsedUser,
+          // });
+        } catch (err) {
+          console.log(err);
+        }
+      };
 
-  const handleSubmit = async () => {
-    try {
-      console.log(userData);
-    } catch (error) {
-      console.log(err);
-    }
-  };
+      fetchUser();
 
-  // const handleUploadPhoto = async () => {
-  //   const options = {
-  //     selectionLimit: 1,
-  //     mediaType: "photo",
-  //     includeBase64: false,
+      return () => {
+        isActive = false;
+      };
+    }, [userData])
+  );
+
+  // useEffect(() => {
+  //   const getProfileData = async () => {
+  //     try {
+  //       const res = await apiGetProfileDetails();
+  //       console.log("we got from api: ", res.data);
+  //       setUserData(res.data.users);
+  //       // await AsyncStorage.setItem("profile", JSON.stringify(res.data.users));
+  //       // const user = await AsyncStorage.getItem("profile");
+  //       // // console.log("local storage: ", user);
+  //       // const parsedUser = JSON.parse(user);
+  //       // setUserData({
+  //       //   ...parsedUser,
+  //       // });
+  //       console.log("local storage: ", userData);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
   //   };
-  //   const result = await launchImageLibrary(options);
-  // };
+
+  //   getProfileData();
+  // }, []);
+
+  useEffect(() => {}, [userData]);
 
   return (
     <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
-      {isEditOn ? (
-        <ScrollView>
-          <View style={styles.formContainer}>
-            <Text>Name:</Text>
-            <TextInput
-              style={styles.input}
-              name="name"
-              value={userData.name}
-              onChangeText={(text) => setUserData({ ...userData, name: text })}
-              placeholder="Name"
-            />
-            <Text>Organization:</Text>
-            <TextInput
-              style={styles.input}
-              name="organization"
-              value={userData.organization}
-              onChangeText={(text) =>
-                setUserData({ ...userData, organization: text })
-              }
-            />
-            <Text>Phone Number:</Text>
-            <TextInput
-              style={styles.input}
-              name="phonenumber"
-              value={userData.phonenumber}
-              onChangeText={(text) =>
-                setUserData({ ...userData, phonenumber: text })
-              }
-            />
-            <Text>Address:</Text>
-            <GooglePlacesAutocomplete
-              placeholder="Search"
-              autoFocus={true}
-              // listViewDisplayed="auto"
-              returnKeyType={"search"}
-              fetchDetails={true}
-              onPress={(data, details = null) => {
-                console.log(details.geometry.location);
-              }}
-              query={{
-                key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
-                language: "en",
-              }}
-              nearbyPlacesAPI="GooglePlacesSearch"
-              debounce={200}
-              styles={placesStyle}
-            />
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-around",
-            }}
-          >
-            <Pressable
-              onPress={() => setIsEditOn(false)}
-              style={styles.submitButton}
-            >
-              <Text>Submit</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => setIsEditOn(false)}
-              style={styles.submitButton}
-            >
-              <Text>Cancel</Text>
-            </Pressable>
-          </View>
-        </ScrollView>
-      ) : (
-        <>
-          <View>
-            {/* <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
+      <>
+        <View style={{ width: "80%", maxWidth: "85%" }}>
+          {/* <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
               <Icon name="user-circle-o" size={55} />
               <Pressable
                 style={{
@@ -159,87 +99,86 @@ const Profile = ({ navigation, isEditOn, setIsEditOn }) => {
                 <Icon name="edit" size={20} style={{ color: "#fff" }} />
               </Pressable>
             </View> */}
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>Name: </Text>
-              <Text>{userData.name}</Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>Email: </Text>
-              <Text> {userData.email} </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>Organization: </Text>
-              <Text> {userData.organization} </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>Phone Number: </Text>
-              <Text> {userData.phonenumber} </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>Address: </Text>
-              <Text> {userData.address} </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>State: </Text>
-              <Text> {userData.state} </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>Country: </Text>
-              <Text> {userData.country} </Text>
-            </View>
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldName}>Zip Code: </Text>
-              <Text> {userData.zipcode} </Text>
-            </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Name: </Text>
+            <Text>{userData.name}</Text>
           </View>
-          <Pressable
-            onPress={() => setIsEditOn(true)}
-            style={styles.submitButton}
-          >
-            <Text style={styles.submitText}>Edit</Text>
-          </Pressable>
-        </>
-      )}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Email: </Text>
+            <Text> {userData.email} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Organization: </Text>
+            <Text> {userData.org} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Phone Number: </Text>
+            <Text> {userData.phone_number} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Address: </Text>
+            <Text> {userData.address} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>State/UT: </Text>
+            <Text> {userData.state} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Country: </Text>
+            <Text> {userData.country} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Zip Code: </Text>
+            <Text> {userData.zip_code} </Text>
+          </View>
+        </View>
+        <Pressable
+          onPress={() => navigation.navigate("Edit Profile")}
+          style={styles.submitButton}
+        >
+          <Text style={styles.submitText}>Edit</Text>
+        </Pressable>
+      </>
     </View>
   );
 };
 
-const placesStyle = StyleSheet.create({
-  textInputContainer: {
-    backgroundColor: "rgba(0,0,0,0)",
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
-  },
-  textInput: {
-    height: 45,
-    color: "#5d5d5d",
-    fontSize: 16,
-    borderWidth: 1,
-  },
-  predefinedPlacesDescription: {
-    color: "#1faadb",
-  },
-  listView: {
-    color: "black",
-    backgroundColor: "white",
-    maxWidth: "89%",
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "blue",
-  },
-  description: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    fontSize: 14,
-    maxWidth: "89%",
-  },
-});
-
 const styles = StyleSheet.create({
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    width: "90%",
+    marginBottom: 5,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
   formContainer: {
     display: "flex",
     flexDirection: "column",
@@ -250,12 +189,12 @@ const styles = StyleSheet.create({
   fieldContainer: {
     display: "flex",
     flexDirection: "row",
-    margin: 5,
-    padding: 2,
+    marginTop: 5,
+    marginBottom: 5,
+    // padding: 2,
   },
 
   input: {
-    borderWidth: 1,
     width: 300,
     height: 35,
     marginTop: 2,
@@ -263,6 +202,10 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 8,
     minWidth: 80,
+    paddingHorizontal: 8,
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
   },
 
   submitButton: {

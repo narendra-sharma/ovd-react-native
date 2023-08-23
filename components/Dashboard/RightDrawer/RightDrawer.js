@@ -5,33 +5,19 @@ import {
   createDrawerNavigator,
 } from "@react-navigation/drawer";
 import Home from "../Home/Home";
-import About from "../About/About";
-import Profile from "../Profile/Profile";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiLogout } from "../../../apis/auth";
 import CompanyStackScreen from "../Companies/CompanyStackScreen";
+import ProfileStackScreen from "../Profile/ProfileStackScreen";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
-const initialUserData = {
-  name: "",
-  email: "",
-  organization: "OVD",
-  phoneNo: "202 5550111",
-  address: "Indian bank, jhujhar nagar",
-  country: "India",
-  state: "Punjab",
-  zipcode: "160034",
-};
-
 const RightDrawer = ({ navigation }) => {
-  const [isEditOn, setIsEditOn] = useState(false);
   // const [userData, setUserData] = useState({ name: "", email: "" });
-  const [userData, setUserData] = useState(initialUserData);
-
-  console.log(userData);
+  const [userData, setUserData] = useState({});
 
   const handleLogout = async () => {
     try {
@@ -46,20 +32,41 @@ const RightDrawer = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const user = await AsyncStorage.getItem("profile");
-        const parsedUser = JSON.parse(user);
-        setUserData({ ...userData, ...parsedUser });
-        // console.log(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+      const getData = async () => {
+        try {
+          const user = await AsyncStorage.getItem("profile");
+          const parsedUser = JSON.parse(user);
+          setUserData({ ...userData, ...parsedUser });
+          // console.log("we at local storage: ", userData);
+        } catch (err) {
+          console.log(err);
+        }
+      };
 
-    getData();
-  }, []);
+      getData();
+      return () => {
+        isActive = false;
+      };
+    }, [userData])
+  );
+
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const user = await AsyncStorage.getItem("profile");
+  //       const parsedUser = JSON.parse(user);
+  //       setUserData({ ...userData, ...parsedUser });
+  //       // console.log(userData);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  //   getData();
+  // }, [navigation]);
 
   return (
     <Drawer.Navigator
@@ -78,8 +85,8 @@ const RightDrawer = ({ navigation }) => {
                 <View style={styles.innerContainer}>
                   <Icon name="user-circle-o" size={35} />
                   <View>
-                    <Text style={styles.textStyle}>{userData.name}</Text>
-                    <Text style={styles.textStyle}>{userData.email}</Text>
+                    <Text style={styles.textStyle}>{userData?.name}</Text>
+                    <Text style={styles.textStyle}>{userData?.email}</Text>
                   </View>
                 </View>
               </View>
@@ -124,13 +131,22 @@ const RightDrawer = ({ navigation }) => {
       <Drawer.Screen
         options={{
           drawerIcon: () => <Icon name="user" size={28} />,
+          title: "Profile",
+          headerShown: false,
+        }}
+        name="Profile"
+        component={ProfileStackScreen}
+      />
+      {/* <Drawer.Screen
+        options={{
+          drawerIcon: () => <Icon name="user" size={28} />,
           title: isEditOn ? "Edit Profile Details" : "Profile",
         }}
         name="Profile"
         component={() => (
           <Profile isEditOn={isEditOn} setIsEditOn={setIsEditOn} />
         )}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 };

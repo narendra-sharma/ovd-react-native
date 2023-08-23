@@ -21,7 +21,7 @@ const CompanyDetail = ({ navigation, route }) => {
   const [isCompanyEditOn, setIsCompanyEditOn] = useState(false);
   const [companyData, setCompanyData] = useState(initialCompanyData);
 
-  console.log(route.params);
+  // console.log(route.params);
 
   useEffect(() => {
     setCompanyData({ ...route.params });
@@ -35,7 +35,8 @@ const CompanyDetail = ({ navigation, route }) => {
 
   const handleDeleteCompany = () => {
     const index = mockData.findIndex((item) => item.id == companyData.id);
-    console.log(companyData.id);
+    const arr = mockData.splice(index, 1);
+    console.log("pressed index: ", arr);
     navigation.goBack();
   };
 
@@ -110,9 +111,6 @@ const CompanyDetail = ({ navigation, route }) => {
           >
             <Text style={styles.textStyle}>Cancel</Text>
           </Pressable>
-          <Pressable style={styles.button} onPress={handleDeleteCompany}>
-            <Text style={styles.textStyle}>Delete Company</Text>
-          </Pressable>
         </View>
       ) : (
         <View style={styles.centeredView}>
@@ -126,12 +124,14 @@ const CompanyDetail = ({ navigation, route }) => {
           <View>
             <Text>Location: {companyData.address} </Text>
           </View>
-
+          <Pressable style={styles.button} onPress={handleDeleteCompany}>
+            <Text style={styles.textStyle}>Delete Company</Text>
+          </Pressable>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => setIsCompanyEditOn(true)}
           >
-            <Text style={styles.textStyle}>Edit</Text>
+            <Text style={styles.textStyle}>Edit Company Details</Text>
           </Pressable>
         </View>
       )}

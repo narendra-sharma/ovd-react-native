@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { apiAuth } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import jwtDecode from "jwt-decode";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 //
 const initialValues = {
@@ -25,6 +25,17 @@ const AuthScreen = ({ navigation }) => {
   //state for email error
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
+  const [token, setToken] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  useEffect(() => {
+    const setLocalStorage = async () => {
+      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("profile", profile);
+    };
+    setLocalStorage();
+  }, [token, profile]);
 
   //handle change in input text
   const handleChange = (value, label) => {
@@ -82,8 +93,8 @@ const AuthScreen = ({ navigation }) => {
         if (res.status == 200) {
           navigation.navigate("Dashboard");
           ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
-          await AsyncStorage.setItem("token", JSON.stringify(res.data.token));
-          await AsyncStorage.setItem("profile", JSON.stringify(res.data.users));
+          setToken(JSON.stringify(res.data.token));
+          setProfile(JSON.stringify(res.data.users));
         }
       } catch (error) {
         ToastAndroid.show(
@@ -125,14 +136,33 @@ const AuthScreen = ({ navigation }) => {
           type="email"
         />
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-        <TextInput
-          style={styles.input}
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChangeText={(text) => handleChange(text, "password")}
-          secureTextEntry={true}
-        />
+
+        <View
+          style={[
+            {
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            },
+            styles.input,
+          ]}
+        >
+          <TextInput
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChangeText={(text) => handleChange(text, "password")}
+            secureTextEntry={isPasswordVisible ? false : true}
+          />
+          {formData.password.length > 0 ? (
+            <Icon
+              onPress={() => setIsPasswordVisible((prev) => !prev)}
+              name={isPasswordVisible ? "eye-slash" : "eye"}
+              size={20}
+            />
+          ) : null}
+        </View>
+
         {passwordError ? (
           <Text style={styles.errorText}>{passwordError}</Text>
         ) : null}

@@ -16,14 +16,6 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Dashboard"
-          component={DashboardScreen}
-          options={({ navigation }) => ({
-            title: "Dashboard",
-            headerShown: false,
-          })}
-        />
-        <Stack.Screen
           name="Login"
           component={AuthScreen}
           options={{ headerShown: false }}
@@ -42,6 +34,14 @@ export default function App() {
           name="Reset Password"
           component={ResetPasswordScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={({ navigation }) => ({
+            title: "Dashboard",
+            headerShown: false,
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

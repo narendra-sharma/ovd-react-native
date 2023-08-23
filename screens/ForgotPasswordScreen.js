@@ -6,6 +6,7 @@ import {
   TextInput,
   Pressable,
   SafeAreaView,
+  ToastAndroid,
 } from "react-native";
 import { apiSendForgotPasswordCode } from "../apis/auth";
 
@@ -39,10 +40,18 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   //handle form submit
   const handleSubmit = async () => {
-    if (validateEmail(email)) {
-      // const res = await apiSendForgotPasswordCode();
-      // console.log(res);
-      navigation.navigate("OTP");
+    try {
+      if (validateEmail(email)) {
+        const res = await apiSendForgotPasswordCode({ email: email });
+        console.log(res);
+        if (res.status == 200) {
+          ToastAndroid.show("Code Sent", ToastAndroid.SHORT);
+        }
+        navigation.navigate("Reset Password");
+        // navigation.navigate("OTP");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
