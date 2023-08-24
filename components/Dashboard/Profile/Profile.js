@@ -5,21 +5,8 @@ import { useFocusEffect } from "@react-navigation/native";
 
 // import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
-const initialUserData = {
-  // name: "",
-  // email: "",
-  // organization: "",
-  // phonenumber: "",
-  // address: "",
-  // country: "",
-  // state: "",
-  // zipcode: "",
-  // latitude: "",
-  // longitude: "",
-};
-
 const Profile = ({ navigation }) => {
-  const [userData, setUserData] = useState(initialUserData);
+  const [userData, setUserData] = useState({});
 
   useFocusEffect(
     React.useCallback(() => {

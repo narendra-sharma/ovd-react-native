@@ -12,110 +12,52 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { apiGetProfileDetails, apiUpdateProfile } from "../../../apis/auth";
 import { Country, State, City } from "country-state-city";
 import { Dropdown } from "react-native-element-dropdown";
 
 // import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
-const initialUserData = {
-  // name: "",
-  // email: "",
-  // organization: "",
-  // phonenumber: "",
-  // address: "",
-  // country: "",
-  // state: "",
-  // zipcode: "",
-  // latitude: "",
-  // longitude: "",
+const initialProjectData = {
+  customerName: "",
+  consultant: "",
+  pointOfContact: "",
+  projectLocation: "",
 };
 
-const EditProfile = ({ navigation }) => {
-  const [userData, setUserData] = useState(initialUserData);
+const EditProject = ({ navigation }) => {
+  const [projectData, setProjectData] = useState(initialProjectData);
   const [isFocus, setIsFocus] = useState(false);
-
-  useEffect(() => {
-    const getProfileData = async () => {
-      try {
-        const res = await apiGetProfileDetails();
-        // console.log("we got from api: ", res.data);
-        setUserData(res.data.users);
-        await AsyncStorage.setItem("profile", JSON.stringify(res.data.users));
-        // const user = await AsyncStorage.getItem("profile");
-        // const parsedUser = JSON.parse(user);
-        // setUserData({
-        //   ...parsedUser,
-        // });
-        // console.log(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getProfileData();
-  }, []);
 
   const handleSubmit = async () => {
     try {
-      const res = await apiUpdateProfile({
-        ...userData,
-        name: userData.name,
-        phonenumber: userData.phone_number,
-        address: userData.address,
-        org: userData.org,
-        state: userData.state,
-        country: userData.country,
-        country_code: userData.country_code,
-        latitude: userData.lat,
-        longitude: userData.long,
-        zipcode: userData.zip_code,
-      });
-      // console.log(userData);
+      // const res = await apiUpdateProfile({
+      //   ...projectData,
+      //   name: projectData.name,
+      //   phonenumber: projectData.phone_number,
+      //   address: projectData.address,
+      //   org: projectData.org,
+      //   state: projectData.state,
+      //   country: projectData.country,
+      //   country_code: projectData.country_code,
+      //   latitude: projectData.lat,
+      //   longitude: projectData.long,
+      //   zipcode: projectData.zip_code,
+      // });
+      // console.log(projectData);
       //   console.log(res);
-      if (res.status == 200) {
-        ToastAndroid.show("Profile Updated Successfully", ToastAndroid.SHORT);
-        const resp = await apiGetProfileDetails();
-        console.log("we got from api: ", res.data);
-        setUserData(resp.data.users);
-        await AsyncStorage.setItem("profile", JSON.stringify(resp.data.users));
-
-        navigation.navigate("My Profile");
-      }
+      // if (res.status == 200) {
+      //   ToastAndroid.show("Profile Updated Successfully", ToastAndroid.SHORT);
+      //   const resp = await apiGetProfileDetails();
+      //   console.log("we got from api: ", res.data);
+      //   setProjectData(resp.data.users);
+      //   await AsyncStorage.setItem("profile", JSON.stringify(resp.data.users));
+      //   navigation.navigate("My Profile");
+      // }
       //   console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const handleUploadPhoto = async () => {
-  //   const options = {
-  //     selectionLimit: 1,
-  //     mediaType: "photo",
-  //     includeBase64: false,
-  //   };
-  //   const result = await launchImageLibrary(options);
-  // };
-
-  // const allCountries = Country.getAllCountries().map((country) => {
-  //   return {
-  //     label: country.name,
-  //     value: country.isoCode,
-  //   };
-  // });
-
-  // console.log(allCountries);
-
-  // const renderLabel = () => {
-  //   if (value || isFocus) {
-  //     return (
-  //       <Text style={[styles.label, isFocus && { color: "blue" }]}>
-  //         Dropdown label
-  //       </Text>
-  //     );
-  //   }
-  //   return null;
-  // };
 
   return (
     <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
@@ -125,31 +67,35 @@ const EditProfile = ({ navigation }) => {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text>Name:</Text>
+          <Text>Project Name:</Text>
           <TextInput
             style={styles.input}
             name="name"
-            value={userData.name}
-            onChangeText={(text) => setUserData({ ...userData, name: text })}
-            placeholder="Name"
+            value={projectData.projectName}
+            onChangeText={(text) =>
+              setProjectData({ ...projectData, projectName: text })
+            }
+            placeholder="Project Name"
           />
-          <Text>Organization:</Text>
+          <Text>Consutant:</Text>
           <TextInput
             style={styles.input}
             name="organization"
-            value={userData.org}
-            onChangeText={(text) => setUserData({ ...userData, org: text })}
+            value={projectData.consultant}
+            onChangeText={(text) =>
+              setProjectData({ ...projectData, consultant: text })
+            }
           />
-          <Text>Phone Number:</Text>
+          <Text>Point of Contact:</Text>
           <TextInput
             style={styles.input}
             name="phonenumber"
-            value={userData.phone_number}
+            value={projectData.pointOfContact}
             onChangeText={(text) =>
-              setUserData({ ...userData, phone_number: text })
+              setProjectData({ ...projectData, pointOfContact: text })
             }
           />
-          <Text>Address:</Text>
+          <Text>Project Location:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
             autoFocus={true}
@@ -157,9 +103,9 @@ const EditProfile = ({ navigation }) => {
             returnKeyType={"search"}
             fetchDetails={true}
             textInputProps={{
-              value: userData.address,
+              value: projectData.address,
               onChangeText: (text) => {
-                setUserData({ ...userData, address: text });
+                setProjectData({ ...projectData, address: text });
               },
             }}
             onPress={(data, details = null) => {
@@ -168,18 +114,6 @@ const EditProfile = ({ navigation }) => {
                 "details.address_components: ",
                 details.address_components
               );
-
-              // const countryIndex = details.address_components.findIndex(
-              //   (obj) => obj.types[0] == "country"
-              // );
-
-              // const stateIndex = details.address_components.findIndex(
-              //   (obj) => obj.types[0] == "administrative_area_level_1"
-              // );
-
-              // const zipIndex = details.address_components.findIndex(
-              //   (obj) => obj.types[0] == "postal_code"
-              // );
 
               const countryName =
                 details.address_components[
@@ -226,10 +160,10 @@ const EditProfile = ({ navigation }) => {
                 areaZip
               );
 
-              // props.notifyChange(details.geometry.location, data);
+              props.notifyChange(details.geometry.location, data);
 
-              setUserData({
-                ...userData,
+              setProjectData({
+                ...projectData,
                 lat: details.geometry.location.lat,
                 long: details.geometry.location.lng,
                 address: details.formatted_address,
@@ -238,8 +172,6 @@ const EditProfile = ({ navigation }) => {
                 country_code: countryCode,
                 country: countryName,
               });
-
-              //   console.log(userData);
             }}
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
@@ -268,12 +200,12 @@ const EditProfile = ({ navigation }) => {
             valueField="value"
             placeholder={!isFocus ? "Select Country" : "..."}
             searchPlaceholder="Search..."
-            value={userData.country_code}
+            value={projectData.country_code}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={(item) => {
-              setUserData({
-                ...userData,
+              setProjectData({
+                ...projectData,
                 country_code: item.value,
                 country: item.label,
                 state: null,
@@ -284,9 +216,9 @@ const EditProfile = ({ navigation }) => {
           {/* <TextInput
               style={styles.input}
               name="country"
-              value={userData.country}
+              value={projectData.country}
               onChangeText={(text) =>
-                setUserData({ ...userData, country: text })
+                setProjectData({ ...projectData, country: text })
               }
             /> */}
           <Text>State/UT: </Text>
@@ -296,7 +228,7 @@ const EditProfile = ({ navigation }) => {
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
-            data={State.getStatesOfCountry(userData.country_code).map(
+            data={State.getStatesOfCountry(projectData.country_code).map(
               (state) => {
                 return { label: state.name, value: state.name };
               }
@@ -307,28 +239,28 @@ const EditProfile = ({ navigation }) => {
             valueField="value"
             placeholder={!isFocus ? "Select State/UT" : "..."}
             searchPlaceholder="Search..."
-            value={userData.state}
+            value={projectData.state}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={(item) => {
-              setUserData({ ...userData, state: item.label });
+              setProjectData({ ...projectData, state: item.label });
               setIsFocus(false);
             }}
           />
           {/* <TextInput
               style={styles.input}
               name="state"
-              value={userData.state}
-              onChangeText={(text) => setUserData({ ...userData, state: text })}
+              value={projectData.state}
+              onChangeText={(text) => setProjectData({ ...projectData, state: text })}
             /> */}
 
           <Text>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zip_code"
-            value={userData.zip_code}
+            value={projectData.zip_code}
             onChangeText={(text) =>
-              setUserData({ ...userData, zip_code: text })
+              setProjectData({ ...projectData, zip_code: text })
             }
           />
         </View>
@@ -354,7 +286,7 @@ const EditProfile = ({ navigation }) => {
   );
 };
 
-export default EditProfile;
+export default EditProject;
 
 const placesStyle = StyleSheet.create({
   textInputContainer: {

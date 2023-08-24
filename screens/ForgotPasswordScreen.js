@@ -46,9 +46,9 @@ const ForgotPasswordScreen = ({ navigation }) => {
         console.log(res);
         if (res.status == 200) {
           ToastAndroid.show("Code Sent", ToastAndroid.SHORT);
+          // navigation.navigate("Reset Password");
+          navigation.navigate("OTP");
         }
-        navigation.navigate("Reset Password");
-        // navigation.navigate("OTP");
       }
     } catch (error) {
       console.log(error);

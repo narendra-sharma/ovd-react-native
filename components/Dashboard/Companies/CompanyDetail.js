@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { mockData } from "./MOCK_DATA";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Icon from "react-native-vector-icons/FontAwesome";
+import ProjectsList from "./Projects/ProjectsList";
+import QuotesList from "./Quotes/QuotesList";
 
 const initialCompanyData = {
   companyName: "",
@@ -20,12 +23,51 @@ const initialCompanyData = {
 const CompanyDetail = ({ navigation, route }) => {
   const [isCompanyEditOn, setIsCompanyEditOn] = useState(false);
   const [companyData, setCompanyData] = useState(initialCompanyData);
-
-  // console.log(route.params);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   useEffect(() => {
     setCompanyData({ ...route.params });
+    navigation.setOptions({
+      title: route.params.companyName,
+    });
   }, []);
+
+  const tabsData = [
+    {
+      name: "Projects",
+    },
+    {
+      name: "Quotes",
+    },
+    {
+      name: "All Tasks",
+    },
+    {
+      name: "Commissions",
+    },
+    {
+      name: "Users",
+    },
+  ];
+
+  const renderTabOptions = () => {
+    switch (selectedTab) {
+      case 0:
+        return <ProjectsList navigation={navigation} />;
+      case 1:
+        return <QuotesList navigation={navigation} />;
+      case 2:
+        return <Text>case 2</Text>;
+      case 3:
+        return <Text>case 3</Text>;
+      case 4:
+        return <Text>case 4</Text>;
+      default:
+        return <Text>case default</Text>;
+    }
+  };
+
+  // console.log(route.params);
 
   const handleSubmit = () => {
     const index = mockData.findIndex((item) => item.id == companyData.id);
@@ -114,6 +156,30 @@ const CompanyDetail = ({ navigation, route }) => {
         </View>
       ) : (
         <View style={styles.centeredView}>
+          <View style={styles.scrollBoxContainer}>
+            <Text style={{ textAlign: "right" }}>
+              {/* Swipe  */}
+              <Icon name="angle-right" size={20} />
+            </Text>
+
+            <ScrollView horizontal={true}>
+              {tabsData.map((tab, index) => {
+                return (
+                  <Pressable
+                    key={index}
+                    style={
+                      selectedTab === index
+                        ? [styles.scrollBox, styles.tabActive]
+                        : styles.scrollBox
+                    }
+                    onPress={() => setSelectedTab(index)}
+                  >
+                    <Text>{tab.name}</Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          </View>
           <Text style={styles.item}>{companyData.companyName}</Text>
           <View>
             <Text>Email: {companyData.email} </Text>
@@ -124,15 +190,20 @@ const CompanyDetail = ({ navigation, route }) => {
           <View>
             <Text>Location: {companyData.address} </Text>
           </View>
-          <Pressable style={styles.button} onPress={handleDeleteCompany}>
-            <Text style={styles.textStyle}>Delete Company</Text>
-          </Pressable>
-          <Pressable
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => setIsCompanyEditOn(true)}
-          >
-            <Text style={styles.textStyle}>Edit Company Details</Text>
-          </Pressable>
+
+          {renderTabOptions()}
+
+          <View>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setIsCompanyEditOn(true)}
+            >
+              <Text style={styles.textStyle}>Edit Company Details</Text>
+            </Pressable>
+            <Pressable style={styles.button} onPress={handleDeleteCompany}>
+              <Text style={styles.textStyle}>Delete Company</Text>
+            </Pressable>
+          </View>
         </View>
       )}
     </>
@@ -191,6 +262,26 @@ const styles = StyleSheet.create({
     padding: 2,
   },
 
+  scrollBoxContainer: {
+    // display: "flex",
+    // flexDirection: "row",
+    backgroundColor: "pink",
+    // position: "relative",
+    paddingTop: 10,
+    height: 80,
+    marginVertical: 15,
+  },
+
+  tabActive: {
+    backgroundColor: "yellow",
+  },
+
+  scrollBox: {
+    height: 24,
+    backgroundColor: "#1faadb",
+    margin: 5,
+  },
+
   input: {
     borderWidth: 1,
     width: 300,
@@ -240,6 +331,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
+    // margin: 10,
+    padding: 15,
   },
 
   button: {
