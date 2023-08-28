@@ -177,6 +177,7 @@ const AuthScreen = ({ navigation }) => {
       </Pressable>
       <Pressable
         style={styles.opacity}
+        // onPress={() => navigation.navigate("OTP")}
         onPress={() => navigation.navigate("Forgot Password")}
       >
         <Text>Forgot Password? Click here</Text>

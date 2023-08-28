@@ -1,71 +1,58 @@
 import { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Pressable, FlatList } from "react-native";
-import TasksList from "./Tasks/TaskList";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 
-const ProjectDetail = ({ navigation, route }) => {
-  const [projectData, setProjectData] = useState({});
-  const [totalCost, setTotalCost] = useState(0);
+const TaskDetail = ({ navigation, route }) => {
+  const [taskData, setTaskData] = useState({});
 
   useEffect(() => {
-    setProjectData({ ...route.params });
+    setTaskData({ ...route.params });
     navigation.setOptions({
-      title: `Project - ${route.params.projectName}`,
+      title: `Task - ${route.params.taskName}`,
     });
   }, []);
-
-  useEffect(() => {
-    const costArr = projectData?.tasks?.map((task, index) => {
-      return Number(task.cost.slice(1));
-    });
-    console.log("cost arr: ", costArr);
-    const sumOfCosts = costArr?.reduce(
-      (prevCost, currCost, index) => prevCost + currCost,
-      0
-    );
-    setTotalCost(sumOfCosts);
-  }, [projectData]);
 
   return (
     <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
       <View style={styles.centeredView}>
-        <Text style={styles.item}>{projectData.companyName}</Text>
-        <View>
-          <Text>Name: {projectData.projectName} </Text>
-        </View>
-        <View>
-          <Text>Consutant: {projectData.consultant} </Text>
-        </View>
-        <View>
-          <Text>Point of Contact: {projectData.pointOfContact} </Text>
-        </View>
-        <View>
-          <Text>Project Location: {projectData.projectLocation} </Text>
-        </View>
-
-        <Text>Tasks: </Text>
-        <TasksList tasks={route.params.tasks} navigation={navigation} />
+        <Text style={styles.item}>{taskData.companyName}</Text>
 
         <View>
-          <Text>Total cost of all tasks: {totalCost}</Text>
+          <Text>Task: {taskData.taskName} </Text>
+        </View>
+        <View>
+          <Text>Status: {taskData.status}</Text>
+        </View>
+        <View>
+          <Text>Tag: {taskData.tag}</Text>
+        </View>
+        <View>
+          <Text>Task Description: {taskData.description}</Text>
+        </View>
+        <View>
+          <Text>Task Cost: {taskData.cost}</Text>
+        </View>
+        <View>
+          <Text>Start Date: {taskData.startDate}</Text>
+        </View>
+        <View>
+          <Text>Date of Completion: {taskData.completionDate}</Text>
+        </View>
+        <View>
+          <Text>Contractor: {taskData.contractor}</Text>
         </View>
 
         <View>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            // onPress={() => setIsCompanyEditOn(true)}
+            onPress={() => navigation.navigate("Edit Task")}
           >
-            <Text
-              style={styles.textStyle}
-              onPress={() => navigation.navigate("Edit Project")}
-            >
-              Edit Project Details
-            </Text>
+            <Text style={styles.textStyle}>Edit Task Details</Text>
           </Pressable>
           <Pressable
             style={styles.button}
             // onPress={handleDeleteCompany}
           >
-            <Text style={styles.textStyle}>Delete Project</Text>
+            <Text style={styles.textStyle}>Delete Task</Text>
           </Pressable>
         </View>
       </View>
@@ -73,7 +60,7 @@ const ProjectDetail = ({ navigation, route }) => {
   );
 };
 
-export default ProjectDetail;
+export default TaskDetail;
 
 const styles = StyleSheet.create({
   formContainer: {

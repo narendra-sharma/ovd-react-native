@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { mockData } from "../MOCK_DATA";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import ProjectsList from "./ProjectsList";
+import CommissionsList from "./CommissionsList";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const initialFormData = {
@@ -21,7 +21,7 @@ const initialFormData = {
   jobs: [{}],
 };
 
-const ViewProjects = ({ navigation }) => {
+const ViewCommissions = ({ navigation }) => {
   const [addCompanyModalVisible, setAddCompanyModalVisible] = useState(false);
   const [companiesList, setCompaniesList] = useState(mockData);
   const [newCompanyData, setNewCompanyData] = useState(initialFormData);
@@ -60,7 +60,7 @@ const ViewProjects = ({ navigation }) => {
         <View style={styles.centeredView}>
           <Text>Project Name:</Text>
           <TextInput
-            placeholder="Company Name"
+            placeholder="Project Name"
             style={styles.input}
             name="phoneNo"
             value={newCompanyData.companyName}
@@ -69,9 +69,9 @@ const ViewProjects = ({ navigation }) => {
             }
           />
 
-          <Text>Email:</Text>
+          <Text>Total Commission:</Text>
           <TextInput
-            placeholder="Email"
+            placeholder="Total Commission"
             style={styles.input}
             name="email"
             value={newCompanyData.email}
@@ -79,7 +79,7 @@ const ViewProjects = ({ navigation }) => {
               setNewCompanyData({ ...newCompanyData, email: text })
             }
           />
-
+          {/* 
           <Text>Phone Number:</Text>
           <TextInput
             placeholder="Company Name"
@@ -89,7 +89,7 @@ const ViewProjects = ({ navigation }) => {
             onChangeText={(text) =>
               setNewCompanyData({ ...newCompanyData, phoneNo: text })
             }
-          />
+          /> */}
 
           <View>
             <Pressable
@@ -108,47 +108,12 @@ const ViewProjects = ({ navigation }) => {
         </View>
       </Modal>
 
-      <ProjectsList navigation={navigation} />
+      <CommissionsList navigation={navigation} />
     </View>
   );
 };
 
-export default ViewProjects;
-
-const placesStyle = StyleSheet.create({
-  textInputContainer: {
-    backgroundColor: "rgba(0,0,0,0)",
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
-  },
-  textInput: {
-    height: 45,
-    color: "#5d5d5d",
-    fontSize: 16,
-    borderWidth: 1,
-  },
-  predefinedPlacesDescription: {
-    color: "#1faadb",
-  },
-  listView: {
-    color: "black",
-    backgroundColor: "white",
-    maxWidth: "89%",
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "blue",
-  },
-  description: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    fontSize: 14,
-    maxWidth: "89%",
-  },
-});
+export default ViewCommissions;
 
 const styles = StyleSheet.create({
   container: {

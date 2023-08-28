@@ -10,53 +10,17 @@ import { default as MaterialIcon } from "react-native-vector-icons/MaterialCommu
 import { Dropdown } from "react-native-element-dropdown";
 import ViewQuotes from "./Quotes/ViewQuotes";
 // import AllTasks from "./Tasks/AllTasks";
+import ViewCommissions from "../Commissions/ViewCommissions";
 import EditProject from "./Projects/EditProject";
 import QuoteDetail from "./Quotes/QuoteDetail";
 import ProjectDetail from "./Projects/ProjectDetail";
 import TaskDetail from "./Projects/Tasks/TaskDetail";
 import EditTask from "./Projects/Tasks/EditTask";
 import AddCompany from "./AddCompany";
-import ViewCommissions from "./Commissions/ViewCommissions";
-import CommissionDetail from "./Commissions/CommissionDetail";
-import EditCommission from "./Commissions/EditCommission";
 
 const Stack = createNativeStackNavigator();
 
-const DropdownMenu = ({ navigation }) => {
-  const [value, setValue] = useState(null);
-
-  const data = [
-    { label: "Projects", value: "View Projects" },
-    { label: "View Quotes", value: "View Quotes" },
-    { label: "All Tasks", value: "All Tasks" },
-    { label: "Commissions", value: "Commissions" },
-    { label: "View Projects", value: "View Projects" },
-    { label: "View Projects", value: "View Projects" },
-  ];
-  return (
-    <Dropdown
-      style={styles.dropdown}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      iconStyle={styles.iconStyle}
-      data={data}
-      maxHeight={300}
-      labelField="label"
-      valueField="value"
-      containerStyle={styles.listStyle}
-      dropdownPosition="bottom"
-      value={value}
-      onChange={(item) => {
-        setValue(item.value);
-        // console.log(navigation);
-        navigation.navigate(item.label);
-      }}
-      renderRightIcon={() => <MaterialIcon name="dots-vertical" size={30} />}
-    />
-  );
-};
-
-const CompanyStackScreen = ({ navigation }) => {
+const SettingsStack = ({ navigation }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -79,19 +43,9 @@ const CompanyStackScreen = ({ navigation }) => {
         name="Add Company"
         component={AddCompany}
         options={({ navigation }) => ({
-          title: "Add New Company",
+          title: "Add Company",
           // headerShown: false,
           // headerRight: () => <DropdownMenu navigation={navigation} />,
-          // headerRight: () => <MaterialIcon name="dots-vertical" size={30} />,
-        })}
-      />
-      <Stack.Screen
-        name="Company Details"
-        component={CompanyDetail}
-        options={({ navigation }) => ({
-          title: "Company Details",
-          // headerShown: false,
-          headerRight: () => <DropdownMenu navigation={navigation} />,
           // headerRight: () => <MaterialIcon name="dots-vertical" size={30} />,
         })}
       />
@@ -156,13 +110,11 @@ const CompanyStackScreen = ({ navigation }) => {
         })}
       />
       <Stack.Screen name="Commissions" component={ViewCommissions} />
-      <Stack.Screen name="Commission Details" component={CommissionDetail} />
-      <Stack.Screen name="Edit Commission" component={EditCommission} />
     </Stack.Navigator>
   );
 };
 
-export default CompanyStackScreen;
+export default SettingsStack;
 
 const styles = StyleSheet.create({
   container: {

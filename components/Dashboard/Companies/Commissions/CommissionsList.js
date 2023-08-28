@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
-import { mockProjects } from "./MockProjects";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { mockCommissions } from "./MockCommissions";
 
-const ProjectsList = ({ navigation }) => {
-  const [projectsList, setProjectsList] = useState(mockProjects);
-  useEffect(() => {}, [projectsList]);
+const CommissionsList = ({ navigation }) => {
+  const [commissionsList, setCommissionsList] = useState(mockCommissions);
+  useEffect(() => {}, [commissionsList]);
 
   return (
     <View style={styles.container}>
       <FlatList
         // style={{ height: 100 }}
-        data={projectsList}
+        data={commissionsList}
         renderItem={({ item }) => (
           <>
             <Pressable
               onPress={() => {
-                navigation.navigate("Project Details", item);
+                navigation.navigate("Commission Details", item);
                 // navigation.setOptions({ title: "Updated!" });
               }}
               style={styles.listItem}
@@ -31,7 +31,7 @@ const ProjectsList = ({ navigation }) => {
   );
 };
 
-export default ProjectsList;
+export default CommissionsList;
 
 const styles = StyleSheet.create({
   container: {

@@ -6,9 +6,11 @@ import {
   Pressable,
   ScrollView,
   TextInput,
+  ToastAndroid,
 } from "react-native";
 import { mockData } from "./MOCK_DATA";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { apiUpdateCompanyDetails } from "../../../apis/companies";
 
 const initialCompanyData = {
   companyName: "",
@@ -18,34 +20,41 @@ const initialCompanyData = {
 };
 
 const EditCompanyDetails = ({ navigation, route }) => {
-  const [isCompanyEditOn, setIsCompanyEditOn] = useState(false);
   const [companyData, setCompanyData] = useState(initialCompanyData);
 
-  // console.log(route.params);
+  console.log("edit params: ", route.params);
 
   useEffect(() => {
     setCompanyData({ ...route.params });
   }, []);
 
-  const handleSubmit = () => {
-    const index = mockData.findIndex((item) => item.id == companyData.id);
-    mockData[index] = { ...mockData[index], companyData };
-    setIsCompanyEditOn(false);
+  const handleSubmit = async () => {
+    // const index = mockData.findIndex((item) => item.id == companyData.id);
+    // mockData[index] = { ...mockData[index], companyData };
+    try {
+      const res = await apiUpdateCompanyDetails(companyData, companyData.id);
+      console.log(res.data);
+      if (res.data.success == true) {
+        ToastAndroid.show("Details updated successfully", ToastAndroid.SHORT);
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
       <View style={styles.centeredView}>
-        <Text>Edit</Text>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.formContainer}>
             <Text>Company Name:</Text>
             <TextInput
               style={styles.input}
               name="name"
-              value={companyData.companyName}
+              value={companyData.name}
               onChangeText={(text) =>
-                setCompanyData({ ...companyData, companyName: text })
+                setCompanyData({ ...companyData, name: text })
               }
               placeholder="Name"
             />
@@ -71,11 +80,92 @@ const EditCompanyDetails = ({ navigation, route }) => {
             <GooglePlacesAutocomplete
               placeholder="Search"
               autoFocus={true}
-              // listViewDisplayed="auto"
+              listViewDisplayed="auto"
               returnKeyType={"search"}
               fetchDetails={true}
+              textInputProps={{
+                value: companyData.address,
+                onChangeText: (text) => {
+                  setCompanyData({ ...companyData, address: text });
+                },
+              }}
               onPress={(data, details = null) => {
-                props.notifyChange(details.geometry.location, data);
+                console.log(
+                  "details.address_components: ",
+                  details.address_components
+                );
+
+                // const countryIndex = details.address_components.findIndex(
+                //   (obj) => obj.types[0] == "country"
+                // );
+
+                // const stateIndex = details.address_components.findIndex(
+                //   (obj) => obj.types[0] == "administrative_area_level_1"
+                // );
+
+                // const zipIndex = details.address_components.findIndex(
+                //   (obj) => obj.types[0] == "postal_code"
+                // );
+
+                const countryName =
+                  details.address_components[
+                    details.address_components.findIndex(
+                      (obj) => obj.types[0] == "country"
+                    )
+                  ]?.long_name;
+
+                const countryCode =
+                  details.address_components[
+                    details.address_components.findIndex(
+                      (obj) => obj.types[0] == "country"
+                    )
+                  ]?.short_name;
+
+                const stateName =
+                  details.address_components[
+                    details.address_components.findIndex(
+                      (obj) => obj.types[0] == "administrative_area_level_1"
+                    )
+                  ]?.long_name;
+
+                const areaZip = details.address_components[
+                  details.address_components.findIndex(
+                    (obj) => obj.types[0] == "postal_code"
+                  )
+                ]?.long_name
+                  ? details.address_components[
+                      details.address_components.findIndex(
+                        (obj) => obj.types[0] == "postal_code"
+                      )
+                    ]?.long_name
+                  : null;
+
+                console.log(
+                  details.formatted_address,
+                  " ",
+                  stateName,
+                  " ",
+                  countryName,
+                  " ",
+                  countryCode,
+                  " ",
+                  areaZip
+                );
+
+                // props.notifyChange(details.geometry.location, data);
+
+                setCompanyData({
+                  ...companyData,
+                  lat: details.geometry.location.lat,
+                  long: details.geometry.location.lng,
+                  address: details.formatted_address,
+                  state: stateName,
+                  zip_code: areaZip,
+                  country_code: countryCode,
+                  country: countryName,
+                });
+
+                //   console.log(companyData);
               }}
               query={{
                 key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
@@ -86,6 +176,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
               styles={placesStyle}
             />
           </View>
+
           <View
             style={{
               display: "flex",
@@ -97,10 +188,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
         <Pressable style={styles.button} onPress={handleSubmit}>
           <Text style={styles.textStyle}>Submit</Text>
         </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => setIsCompanyEditOn(false)}
-        >
+        <Pressable style={styles.button} onPress={() => navigation.goBack()}>
           <Text style={styles.textStyle}>Cancel</Text>
         </Pressable>
       </View>

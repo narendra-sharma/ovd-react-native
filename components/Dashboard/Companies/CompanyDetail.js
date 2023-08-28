@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,12 +6,20 @@ import {
   Pressable,
   ScrollView,
   TextInput,
+  Alert,
+  ToastAndroid,
 } from "react-native";
 import { mockData } from "./MOCK_DATA";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Icon from "react-native-vector-icons/FontAwesome";
 import ProjectsList from "./Projects/ProjectsList";
 import QuotesList from "./Quotes/QuotesList";
+import {
+  apiDeleteCompany,
+  apiGetCompanyDetails,
+} from "../../../apis/companies";
+import { useFocusEffect } from "@react-navigation/native";
+import CommissionsList from "./Commissions/CommissionsList";
 
 const initialCompanyData = {
   companyName: "",
@@ -22,15 +30,45 @@ const initialCompanyData = {
 
 const CompanyDetail = ({ navigation, route }) => {
   const [isCompanyEditOn, setIsCompanyEditOn] = useState(false);
-  const [companyData, setCompanyData] = useState(initialCompanyData);
+  const [companyData, setCompanyData] = useState({});
   const [selectedTab, setSelectedTab] = useState(0);
 
-  useEffect(() => {
-    setCompanyData({ ...route.params });
-    navigation.setOptions({
-      title: route.params.companyName,
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getCompanyDetails = async () => {
+        try {
+          const res = await apiGetCompanyDetails(route.params.id);
+          // console.log(res.data);
+          setCompanyData(res.data.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCompanyDetails();
+
+      return () => (isActive = false);
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   const getCompanyDetails = async () => {
+  //     try {
+  //       const res = await apiGetCompanyDetails(route.params.id);
+  //       // console.log(res.data);
+  //       setCompanyData(res.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getCompanyDetails();
+  //   console.log("companyData obj: ", companyData);
+
+  //   navigation.setOptions({
+  //     title: companyData.name,
+  //   });
+  // }, []);
 
   const tabsData = [
     {
@@ -48,6 +86,9 @@ const CompanyDetail = ({ navigation, route }) => {
     {
       name: "Users",
     },
+    {
+      name: "Analytics",
+    },
   ];
 
   const renderTabOptions = () => {
@@ -57,11 +98,13 @@ const CompanyDetail = ({ navigation, route }) => {
       case 1:
         return <QuotesList navigation={navigation} />;
       case 2:
-        return <Text>case 2</Text>;
+        return <Text>Tasks</Text>;
       case 3:
-        return <Text>case 3</Text>;
+        return <CommissionsList navigation={navigation} />;
       case 4:
-        return <Text>case 4</Text>;
+        return <Text>Users</Text>;
+      case 5:
+        return <Text>Analytics</Text>;
       default:
         return <Text>case default</Text>;
     }
@@ -75,11 +118,31 @@ const CompanyDetail = ({ navigation, route }) => {
     setIsCompanyEditOn(false);
   };
 
-  const handleDeleteCompany = () => {
-    const index = mockData.findIndex((item) => item.id == companyData.id);
-    const arr = mockData.splice(index, 1);
-    console.log("pressed index: ", arr);
-    navigation.goBack();
+  const handleDeleteCompany = async () => {
+    const deleteCompany = async () => {
+      try {
+        const res = await apiDeleteCompany(route.params.id);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          ToastAndroid.show("Company Deleted Successfully", ToastAndroid.SHORT);
+          navigation.navigate("All Companies");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Alert.alert(
+      `Delete ${companyData.name}`,
+      `Are you sure you want to delete ${companyData.name}?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => deleteCompany() },
+      ]
+    );
   };
 
   return (
@@ -180,7 +243,7 @@ const CompanyDetail = ({ navigation, route }) => {
               })}
             </ScrollView>
           </View>
-          <Text style={styles.item}>{companyData.companyName}</Text>
+          <Text style={styles.item}>{companyData.name}</Text>
           <View>
             <Text>Email: {companyData.email} </Text>
           </View>
@@ -196,7 +259,10 @@ const CompanyDetail = ({ navigation, route }) => {
           <View>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setIsCompanyEditOn(true)}
+              onPress={() =>
+                navigation.navigate("Edit Company Details", companyData)
+              }
+              // onPress={() => setIsCompanyEditOn(true)}
             >
               <Text style={styles.textStyle}>Edit Company Details</Text>
             </Pressable>
@@ -278,7 +344,7 @@ const styles = StyleSheet.create({
 
   scrollBox: {
     height: 24,
-    backgroundColor: "#1faadb",
+    // backgroundColor: "#1faadb",
     margin: 5,
   },
 

@@ -34,7 +34,7 @@ export const apiUpdateProfile = async (userData) => {
 };
 
 export const apiGetProfileDetails = async () => {
-  console.log("At get profile");
+  // console.log("At get profile");
   const response = await request({
     path: "auth/edit-profile",
   });
@@ -50,9 +50,29 @@ export const apiSendForgotPasswordCode = async (formData) => {
   return response;
 };
 
-export const apiResetPassword = async () => {
+export const apiVerifyOtp = async (formData) => {
   const response = await request({
-    path: "https://jsonplaceholder.typicode.com/todos/1",
+    path: "auth/check-otp",
+    method: "post",
+    body: formData,
+  });
+  return response;
+};
+
+export const apiResetPassword = async (formData) => {
+  const response = await request({
+    path: "auth/change-password",
+    method: "post",
+    body: formData,
+  });
+  return response;
+};
+
+export const apiChangePasswordFromDashboard = async (formData) => {
+  const response = await request({
+    path: "auth/change-user-password",
+    method: "post",
+    body: formData,
   });
   return response;
 };

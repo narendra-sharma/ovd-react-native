@@ -12,6 +12,7 @@ import { apiLogout } from "../../../apis/auth";
 import CompanyStackScreen from "../Companies/CompanyStackScreen";
 import ProfileStackScreen from "../Profile/ProfileStackScreen";
 import { useFocusEffect } from "@react-navigation/native";
+import ChangePassword from "../Settings/ChangePassword";
 
 const Drawer = createDrawerNavigator();
 
@@ -101,6 +102,10 @@ const RightDrawer = ({ navigation }) => {
                 marginBottom: 50,
               }}
             >
+              {/* <Pressable style={styles.settingsButton}>
+                <MaterialIcons name="settings" size={20} color="#B76E79" />
+                <Text style={{ color: "#B76E79" }}>Settings</Text>
+              </Pressable> */}
               <Pressable style={styles.logoutButton} onPress={handleLogout}>
                 <Icon name="sign-out" size={28} />
                 <Text>Logout</Text>
@@ -136,6 +141,15 @@ const RightDrawer = ({ navigation }) => {
         }}
         name="Profile"
         component={ProfileStackScreen}
+      />
+      <Drawer.Screen
+        options={({ navigation }) => ({
+          drawerIcon: () => <MaterialIcons name="settings" size={28} />,
+          title: "Change Password",
+          // headerShown: false,
+        })}
+        name="Change Password"
+        component={ChangePassword}
       />
       {/* <Drawer.Screen
         options={{
@@ -176,6 +190,20 @@ const styles = StyleSheet.create({
 
   textStyle: {
     marginLeft: 5,
+  },
+
+  settingsButton: {
+    height: 50,
+    borderWidth: 0.5,
+    borderColor: "#B76E79",
+    borderRadius: 8,
+    width: "60%",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: "auto",
+    display: "flex",
+    flexDirection: "row",
+    marginBottom: 10,
   },
 
   logoutButton: {

@@ -34,7 +34,7 @@ const Profile = ({ navigation }) => {
       return () => {
         isActive = false;
       };
-    }, [userData])
+    }, [])
   );
 
   // useEffect(() => {

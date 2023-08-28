@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -12,6 +12,9 @@ import {
 import { mockData } from "./MOCK_DATA";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { ScrollView } from "react-native-gesture-handler";
+import { apiGetAllCompanies } from "../../../apis/companies";
+import { useFocusEffect } from "@react-navigation/native";
 
 const initialFormData = {
   companyName: "",
@@ -24,7 +27,41 @@ const AllCompanies = ({ navigation }) => {
   const [addCompanyModalVisible, setAddCompanyModalVisible] = useState(false);
   const [companiesList, setCompaniesList] = useState(mockData);
   const [newCompanyData, setNewCompanyData] = useState(initialFormData);
-  useEffect(() => {}, [companiesList]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getAllCompanies = async () => {
+        try {
+          const res = await apiGetAllCompanies();
+          console.log(res.data.data);
+          setCompaniesList([...res.data.data]);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      getAllCompanies();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  useEffect(() => {
+    const getAllCompanies = async () => {
+      try {
+        const res = await apiGetAllCompanies();
+        console.log(res.data.data);
+        setCompaniesList([...res.data.data]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAllCompanies();
+  }, []);
 
   const handleNewCompanySubmit = () => {
     setCompaniesList([...companiesList, newCompanyData]);
@@ -33,12 +70,12 @@ const AllCompanies = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          setAddCompanyModalVisible(true);
-          navigation.se;
+          navigation.navigate("Add Company");
+          // setAddCompanyModalVisible(true);
         }}
       >
         <Text style={styles.addText}>
@@ -56,61 +93,66 @@ const AllCompanies = ({ navigation }) => {
           setAddCompanyModalVisible(!addCompanyModalVisible);
         }}
       >
-        <View style={styles.centeredView}>
-          <Text>Company Name:</Text>
-          <TextInput
-            placeholder="Company Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.companyName}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, companyName: text })
-            }
-          />
+        <ScrollView contentContainerStyle={styles.centeredView}>
+          <ScrollView>
+            <Text>Company Name:</Text>
+            <TextInput
+              placeholder="Company Name"
+              style={styles.input}
+              name="phoneNo"
+              value={newCompanyData.companyName}
+              onChangeText={(text) =>
+                setNewCompanyData({ ...newCompanyData, companyName: text })
+              }
+            />
+            <Text>Email:</Text>
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              name="email"
+              value={newCompanyData.email}
+              onChangeText={(text) =>
+                setNewCompanyData({ ...newCompanyData, email: text })
+              }
+            />
+            <Text>Phone Number:</Text>
+            <TextInput
+              placeholder="Phone Number"
+              style={styles.input}
+              name="phoneNo"
+              value={newCompanyData.phoneNo}
+              onChangeText={(text) =>
+                setNewCompanyData({ ...newCompanyData, phoneNo: text })
+              }
+            />
+            <Text>Address:</Text>
+            <GooglePlacesAutocomplete
+              placeholder="Search"
+              autoFocus={true}
+              // listViewDisplayed="auto"
+              returnKeyType={"search"}
+              fetchDetails={true}
+              onPress={(data, details = null) => {
+                // console.log("data: ", data);
+                console.log("details: ", details.geometry.location);
+                // props.notifyChange(details.geometry.location, data);
+              }}
+              query={{
+                key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
+                language: "en",
+              }}
+              nearbyPlacesAPI="GooglePlacesSearch"
+              debounce={200}
+              styles={placesStyle}
+            />
+          </ScrollView>
 
-          <Text>Email:</Text>
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            name="email"
-            value={newCompanyData.email}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, email: text })
-            }
-          />
-
-          <Text>Phone Number:</Text>
-          <TextInput
-            placeholder="Company Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.phoneNo}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, phoneNo: text })
-            }
-          />
-
-          <Text>Address:</Text>
-          <GooglePlacesAutocomplete
-            placeholder="Search"
-            autoFocus={true}
-            // listViewDisplayed="auto"
-            returnKeyType={"search"}
-            fetchDetails={true}
-            onPress={(data, details = null) => {
-              // console.log("data: ", data);
-              console.log("details: ", details.geometry.location);
-              // props.notifyChange(details.geometry.location, data);
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
             }}
-            query={{
-              key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
-              language: "en",
-            }}
-            nearbyPlacesAPI="GooglePlacesSearch"
-            debounce={200}
-            styles={placesStyle}
-          />
-          <View>
+          >
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setAddCompanyModalVisible(false)}
@@ -124,7 +166,7 @@ const AllCompanies = ({ navigation }) => {
               <Text style={styles.textStyle}>Add</Text>
             </Pressable>
           </View>
-        </View>
+        </ScrollView>
       </Modal>
 
       <FlatList
@@ -134,18 +176,18 @@ const AllCompanies = ({ navigation }) => {
           <>
             <Pressable
               onPress={() => {
-                navigation.navigate("Company Details", item);
+                navigation.navigate("Company Details", { id: item.id });
                 // navigation.setOptions({ title: "Updated!" });
               }}
               style={styles.listItem}
             >
-              <Text style={styles.item}>{item.companyName}</Text>
+              <Text style={styles.item}>{item.name}</Text>
               <Icon name="angle-right" size={28} />
             </Pressable>
           </>
         )}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -195,13 +237,16 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     marginTop: 10,
-    height: "100%",
+    height: "80%",
+    padding: 20,
   },
+
   modalView: {
     margin: 10,
     backgroundColor: "white",
@@ -217,25 +262,30 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: "90%",
+    height: "80%",
   },
+
   button: {
     margin: 10,
     backgroundColor: "#B76E79",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "40%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
+
   buttonClose: {
     backgroundColor: "#B76E79",
   },
+
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
+
   modalText: {
     marginBottom: 15,
     textAlign: "center",
@@ -258,12 +308,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
+  input: {
+    width: 300,
+    height: 35,
+    marginTop: 2,
+    marginBottom: 10,
+    padding: 5,
+    borderRadius: 8,
+    minWidth: 80,
+    paddingHorizontal: 8,
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+  },
+
   addButton: {
-    margin: 10,
+    margin: 5,
     backgroundColor: "#B76E79",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "40%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",

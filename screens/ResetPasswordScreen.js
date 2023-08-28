@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  ToastAndroid,
+} from "react-native";
 import { apiResetPassword } from "../apis/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const passwords = {
   newPassword: "",
   confirmPassword: "",
 };
 
-const ResetPasswordScreen = ({ navigation }) => {
+const ResetPasswordScreen = ({ navigation, route }) => {
   const [formData, setFormData] = useState(passwords);
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -33,6 +41,8 @@ const ResetPasswordScreen = ({ navigation }) => {
         }
     }
   };
+
+  console.log(route);
 
   //handle password validation
   const validatePassword = (password) => {
@@ -74,9 +84,25 @@ const ResetPasswordScreen = ({ navigation }) => {
       validateConfirmPassword(formData.confirmPassword) &&
       formData.newPassword === formData.confirmPassword
     ) {
-      // const res = await apiResetPassword();
-      // console.log(res);
-      navigation.navigate("Dashboard");
+      try {
+        const res = await apiResetPassword({
+          email: route.params.email,
+          password: formData.newPassword,
+          password_confirmation: formData.confirmPassword,
+        });
+        console.log(res);
+        if (res.status == 200) {
+          // await AsyncStorage.setItem("token", token);
+          // await AsyncStorage.setItem("profile", profile);
+          ToastAndroid.show(
+            "Password changed successfully",
+            ToastAndroid.SHORT
+          );
+          navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
     if (
       !validatePassword(formData.newPassword) ||
@@ -103,7 +129,7 @@ const ResetPasswordScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           name="newPassword"
-          placeholder="Password"
+          placeholder="New Password"
           value={formData.newPassword}
           onChangeText={(text) => handleChange(text, "newPassword")}
           secureTextEntry={true}
@@ -114,7 +140,7 @@ const ResetPasswordScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           name="confirmPassword"
-          placeholder="Password"
+          placeholder="Confirm Password"
           value={formData.confirmPassword}
           onChangeText={(text) => handleChange(text, "confirmPassword")}
           secureTextEntry={true}
@@ -167,7 +193,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 10,
-    transition: "0.2s",
   },
 });
 

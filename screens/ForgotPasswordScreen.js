@@ -40,15 +40,16 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   //handle form submit
   const handleSubmit = async () => {
+    ToastAndroid.show("Please Wait", ToastAndroid.LONG);
     try {
       if (validateEmail(email)) {
         const res = await apiSendForgotPasswordCode({ email: email });
-        console.log(res);
+        // console.log(res);
         if (res.status == 200) {
           ToastAndroid.show("Code Sent", ToastAndroid.SHORT);
-          // navigation.navigate("Reset Password");
-          navigation.navigate("OTP");
+          navigation.navigate("OTP", { email });
         }
+        // navigation.navigate("OTP", { email });
       }
     } catch (error) {
       console.log(error);

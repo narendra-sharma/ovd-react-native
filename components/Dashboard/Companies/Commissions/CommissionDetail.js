@@ -1,71 +1,51 @@
 import { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Pressable, FlatList } from "react-native";
-import TasksList from "./Tasks/TaskList";
 
-const ProjectDetail = ({ navigation, route }) => {
-  const [projectData, setProjectData] = useState({});
-  const [totalCost, setTotalCost] = useState(0);
+const CommissionDetail = ({ navigation, route }) => {
+  const [commissionData, setCommissionData] = useState({});
 
   useEffect(() => {
-    setProjectData({ ...route.params });
+    setCommissionData({ ...route.params });
     navigation.setOptions({
-      title: `Project - ${route.params.projectName}`,
+      title: `Commission - ${route.params.projectName}`,
     });
   }, []);
-
-  useEffect(() => {
-    const costArr = projectData?.tasks?.map((task, index) => {
-      return Number(task.cost.slice(1));
-    });
-    console.log("cost arr: ", costArr);
-    const sumOfCosts = costArr?.reduce(
-      (prevCost, currCost, index) => prevCost + currCost,
-      0
-    );
-    setTotalCost(sumOfCosts);
-  }, [projectData]);
 
   return (
     <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
       <View style={styles.centeredView}>
-        <Text style={styles.item}>{projectData.companyName}</Text>
+        <Text style={styles.item}>{commissionData.companyName}</Text>
         <View>
-          <Text>Name: {projectData.projectName} </Text>
+          <Text>Project Name: {commissionData.projectName} </Text>
         </View>
         <View>
-          <Text>Consutant: {projectData.consultant} </Text>
+          <Text>Total Commission: {commissionData.totalCommission} </Text>
         </View>
         <View>
-          <Text>Point of Contact: {projectData.pointOfContact} </Text>
+          <Text>Amount Paid: {commissionData.amountPaid} </Text>
         </View>
         <View>
-          <Text>Project Location: {projectData.projectLocation} </Text>
-        </View>
-
-        <Text>Tasks: </Text>
-        <TasksList tasks={route.params.tasks} navigation={navigation} />
-
-        <View>
-          <Text>Total cost of all tasks: {totalCost}</Text>
+          <Text>Amount Pending: {commissionData.amountPending} </Text>
         </View>
 
         <View>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            // onPress={() => setIsCompanyEditOn(true)}
+            //  onPress={() => navigation.navigate("Edit Project")}
           >
-            <Text
-              style={styles.textStyle}
-              onPress={() => navigation.navigate("Edit Project")}
-            >
-              Edit Project Details
-            </Text>
+            <Text style={styles.textStyle}>View Transaction History</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => navigation.navigate("Edit Commission")}
+          >
+            <Text style={styles.textStyle}>Edit Commission Details</Text>
           </Pressable>
           <Pressable
             style={styles.button}
             // onPress={handleDeleteCompany}
           >
-            <Text style={styles.textStyle}>Delete Project</Text>
+            <Text style={styles.textStyle}>Delete Commission</Text>
           </Pressable>
         </View>
       </View>
@@ -73,7 +53,7 @@ const ProjectDetail = ({ navigation, route }) => {
   );
 };
 
-export default ProjectDetail;
+export default CommissionDetail;
 
 const styles = StyleSheet.create({
   formContainer: {
