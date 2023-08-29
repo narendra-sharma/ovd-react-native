@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import About from "../components/Dashboard/About/About";
-import Home from "../components/Dashboard/Home/Home";
-import Profile from "../components/Dashboard/Profile/Profile";
-import RightDrawer from "../components/Dashboard/RightDrawer/RightDrawer";
-import CustomDrawerIcon from "../components/Dashboard/RightDrawer/CustomDrawer";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import RightDrawer from "../components/AdminDashboard/RightDrawer/RightDrawer";
 
 const DashboardScreen = ({ navigation }) => {
   const [userData, setUserData] = useState({ name: "", email: "" });

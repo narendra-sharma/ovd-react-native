@@ -19,6 +19,10 @@ import AddCompany from "./AddCompany";
 import ViewCommissions from "./Commissions/ViewCommissions";
 import CommissionDetail from "./Commissions/CommissionDetail";
 import EditCommission from "./Commissions/EditCommission";
+import ViewUsers from "./User/ViewUsers";
+import UserDetail from "./User/UserDetails";
+import EditUser from "./User/EditUser";
+import AddUser from "./User/AddUser";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +34,7 @@ const DropdownMenu = ({ navigation }) => {
     { label: "View Quotes", value: "View Quotes" },
     { label: "All Tasks", value: "All Tasks" },
     { label: "Commissions", value: "Commissions" },
-    { label: "View Projects", value: "View Projects" },
+    { label: "View Users", value: "View Users" },
     { label: "View Projects", value: "View Projects" },
   ];
   return (
@@ -158,6 +162,37 @@ const CompanyStackScreen = ({ navigation }) => {
       <Stack.Screen name="Commissions" component={ViewCommissions} />
       <Stack.Screen name="Commission Details" component={CommissionDetail} />
       <Stack.Screen name="Edit Commission" component={EditCommission} />
+      <Stack.Screen
+        name="View Users"
+        component={ViewUsers}
+        options={({ navigation }) => ({
+          title: "All Users",
+        })}
+      />
+      <Stack.Screen
+        name="User Details"
+        component={UserDetail}
+        options={({ navigation }) => ({
+          title: "User Details",
+        })}
+      />
+      <Stack.Screen
+        name="Edit User"
+        component={EditUser}
+        options={({ navigation }) => ({
+          title: "Edit User",
+        })}
+      />
+      <Stack.Screen
+        name="Add User"
+        component={AddUser}
+        options={({ navigation }) => ({
+          title: "Add New User",
+          // headerShown: false,
+          // headerRight: () => <DropdownMenu navigation={navigation} />,
+          // headerRight: () => <MaterialIcon name="dots-vertical" size={30} />,
+        })}
+      />
     </Stack.Navigator>
   );
 };

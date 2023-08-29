@@ -61,11 +61,11 @@ export default TasksList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    // paddingTop: 22,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    height: "100%",
+    // backgroundColor: "pink",
   },
 
   button: {

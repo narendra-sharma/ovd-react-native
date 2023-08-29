@@ -10,8 +10,6 @@ import {
   ToastAndroid,
 } from "react-native";
 
-// import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-
 const initialCommissionData = {
   customerName: "",
   consultant: "",

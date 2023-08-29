@@ -41,82 +41,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-    height: "100%",
-  },
-  modalView: {
-    margin: 10,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: "90%",
-  },
-  button: {
-    margin: 10,
-    backgroundColor: "#B76E79",
-    padding: 12,
-    borderRadius: 8,
-    width: "50%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    alignContent: "space-around",
-  },
-  buttonClose: {
-    backgroundColor: "#B76E79",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
+    // backgroundColor: "pink",
   },
 
   listItem: {
     backgroundColor: "#fff",
     margin: 2,
-    width: "80%",
+    width: "76%",
     display: "flex",
     flexDirection: "row",
     borderWidth: 1,
     borderColor: "#d9d9d9",
     justifyContent: "space-between",
     alignItems: "center",
+    padding: 10,
   },
 
   item: {
-    padding: 10,
+    padding: 4,
     fontSize: 16,
-  },
-
-  addButton: {
-    margin: 10,
-    backgroundColor: "#B76E79",
-    padding: 12,
-    borderRadius: 8,
-    width: "50%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    alignContent: "space-around",
-  },
-
-  addText: {
-    color: "#fff",
   },
 });

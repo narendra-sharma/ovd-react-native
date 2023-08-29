@@ -47,67 +47,6 @@ const ViewCommissions = ({ navigation }) => {
         </Text>
       </Pressable>
 
-      {/* Add new company form */}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={addCompanyModalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setAddCompanyModalVisible(!addCompanyModalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <Text>Project Name:</Text>
-          <TextInput
-            placeholder="Project Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.companyName}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, companyName: text })
-            }
-          />
-
-          <Text>Total Commission:</Text>
-          <TextInput
-            placeholder="Total Commission"
-            style={styles.input}
-            name="email"
-            value={newCompanyData.email}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, email: text })
-            }
-          />
-          {/* 
-          <Text>Phone Number:</Text>
-          <TextInput
-            placeholder="Company Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.phoneNo}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, phoneNo: text })
-            }
-          /> */}
-
-          <View>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setAddCompanyModalVisible(false)}
-            >
-              <Text style={styles.textStyle}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={handleNewCompanySubmit}
-            >
-              <Text style={styles.textStyle}>Add</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-
       <CommissionsList navigation={navigation} />
     </View>
   );

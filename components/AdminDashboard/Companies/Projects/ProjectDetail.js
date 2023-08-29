@@ -26,48 +26,60 @@ const ProjectDetail = ({ navigation, route }) => {
   }, [projectData]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
-      <View style={styles.centeredView}>
-        <Text style={styles.item}>{projectData.companyName}</Text>
-        <View>
-          <Text>Name: {projectData.projectName} </Text>
-        </View>
-        <View>
-          <Text>Consutant: {projectData.consultant} </Text>
-        </View>
-        <View>
-          <Text>Point of Contact: {projectData.pointOfContact} </Text>
-        </View>
-        <View>
-          <Text>Project Location: {projectData.projectLocation} </Text>
-        </View>
+    <View style={styles.centeredView}>
+      <Text style={styles.item}>{projectData.companyName}</Text>
 
-        <Text>Tasks: </Text>
-        <TasksList tasks={route.params.tasks} navigation={navigation} />
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Name: </Text>
+        <Text> {projectData.projectName} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Consutant: </Text>
+        <Text> {projectData.consultant} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Point of Contact: </Text>
+        <Text> {projectData.pointOfContact} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Project Location: </Text>
+        <Text> {projectData.projectLocation} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Tasks: </Text>
+      </View>
 
-        <View>
-          <Text>Total cost of all tasks: {totalCost}</Text>
-        </View>
+      <TasksList tasks={route.params.tasks} navigation={navigation} />
 
-        <View>
-          <Pressable
-            style={[styles.button, styles.buttonClose]}
-            // onPress={() => setIsCompanyEditOn(true)}
+      <View
+        style={[
+          styles.fieldContainer,
+          // { backgroundColor: "pink", padding: 2, marginTop: -10 },
+        ]}
+      >
+        <Text style={styles.fieldName}>Total cost of all tasks:</Text>
+        <Text>{totalCost}</Text>
+      </View>
+      <View></View>
+
+      <View style={styles.buttonsContainer}>
+        <Pressable
+          style={[styles.button, styles.buttonClose]}
+          // onPress={() => setIsCompanyEditOn(true)}
+        >
+          <Text
+            style={styles.textStyle}
+            onPress={() => navigation.navigate("Edit Project")}
           >
-            <Text
-              style={styles.textStyle}
-              onPress={() => navigation.navigate("Edit Project")}
-            >
-              Edit Project Details
-            </Text>
-          </Pressable>
-          <Pressable
-            style={styles.button}
-            // onPress={handleDeleteCompany}
-          >
-            <Text style={styles.textStyle}>Delete Project</Text>
-          </Pressable>
-        </View>
+            Edit Project Details
+          </Text>
+        </Pressable>
+        <Pressable
+          style={styles.button}
+          // onPress={handleDeleteCompany}
+        >
+          <Text style={styles.textStyle}>Delete Project</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -76,20 +88,6 @@ const ProjectDetail = ({ navigation, route }) => {
 export default ProjectDetail;
 
 const styles = StyleSheet.create({
-  formContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-  },
-
-  fieldContainer: {
-    display: "flex",
-    flexDirection: "row",
-    margin: 5,
-    padding: 2,
-  },
-
   scrollBoxContainer: {
     // display: "flex",
     // flexDirection: "row",
@@ -100,45 +98,11 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
 
-  tabActive: {
-    backgroundColor: "yellow",
-  },
-
-  scrollBox: {
-    height: 24,
-    backgroundColor: "#1faadb",
+  fieldContainer: {
+    display: "flex",
+    flexDirection: "row",
     margin: 5,
-  },
-
-  input: {
-    borderWidth: 1,
-    width: 300,
-    height: 35,
-    marginTop: 2,
-    marginBottom: 10,
-    padding: 5,
-    borderRadius: 8,
-    minWidth: 80,
-  },
-
-  submitButton: {
-    marginTop: 10,
-    backgroundColor: "#B76E79",
-    padding: 12,
-    borderRadius: 8,
-    width: "30%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    alignContent: "space-around",
-  },
-
-  submitText: {
-    color: "white",
-    justifyContent: "center",
-  },
-
-  opacity: {
-    margin: 20,
+    padding: 2,
   },
 
   fieldName: {
@@ -146,6 +110,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
+
   container: {
     flex: 1,
     paddingTop: 22,
@@ -156,11 +121,20 @@ const styles = StyleSheet.create({
 
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     marginTop: 10,
     // margin: 10,
     padding: 15,
+  },
+
+  buttonsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    // backgroundColor: "pink",
   },
 
   button: {
@@ -173,14 +147,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignContent: "space-around",
   },
+
   buttonClose: {
     backgroundColor: "#B76E79",
   },
+
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
+
   modalText: {
     marginBottom: 15,
     textAlign: "center",
