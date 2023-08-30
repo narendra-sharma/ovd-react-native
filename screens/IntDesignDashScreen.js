@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import RightDrawer from "../components/AdminDashboard/RightDrawer/RightDrawer";
-import { View } from "react-native";
+import { View, Text } from "react-native";
+import RightDrawer from "../components/IntDesignDashboard/RightDrawer/RightDrawer";
 
 const IntDesignDashScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Text>Interior Designer Dashboard</Text>
-    </View>
-  );
+  return <RightDrawer navigation={navigation} />;
 };
 
 export default IntDesignDashScreen;

@@ -87,7 +87,9 @@ const RightDrawer = ({ navigation }) => {
                   <Icon name="user-circle-o" size={35} />
                   <View>
                     <Text style={styles.textStyle}>{userData?.name}</Text>
-                    <Text style={styles.textStyle}>{userData?.email}</Text>
+                    <Text style={{ fontSize: 12, marginLeft: 5 }}>
+                      {userData?.email}
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -185,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     marginTop: 40,
-    width: "90%",
+    maxWidth: "90%",
   },
 
   textStyle: {

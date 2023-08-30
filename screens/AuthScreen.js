@@ -13,7 +13,6 @@ import { apiAuth } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-//
 const initialValues = {
   email: "",
   password: "",
@@ -83,6 +82,41 @@ const AuthScreen = ({ navigation }) => {
     }
   };
 
+  //handle user type dashboard screen
+  const handleUserType = (userCode) => {
+    console.log(userCode);
+    switch (userCode) {
+      case 1:
+        //userCode: 1 => admin
+        navigation.navigate("Admin Dashboard");
+        ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+        return;
+      case 2:
+        //userCode: 2 => admin
+        navigation.navigate("Admin Dashboard");
+        ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+        return;
+      case 3:
+        //userCode: 3 => Consultant Manager / Sales Manager
+        navigation.navigate("Sales Manager Dashboard");
+        return;
+      case 4:
+        //userCode: 4 => Consultant / Interior Designer
+        navigation.navigate("Interior Designer Dashboard");
+        // setToken(JSON.stringify(res.data.token));
+        // setProfile(JSON.stringify(res.data.users));
+        return;
+
+      case 18:
+        navigation.navigate("Supplier Staff Dashboard");
+        return;
+
+      default:
+        console.log("a differnt user");
+        return;
+    }
+  };
+
   //handle form submit
   const handleSubmit = async () => {
     if (formData.password.length > 0 && validateEmail(formData.email)) {
@@ -91,8 +125,13 @@ const AuthScreen = ({ navigation }) => {
         const res = await apiAuth(formData);
         console.log(res.data);
         if (res.status == 200) {
-          navigation.navigate("Dashboard");
-          ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+          // handleUserType(16);
+          handleUserType(
+            res.data.users.user_type,
+            res.data.token,
+            res.data.users
+          );
+          // navigation.navigate("Dashboard");
           setToken(JSON.stringify(res.data.token));
           setProfile(JSON.stringify(res.data.users));
         }

@@ -8,6 +8,10 @@ import AuthScreen from "./screens/AuthScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import OtpInputScreen from "./screens/OtpInputScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
+import IntDesignDashScreen from "./screens/IntDesignDashScreen";
+import SupplierStaffScreen from "./screens/SupplierStaffScreen";
+import SalesManagerScreen from "./screens/SalesManagerScreen";
+import CustomerScreen from "./screens/CustomerScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,8 +42,44 @@ export default function App() {
         />
         {/* Admin Stack */}
         <Stack.Screen
-          name="Dashboard"
+          name="Admin Dashboard"
           component={DashboardScreen}
+          options={({ navigation }) => ({
+            title: "Dashboard",
+            headerShown: false,
+          })}
+        />
+        {/* Interior Designer Stack */}
+        <Stack.Screen
+          name="Interior Designer Dashboard"
+          component={IntDesignDashScreen}
+          options={({ navigation }) => ({
+            title: "Dashboard",
+            headerShown: false,
+          })}
+        />
+        {/* Sales Manager Stack */}
+        <Stack.Screen
+          name="Sales Manager Dashboard"
+          component={SalesManagerScreen}
+          options={({ navigation }) => ({
+            title: "Dashboard",
+            headerShown: false,
+          })}
+        />
+        {/* Supplier Staff Stack */}
+        <Stack.Screen
+          name="Supplier Staff Dashboard"
+          component={SupplierStaffScreen}
+          options={({ navigation }) => ({
+            title: "Dashboard",
+            headerShown: false,
+          })}
+        />
+        {/* Customer Stack */}
+        <Stack.Screen
+          name="Customer Dashboard"
+          component={CustomerScreen}
           options={({ navigation }) => ({
             title: "Dashboard",
             headerShown: false,
