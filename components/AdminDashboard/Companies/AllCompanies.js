@@ -103,7 +103,7 @@ const AllCompanies = ({ navigation }) => {
           <>
             <Pressable style={styles.listItem}>
               <Pressable
-                style={{ width: "78%" }}
+                style={{ width: "76%" }}
                 onPress={() => {
                   navigation.navigate("Company Details", { id: item.id });
                   // navigation.setOptions({ title: "Updated!" });
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "pink",
     padding: 2,
     marginHorizontal: 8,
-    width: "18%",
+    width: "20%",
     justifyContent: "space-between",
   },
 

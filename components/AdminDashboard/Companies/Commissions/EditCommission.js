@@ -102,15 +102,6 @@ const EditCommission = ({ navigation }) => {
 export default EditCommission;
 
 const styles = StyleSheet.create({
-  dropdown: {
-    height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    width: "90%",
-    marginBottom: 5,
-  },
   icon: {
     marginRight: 5,
   },

@@ -19,10 +19,10 @@ import AddCompany from "./AddCompany";
 import ViewCommissions from "./Commissions/ViewCommissions";
 import CommissionDetail from "./Commissions/CommissionDetail";
 import EditCommission from "./Commissions/EditCommission";
-import ViewUsers from "./User/ViewUsers";
-import UserDetail from "./User/UserDetails";
-import EditUser from "./User/EditUser";
-import AddUser from "./User/AddUser";
+import ViewUsers from "./Users/ViewUsers";
+import UserDetail from "./Users/UserDetails";
+import EditUser from "./Users/EditUser";
+import AddUser from "./Users/AddUser";
 
 const Stack = createNativeStackNavigator();
 

@@ -21,12 +21,31 @@ const UsersList = ({ navigation }) => {
               }}
               style={styles.listItem}
             >
-              <View>
+              {/* <View>
                 <Text style={styles.item}>{item.name}</Text>
                 <Text style={styles.subText}>Email/Username: {item.email}</Text>
               </View>
 
-              <Icon name="angle-right" size={28} />
+              <Icon name="angle-right" size={28} /> */}
+              <View>
+                <Text style={styles.item}>{item.name}</Text>
+                <Text style={styles.subText}>Email: {item.email}</Text>
+              </View>
+
+              <View style={styles.iconsContainer}>
+                <Icon
+                  onPress={() => navigation.navigate("Edit User", item)}
+                  name="pen"
+                  size={22}
+                  // color="blue"
+                />
+                <Icon
+                  // onPress={() => handleDelete(item.name, item.id)}
+                  name="trash-alt"
+                  size={22}
+                  color="red"
+                />
+              </View>
             </Pressable>
           </>
         )}
@@ -40,17 +59,18 @@ export default UsersList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    // paddingTop: 22,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    height: "100%",
+    // backgroundColor: "pink",
   },
 
   listItem: {
     backgroundColor: "#fff",
     margin: 2,
-    width: "92%",
+    minWidth: "98%",
+    maxWidth: "98%",
     display: "flex",
     flexDirection: "row",
     borderWidth: 1,
@@ -61,8 +81,17 @@ const styles = StyleSheet.create({
   },
 
   item: {
-    padding: 4,
     fontSize: 16,
+  },
+
+  iconsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    // backgroundColor: "pink",
+    padding: 2,
+    marginHorizontal: 8,
+    width: "20%",
+    justifyContent: "space-between",
   },
 
   subText: {

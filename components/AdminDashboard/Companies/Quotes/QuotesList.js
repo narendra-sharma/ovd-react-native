@@ -19,7 +19,20 @@ const QuotesList = ({ navigation }) => {
             style={styles.listItem}
           >
             <Text style={styles.item}>{item.customerName}</Text>
-            <Icon name="angle-right" size={28} />
+            <View style={styles.iconsContainer}>
+              <Icon
+                onPress={() => navigation.navigate("Edit Quote", item)}
+                name="pen"
+                size={22}
+                // color="blue"
+              />
+              <Icon
+                // onPress={() => handleDelete(item.name, item.id)}
+                name="trash-alt"
+                size={22}
+                color="red"
+              />
+            </View>
           </Pressable>
         )}
       />
@@ -50,19 +63,30 @@ const styles = StyleSheet.create({
   listItem: {
     backgroundColor: "#fff",
     margin: 2,
-    width: "83.5%",
+    minWidth: "98%",
+    maxWidth: "98%",
     display: "flex",
     flexDirection: "row",
     borderWidth: 1,
     borderColor: "#d9d9d9",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 10,
   },
 
   item: {
     padding: 10,
     fontSize: 16,
+    // maxW,
+  },
+
+  iconsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    // backgroundColor: "pink",
+    padding: 2,
+    marginHorizontal: 8,
+    width: "20%",
+    justifyContent: "space-between",
   },
 
   addButton: {

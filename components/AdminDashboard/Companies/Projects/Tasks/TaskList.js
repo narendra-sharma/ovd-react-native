@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
-// import { mockProjects } from "./MockProjects";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 const TasksList = ({ navigation, tasks = [] }) => {
   const [taskList, setTasksList] = useState([...tasks]);
@@ -39,16 +39,45 @@ const TasksList = ({ navigation, tasks = [] }) => {
               ]) ||
               (item.status == "in progress" && [
                 styles.listItem,
-                { backgroundColor: "yellow" },
+                { backgroundColor: "lightblue" },
               ]) ||
               (item.status == "to do" && [
                 styles.listItem,
-                { backgroundColor: "red" },
+                { backgroundColor: "orange" },
               ])
             }
           >
-            <Text style={styles.item}>Name: {item.taskName}</Text>
-            <Text style={styles.subText}>Status: {item.status}</Text>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Icon
+                style={{ marginRight: 8 }}
+                name="clipboard-list"
+                size={30}
+              />
+              <View>
+                <Text style={styles.item}>Name: {item.taskName}</Text>
+                <Text style={styles.subText}>Status: {item.status}</Text>
+              </View>
+            </View>
+            <View style={styles.iconsContainer}>
+              <Icon
+                onPress={() => navigation.navigate("Edit Task", item)}
+                name="pen"
+                size={22}
+                // color="blue"
+              />
+              <Icon
+                // onPress={() => handleDelete(item.name, item.id)}
+                name="trash-alt"
+                size={22}
+                color="red"
+              />
+            </View>
           </Pressable>
         )}
       />
@@ -82,19 +111,30 @@ const styles = StyleSheet.create({
   listItem: {
     backgroundColor: "#fff",
     margin: 2,
-    width: 300,
+    minWidth: "98%",
+    maxWidth: "98%",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
     borderWidth: 1,
     borderColor: "#d9d9d9",
-    justifyContent: "space-around",
-    alignItems: "flex-start",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 10,
   },
 
   item: {
-    padding: 4,
     fontSize: 16,
+    // maxW,
+  },
+
+  iconsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    // backgroundColor: "pink",
+    padding: 2,
+    marginHorizontal: 8,
+    width: "20%",
+    justifyContent: "space-between",
   },
 
   subText: {

@@ -19,6 +19,15 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* Admin Stack */}
+        <Stack.Screen
+          name="Admin Dashboard"
+          component={DashboardScreen}
+          options={({ navigation }) => ({
+            title: "Dashboard",
+            headerShown: false,
+          })}
+        />
         {/* Common Screens */}
         <Stack.Screen
           name="Login"
@@ -39,15 +48,6 @@ export default function App() {
           name="Reset Password"
           component={ResetPasswordScreen}
           options={{ headerShown: false }}
-        />
-        {/* Admin Stack */}
-        <Stack.Screen
-          name="Admin Dashboard"
-          component={DashboardScreen}
-          options={({ navigation }) => ({
-            title: "Dashboard",
-            headerShown: false,
-          })}
         />
         {/* Interior Designer Stack */}
         <Stack.Screen

@@ -11,47 +11,57 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { Dropdown } from "react-native-element-dropdown";
+
+const DropdownMenu = ({ navigation }) => {
+  const [value, setValue] = useState(null);
+
+  const data = [
+    { label: "To Do", value: "To Do" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
+  ];
+  return (
+    <Dropdown
+      style={styles.dropdown}
+      placeholder="Select Status"
+      placeholderStyle={styles.placeholderStyle}
+      selectedTextStyle={styles.selectedTextStyle}
+      iconStyle={styles.iconStyle}
+      data={data}
+      maxHeight={300}
+      labelField="label"
+      valueField="value"
+      containerStyle={styles.listStyle}
+      dropdownPosition="bottom"
+      value={value}
+      onChange={(item) => {
+        setValue(item.value);
+      }}
+    />
+  );
+};
 
 const EditTask = () => {
   const [taskData, setTaskData] = useState({});
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [endDate, setEndDate] = useState();
+  const [isEndDatePickerVisible, setEndDateVisibility] = useState(false);
 
-  const [show, setShow] = useState(false);
-  const [selectedDate, setSelectedDate] = useState();
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [mode, setMode] = useState(null);
+  const [startDate, setStartDate] = useState();
+  const [isStartDatePickerVisible, setStartDateVisibility] = useState(false);
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
+  const showStartDatePicker = () => {
+    setStartDateVisibility(true);
   };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+  const hideStartDatePicker = () => {
+    setStartDateVisibility(false);
   };
 
-  const handleConfirm = (date) => {
-    setSelectedDate(date);
-    hideDatePicker();
-  };
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode("date");
-  };
-
-  const showTimepicker = () => {
-    showMode("time");
+  const handleStartDateConfirm = (date) => {
+    setStartDate(date);
+    hideStartDatePicker();
   };
 
   const handleSubmit = async () => {
@@ -59,6 +69,19 @@ const EditTask = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const showEndDatePicker = () => {
+    setEndDateVisibility(true);
+  };
+
+  const hideEndDatePicker = () => {
+    setEndDateVisibility(false);
+  };
+
+  const handleEndDateConfirm = (date) => {
+    setEndDate(date);
+    hideEndDatePicker();
   };
 
   return (
@@ -80,15 +103,16 @@ const EditTask = () => {
             placeholder="Task Name"
           />
           <Text>Status:</Text>
-          <TextInput
+          <DropdownMenu />
+          {/* <TextInput
             style={styles.input}
             name="organization"
             value={taskData.totalCommission}
             onChangeText={(text) =>
               setTaskData({ ...taskData, totalCommission: text })
             }
-            placeholder="Total Commission"
-          />
+            placeholder="Status"
+          /> */}
           <Text>Tag:</Text>
           <TextInput
             style={styles.input}
@@ -117,38 +141,76 @@ const EditTask = () => {
             }
             placeholder="Task Cost"
           />
-          <Text>{`Start Date:  ${
-            selectedDate
-              ? moment(selectedDate).format("MM/DD/YYYY")
-              : "Please select date"
-          }`}</Text>
-          <Button title="Show Date Picker" onPress={showDatePicker} />
           <DateTimePickerModal
-            isVisible={isDatePickerVisible}
+            isVisible={isStartDatePickerVisible}
             mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
+            onConfirm={handleStartDateConfirm}
+            onCancel={hideStartDatePicker}
           />
+          <Text>Start Date:</Text>
           <Pressable
-            onPress={() => showDatepicker()}
-            style={styles.input}
+            onPress={() => {
+              showStartDatePicker();
+              setTaskData({ ...taskData, startDate: startDate });
+            }}
+            style={[
+              styles.input,
+              {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                color: "#d9d9d9",
+              },
+            ]}
             name="startDate"
             value={taskData.startDate}
-            // onChangeText={(text) =>
-            //   setTaskData({ ...taskData, startDate: text })
-            // }
-            // placeholder="Start Date"
-          />
+          >
+            <Icon name="calendar-alt" size={25} color="#A9A9AC" />
+
+            {startDate ? (
+              <Text style={{ color: "#000", marginLeft: 10 }}>
+                {moment(startDate).format("MM/DD/YYYY")}
+              </Text>
+            ) : (
+              <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>
+                Start Date
+              </Text>
+            )}
+          </Pressable>
 
           <Text>Date of Completion:</Text>
-          <TextInput
-            style={styles.input}
-            name="dateOfCompletion"
-            value={taskData.dateOfCompletion}
-            onChangeText={(text) =>
-              setTaskData({ ...taskData, dateOfCompletion: text })
-            }
-            placeholder="Enter Date"
+          <Pressable
+            onPress={() => {
+              showEndDatePicker();
+              setTaskData({ ...taskData, endDate: endDate });
+            }}
+            style={[
+              styles.input,
+              {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                color: "#d9d9d9",
+              },
+            ]}
+            name="startDate"
+            value={taskData.endDate}
+          >
+            <Icon name="calendar-alt" size={25} color="#A9A9AC" />
+
+            {endDate ? (
+              <Text style={{ color: "#000", marginLeft: 10 }}>
+                {moment(endDate).format("MM/DD/YYYY")}
+              </Text>
+            ) : (
+              <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>End Date</Text>
+            )}
+          </Pressable>
+          <DateTimePickerModal
+            isVisible={isEndDatePickerVisible}
+            mode="date"
+            onConfirm={handleEndDateConfirm}
+            onCancel={hideEndDatePicker}
           />
           <Text>Contractor:</Text>
           <TextInput
@@ -193,7 +255,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
-    width: "90%",
+    width: "100%",
     marginBottom: 5,
   },
   icon: {
@@ -210,6 +272,7 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    color: "#A9A9AC",
   },
   selectedTextStyle: {
     fontSize: 16,

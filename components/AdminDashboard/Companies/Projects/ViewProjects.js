@@ -47,7 +47,7 @@ const ViewProjects = ({ navigation }) => {
         </Text>
       </Pressable>
 
-      {/* Add new company form */}
+      {/* Add new project form */}
       <Modal
         animationType="slide"
         transparent={false}
@@ -115,50 +115,17 @@ const ViewProjects = ({ navigation }) => {
 
 export default ViewProjects;
 
-const placesStyle = StyleSheet.create({
-  textInputContainer: {
-    backgroundColor: "rgba(0,0,0,0)",
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
-  },
-  textInput: {
-    height: 45,
-    color: "#5d5d5d",
-    fontSize: 16,
-    borderWidth: 1,
-  },
-  predefinedPlacesDescription: {
-    color: "#1faadb",
-  },
-  listView: {
-    color: "black",
-    backgroundColor: "white",
-    maxWidth: "89%",
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "blue",
-  },
-  description: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    fontSize: 14,
-    maxWidth: "89%",
-  },
-});
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 22,
-    justifyContent: "center",
-    alignItems: "center",
     width: "100%",
     height: "100%",
+    padding: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -166,6 +133,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: "100%",
   },
+
   modalView: {
     margin: 10,
     backgroundColor: "white",
@@ -182,6 +150,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: "90%",
   },
+
   button: {
     margin: 10,
     backgroundColor: "#B76E79",
@@ -192,14 +161,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignContent: "space-around",
   },
+
   buttonClose: {
     backgroundColor: "#B76E79",
   },
+
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
+
   modalText: {
     marginBottom: 15,
     textAlign: "center",

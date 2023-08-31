@@ -18,7 +18,7 @@ import {
 } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
 import CommissionsList from "./Commissions/CommissionsList";
-import UsersList from "./User/UserList";
+import UsersList from "./Users/UserList";
 
 const initialCompanyData = {
   companyName: "",

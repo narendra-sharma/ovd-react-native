@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+} from "react-native";
 import {
   DrawerItemList,
   createDrawerNavigator,
@@ -20,17 +27,28 @@ const RightDrawer = ({ navigation }) => {
   // const [userData, setUserData] = useState({ name: "", email: "" });
   const [userData, setUserData] = useState({});
 
-  const handleLogout = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      const res = await apiLogout(JSON.parse(token));
-      console.log(res);
-      await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("profile");
-      navigation.navigate("Login");
-    } catch (err) {
-      console.log(err);
-    }
+  const handleLogout = () => {
+    const logout = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const res = await apiLogout(JSON.parse(token));
+        console.log(res);
+        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem("profile");
+        navigation.navigate("Login");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    Alert.alert(`Logout`, `Are you sure you want to logout?`, [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => logout() },
+    ]);
   };
 
   useFocusEffect(
@@ -82,7 +100,12 @@ const RightDrawer = ({ navigation }) => {
             }}
           >
             <View>
-              <View style={styles.detailsContainer}>
+              <Pressable
+                style={styles.detailsContainer}
+                onPress={() => {
+                  navigation.navigate("Profile");
+                }}
+              >
                 <View style={styles.innerContainer}>
                   <Icon name="user-circle-o" size={35} />
                   <View>
@@ -92,7 +115,7 @@ const RightDrawer = ({ navigation }) => {
                     </Text>
                   </View>
                 </View>
-              </View>
+              </Pressable>
               <DrawerItemList {...props} />
             </View>
 
@@ -104,10 +127,6 @@ const RightDrawer = ({ navigation }) => {
                 marginBottom: 50,
               }}
             >
-              {/* <Pressable style={styles.settingsButton}>
-                <MaterialIcons name="settings" size={20} color="#B76E79" />
-                <Text style={{ color: "#B76E79" }}>Settings</Text>
-              </Pressable> */}
               <Pressable style={styles.logoutButton} onPress={handleLogout}>
                 <Icon name="sign-out" size={28} />
                 <Text>Logout</Text>
