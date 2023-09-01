@@ -8,6 +8,7 @@ export const apiGetAllCompanies = async () => {
 };
 
 export const apiCreateNewCompany = async (formData) => {
+  // console.log("at api: ", formData);
   const response = await request({
     method: "post",
     path: "auth/create-company",
@@ -36,6 +37,13 @@ export const apiUpdateCompanyDetails = async (formData, id) => {
     method: "post",
     path: `auth/update-company/${id}`,
     body: formData,
+  });
+  return response;
+};
+
+export const apiGetAllUsers = async () => {
+  const response = await request({
+    path: "auth/get-all-users",
   });
   return response;
 };

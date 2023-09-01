@@ -11,6 +11,24 @@ const UserDetail = ({ navigation, route }) => {
     });
   }, []);
 
+  const renderUserTypes = () => {
+    switch (userData.user_type) {
+      case 1:
+        return <Text>Super Admin</Text>;
+      case 2:
+        return <Text>Admin</Text>;
+      case 3:
+        return <Text>Consultant Manager </Text>;
+      case 4:
+        return <Text>Consultant </Text>;
+
+      case 5:
+        return <Text>Contractor </Text>;
+      default:
+        return <Text>User </Text>;
+    }
+  };
+
   return (
     <View style={styles.centeredView}>
       <View>
@@ -21,7 +39,11 @@ const UserDetail = ({ navigation, route }) => {
         </View>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Role: </Text>
-          <Text>{userData.role} </Text>
+          {renderUserTypes()}
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Organization: </Text>
+          <Text>{userData.org} </Text>
         </View>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Email: </Text>
@@ -29,11 +51,27 @@ const UserDetail = ({ navigation, route }) => {
         </View>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Phone Number: </Text>
-          <Text>{userData.phoneNo} </Text>
+          <Text>{userData.phone_number} </Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Username: </Text>
-          <Text>{userData.username} </Text>
+          <Text style={styles.fieldName}>Address: </Text>
+          <Text> {userData.address} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>State/UT: </Text>
+          <Text> {userData.state} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Country: </Text>
+          <Text> {userData.country} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Zip Code: </Text>
+          <Text> {userData.zip_code} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Created By: </Text>
+          {renderUserTypes()}
         </View>
       </View>
 

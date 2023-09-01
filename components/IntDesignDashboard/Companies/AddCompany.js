@@ -20,6 +20,9 @@ const initialFormData = {
 
 const AddCompany = ({ navigation }) => {
   const [newCompanyData, setNewCompanyData] = useState(initialFormData);
+  const [nameError, setNameError] = useState(null);
+  const [addressError, setAddressError] = useState(null);
+  const [responseError, setResponseError] = useState(null);
 
   const handleNewCompanySubmit = async () => {
     try {
@@ -42,7 +45,7 @@ const AddCompany = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={styles.mainContainer}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -201,11 +204,13 @@ const placesStyle = StyleSheet.create({
     // backgroundColor: "rgba(0,0,0,0)",
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
+    // maxWidth: "100%",
+    // minWidth: "90%",
     borderColor: "gray",
+    width: "100%",
   },
   textInput: {
+    backgroundColor: "transparent",
     height: 45,
     color: "#5d5d5d",
     fontSize: 16,
@@ -218,7 +223,7 @@ const placesStyle = StyleSheet.create({
   listView: {
     color: "black",
     borderColor: "gray",
-    maxWidth: "89%",
+    maxWidth: "100%",
   },
   separator: {
     flex: 1,
@@ -234,41 +239,10 @@ const placesStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  dropdown: {
-    height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    width: "90%",
-    marginBottom: 5,
+  mainContainer: {
+    padding: 22,
   },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    position: "absolute",
-    backgroundColor: "white",
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
+
   formContainer: {
     display: "flex",
     flexDirection: "column",
@@ -279,16 +253,21 @@ const styles = StyleSheet.create({
   fieldContainer: {
     display: "flex",
     flexDirection: "row",
-    marginTop: 5,
     marginBottom: 5,
     // padding: 2,
   },
 
+  fieldName: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+  },
+
   input: {
-    width: 300,
+    width: "100%",
     height: 35,
     marginTop: 2,
-    marginBottom: 10,
+    // marginBottom: 10,
     padding: 5,
     borderRadius: 8,
     minWidth: 80,
@@ -316,12 +295,6 @@ const styles = StyleSheet.create({
 
   opacity: {
     margin: 20,
-  },
-
-  fieldName: {
-    fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
   },
 
   errorText: {

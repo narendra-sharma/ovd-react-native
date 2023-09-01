@@ -114,7 +114,10 @@ const AllCompanies = ({ navigation }) => {
               <View style={styles.iconsContainer}>
                 <Icon
                   onPress={() =>
-                    navigation.navigate("Edit Company Details", item)
+                    navigation.navigate("Edit Company Details", {
+                      company: item,
+                      id: item.id,
+                    })
                   }
                   name="pen"
                   size={22}

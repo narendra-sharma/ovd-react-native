@@ -14,7 +14,7 @@ import moment from "moment";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { Dropdown } from "react-native-element-dropdown";
 
-const DropdownMenu = ({ navigation }) => {
+const DropdownMenu = () => {
   const [value, setValue] = useState(null);
 
   const data = [

@@ -4,11 +4,12 @@
     "slug": "NewNativeApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/newIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/new.jpg",
-      "resizeMode": "cover"
+      "image": "./assets/bigger.png",
+      "resizeMode": "native",
+      "backgroundColor": "#ADD8E6"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {

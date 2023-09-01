@@ -10,56 +10,146 @@ import {
   ToastAndroid,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { apiCreateNewCompany } from "../../../apis/companies";
+import { apiCreateNewCompany, apiGetAllUsers } from "../../../apis/companies";
+import { Dropdown } from "react-native-element-dropdown";
+import { Country, State, City } from "country-state-city";
 
 const initialFormData = {
   companyName: "",
   email: "",
   phoneNo: "",
+  address: "",
+  contractor: [],
+  consultant: [],
+  consultantManager: [],
+  vat_number: "",
 };
 
 const AddCompany = ({ navigation }) => {
   const [newCompanyData, setNewCompanyData] = useState(initialFormData);
+  const [nameError, setNameError] = useState(null);
+  const [addressError, setAddressError] = useState(null);
+  const [contractorsList, setContractorsList] = useState([]);
+  const [consultantList, setConsultantList] = useState([]);
+  const [consultantManagerList, setConsultantManagerList] = useState([]);
+
+  const [responseError, setResponseError] = useState(null);
+
+  useEffect(() => {
+    const getAllUsers = async () => {
+      const res = await apiGetAllUsers();
+      // console.log(res.data.data);
+      const contractors = res.data.data.filter((user) => user.user_type == 5);
+      const consultants = res.data.data.filter((user) => user.user_type == 4);
+      const consultantManager = res.data.data.filter(
+        (user) => user.user_type == 3
+      );
+
+      const tempContractors = contractors.map((contractor) => {
+        return { label: contractor.name, value: contractor.id };
+      });
+
+      const tempConsultants = consultants.map((consultant) => {
+        return { label: consultant.name, value: consultant.id };
+      });
+
+      const tempConsultantManager = consultantManager.map((manager) => {
+        return { label: manager.name, value: manager.id };
+      });
+
+      setContractorsList([...tempContractors]);
+      setConsultantList([...tempConsultants]);
+      setConsultantManagerList([...tempConsultantManager]);
+    };
+    getAllUsers();
+  }, []);
+
+  const validateCompanyName = (name) => {
+    if (name == "") {
+      setNameError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateAddress = (address) => {
+    if (address == "") {
+      setAddressError("Required*");
+      return false;
+    }
+    return true;
+  };
 
   const handleNewCompanySubmit = async () => {
-    try {
-      const res = await apiCreateNewCompany({
-        name: newCompanyData.companyName,
-        address: newCompanyData.address,
-        status: 1,
-      });
-      console.log("response: ");
-      console.log(res);
-      if (res.data.success == true) {
-        ToastAndroid.show("New Company Added", ToastAndroid.SHORT);
-        navigation.goBack();
+    if (
+      validateCompanyName(newCompanyData.companyName) &&
+      validateAddress(newCompanyData.address)
+    ) {
+      try {
+        const res = await apiCreateNewCompany({
+          ...newCompanyData,
+          name: newCompanyData.companyName,
+          address: newCompanyData.address,
+          status: 1,
+          vat_number: newCompanyData.vatNumber,
+          consultant_manager: newCompanyData.consultantManager,
+        });
+        console.log("response: ");
+        console.log(res);
+        if (res.data.success == true) {
+          ToastAndroid.show("New Company Added", ToastAndroid.SHORT);
+          navigation.goBack();
+        } else {
+          ToastAndroid.show("Cannot Add New Company", ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        ToastAndroid.show("Cannot Add New Company", ToastAndroid.SHORT);
+        console.log(error);
       }
-    } catch (error) {
-      ToastAndroid.show("Cannot Add New Company", ToastAndroid.SHORT);
-      console.log(error);
+      // setNewCompanyData(initialFormData);
     }
-    setNewCompanyData(initialFormData);
+    if (!validateCompanyName(newCompanyData.companyName)) {
+      console.log(nameError);
+    }
+    if (!validateAddress(newCompanyData.address)) {
+      console.log(addressError);
+    }
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={styles.mainContainer}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text>Name:</Text>
+          <Text style={styles.fieldName}>Name:</Text>
           <TextInput
             style={styles.input}
             name="name"
             value={newCompanyData.companyName}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, companyName: text })
-            }
+            onChangeText={(text) => {
+              setNewCompanyData({ ...newCompanyData, companyName: text });
+              setNameError(null);
+            }}
             placeholder="Name"
           />
-          <Text>Email:</Text>
+          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+
+          <Text style={styles.fieldName}>VAT Number:</Text>
+          <TextInput
+            style={styles.input}
+            name="vat"
+            value={newCompanyData.vatNumber}
+            onChangeText={(text) => {
+              setNewCompanyData({ ...newCompanyData, vatNumber: text });
+              setNameError(null);
+            }}
+            placeholder="vat"
+          />
+
+          <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
             name="email"
@@ -69,7 +159,7 @@ const AddCompany = ({ navigation }) => {
               setNewCompanyData({ ...newCompanyData, email: text })
             }
           />
-          <Text>Phone Number:</Text>
+          <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="phonenumber"
@@ -79,6 +169,36 @@ const AddCompany = ({ navigation }) => {
               setNewCompanyData({ ...newCompanyData, phone_number: text })
             }
           />
+
+          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          <DropdownMenu
+            data={consultantManagerList}
+            placeholder="Select Consultant Manager"
+            value={newCompanyData.consultantManager}
+            setValue={setNewCompanyData}
+            label="consultantManager"
+            originalObj={newCompanyData}
+          />
+          <Text style={styles.fieldName}>Assign Consultant:</Text>
+          <DropdownMenu
+            data={consultantList}
+            placeholder="Select Consultant"
+            value={newCompanyData.consultant}
+            setValue={setNewCompanyData}
+            label="consultant"
+            originalObj={newCompanyData}
+          />
+
+          <Text style={styles.fieldName}>Assign Contractor:</Text>
+          <DropdownMenu
+            data={contractorsList}
+            placeholder="Select Contractor"
+            value={newCompanyData.contractor}
+            setValue={setNewCompanyData}
+            label="contractor"
+            originalObj={newCompanyData}
+          />
+
           <Text>Address:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
@@ -90,6 +210,7 @@ const AddCompany = ({ navigation }) => {
               value: newCompanyData.address,
               onChangeText: (text) => {
                 setNewCompanyData({ ...newCompanyData, address: text });
+                setAddressError(null);
               },
             }}
             onPress={(data, details = null) => {
@@ -148,16 +269,14 @@ const AddCompany = ({ navigation }) => {
 
               setNewCompanyData({
                 ...newCompanyData,
-                lat: details.geometry.location.lat,
-                long: details.geometry.location.lng,
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
                 address: details.formatted_address,
                 state: stateName,
-                zip_code: areaZip,
+                zipcode: areaZip,
                 country_code: countryCode,
                 country: countryName,
               });
-
-              //   console.log(newCompanyData);
             }}
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
@@ -166,6 +285,72 @@ const AddCompany = ({ navigation }) => {
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
             styles={placesStyle}
+          />
+          {addressError ? (
+            <Text style={styles.errorText}>{addressError}</Text>
+          ) : null}
+
+          <Text>Country: </Text>
+          <Dropdown
+            style={[styles.dropdown]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={Country.getAllCountries().map((country) => {
+              return {
+                label: country.name,
+                value: country.isoCode,
+              };
+            })}
+            search
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Country"
+            searchPlaceholder="Search..."
+            value={newCompanyData.country_code}
+            onChange={(item) => {
+              setNewCompanyData({
+                ...newCompanyData,
+                country_code: item.value,
+                country: item.label,
+                state: null,
+              });
+            }}
+          />
+          <Text>State/UT: </Text>
+          <Dropdown
+            style={[styles.dropdown]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={State.getStatesOfCountry(newCompanyData.country_code).map(
+              (state) => {
+                return { label: state.name, value: state.name };
+              }
+            )}
+            search
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select State/UT"
+            searchPlaceholder="Search..."
+            value={newCompanyData.state}
+            onChange={(item) => {
+              setNewCompanyData({ ...newCompanyData, state: item.label });
+            }}
+          />
+
+          <Text>Zip Code: </Text>
+          <TextInput
+            style={styles.input}
+            name="zipcode"
+            value={newCompanyData.zipcode}
+            onChangeText={(text) =>
+              setNewCompanyData({ ...newCompanyData, zipcode: text })
+            }
           />
         </View>
 
@@ -196,16 +381,47 @@ const AddCompany = ({ navigation }) => {
 
 export default AddCompany;
 
+const DropdownMenu = ({
+  data,
+  placeholder,
+  value,
+  setValue,
+  label,
+  originalObj,
+}) => {
+  return (
+    <Dropdown
+      style={styles.dropdown}
+      placeholder={placeholder}
+      placeholderStyle={styles.placeholderStyle}
+      selectedTextStyle={styles.selectedTextStyle}
+      iconStyle={styles.iconStyle}
+      data={data}
+      maxHeight={300}
+      labelField="label"
+      valueField="value"
+      containerStyle={styles.listStyle}
+      dropdownPosition="bottom"
+      value={value}
+      onChange={(item) => {
+        setValue({ ...originalObj, [label]: item.value });
+      }}
+    />
+  );
+};
+
 const placesStyle = StyleSheet.create({
   textInputContainer: {
     // backgroundColor: "rgba(0,0,0,0)",
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
+    // maxWidth: "100%",
+    // minWidth: "90%",
     borderColor: "gray",
+    width: "100%",
   },
   textInput: {
+    backgroundColor: "transparent",
     height: 45,
     color: "#5d5d5d",
     fontSize: 16,
@@ -218,7 +434,7 @@ const placesStyle = StyleSheet.create({
   listView: {
     color: "black",
     borderColor: "gray",
-    maxWidth: "89%",
+    maxWidth: "100%",
   },
   separator: {
     flex: 1,
@@ -234,41 +450,10 @@ const placesStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  dropdown: {
-    height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    width: "90%",
-    marginBottom: 5,
+  mainContainer: {
+    padding: 22,
   },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    position: "absolute",
-    backgroundColor: "white",
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
+
   formContainer: {
     display: "flex",
     flexDirection: "column",
@@ -279,16 +464,21 @@ const styles = StyleSheet.create({
   fieldContainer: {
     display: "flex",
     flexDirection: "row",
-    marginTop: 5,
     marginBottom: 5,
     // padding: 2,
   },
 
+  fieldName: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+  },
+
   input: {
-    width: 300,
+    width: "100%",
     height: 35,
     marginTop: 2,
-    marginBottom: 10,
+    // marginBottom: 10,
     padding: 5,
     borderRadius: 8,
     minWidth: 80,
@@ -318,14 +508,18 @@ const styles = StyleSheet.create({
     margin: 20,
   },
 
-  fieldName: {
-    fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
-  },
-
   errorText: {
     color: "red",
     fontSize: 10,
+  },
+
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    width: "100%",
+    marginBottom: 5,
   },
 });

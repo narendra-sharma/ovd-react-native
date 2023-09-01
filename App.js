@@ -12,10 +12,59 @@ import IntDesignDashScreen from "./screens/IntDesignDashScreen";
 import SupplierStaffScreen from "./screens/SupplierStaffScreen";
 import SalesManagerScreen from "./screens/SalesManagerScreen";
 import CustomerScreen from "./screens/CustomerScreen";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [userType, setUserType] = useState(null);
+
+  useEffect(() => {
+    const checkUserExists = async () => {
+      const profile = await AsyncStorage.getItem("profile");
+      console.log(profile);
+      const parsedProfile = JSON.parse(profile);
+
+      if (parsedProfile.user_type) {
+        setUserType(parsedProfile.user_type); // Set the user type in the state
+      }
+
+      switch (userType) {
+        case 1:
+          //userCode: 1 => admin
+          navigation.navigate("Admin Dashboard");
+          ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+          return;
+        case 2:
+          //userCode: 2 => admin
+          navigation.navigate("Admin Dashboard");
+          ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+          return;
+        case 3:
+          //userCode: 3 => Consultant Manager / Sales Manager
+          navigation.navigate("Sales Manager Dashboard");
+          return;
+        case 4:
+          //userCode: 4 => Consultant / Interior Designer
+          navigation.navigate("Interior Designer Dashboard");
+          // setToken(JSON.stringify(res.data.token));
+          // setProfile(JSON.stringify(res.data.users));
+          return;
+
+        case 18:
+          navigation.navigate("Supplier Staff Dashboard");
+          return;
+
+        default:
+          console.log("a differnt user");
+          return;
+      }
+    };
+
+    checkUserExists();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

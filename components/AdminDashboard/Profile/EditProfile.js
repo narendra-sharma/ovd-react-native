@@ -118,7 +118,7 @@ const EditProfile = ({ navigation }) => {
   // };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={styles.centeredView}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -266,11 +266,9 @@ const EditProfile = ({ navigation }) => {
             maxHeight={300}
             labelField="label"
             valueField="value"
-            placeholder={!isFocus ? "Select Country" : "..."}
+            placeholder="Select Country"
             searchPlaceholder="Search..."
             value={userData.country_code}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
             onChange={(item) => {
               setUserData({
                 ...userData,
@@ -278,7 +276,6 @@ const EditProfile = ({ navigation }) => {
                 country: item.label,
                 state: null,
               });
-              setIsFocus(false);
             }}
           />
           {/* <TextInput
@@ -291,7 +288,7 @@ const EditProfile = ({ navigation }) => {
             /> */}
           <Text>State/UT: </Text>
           <Dropdown
-            style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+            style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
@@ -305,14 +302,11 @@ const EditProfile = ({ navigation }) => {
             maxHeight={300}
             labelField="label"
             valueField="value"
-            placeholder={!isFocus ? "Select State/UT" : "..."}
+            placeholder="Select State/UT"
             searchPlaceholder="Search..."
             value={userData.state}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
             onChange={(item) => {
               setUserData({ ...userData, state: item.label });
-              setIsFocus(false);
             }}
           />
           {/* <TextInput
@@ -361,11 +355,11 @@ const placesStyle = StyleSheet.create({
     // backgroundColor: "rgba(0,0,0,0)",
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
+    width: "100%",
     borderColor: "gray",
   },
   textInput: {
+    backgroundColor: "transparent",
     height: 45,
     color: "#5d5d5d",
     fontSize: 16,
@@ -378,7 +372,7 @@ const placesStyle = StyleSheet.create({
   listView: {
     color: "black",
     borderColor: "gray",
-    maxWidth: "89%",
+    maxWidth: "100%",
   },
   separator: {
     flex: 1,
@@ -394,13 +388,19 @@ const placesStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
+  centeredView: {
+    display: "flex",
+    padding: 22,
+    width: "100%",
+  },
+
   dropdown: {
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
-    width: "90%",
+    width: "100%",
     marginBottom: 5,
   },
   icon: {
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 300,
+    width: "100%",
     height: 35,
     marginTop: 2,
     marginBottom: 10,

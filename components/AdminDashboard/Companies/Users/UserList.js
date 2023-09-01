@@ -3,8 +3,8 @@ import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { mockUsers } from "./MockUsers";
 
-const UsersList = ({ navigation }) => {
-  const [usersList, setUsersList] = useState(mockUsers);
+const UsersList = ({ navigation, usersList }) => {
+  // const [usersList, setUsersList] = useState(mockUsers);
   useEffect(() => {}, [usersList]);
 
   return (

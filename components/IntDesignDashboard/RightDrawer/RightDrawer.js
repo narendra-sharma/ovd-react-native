@@ -72,7 +72,9 @@ const RightDrawer = ({ navigation }) => {
                   <Icon name="user-circle-o" size={35} />
                   <View>
                     <Text style={styles.textStyle}>{userData?.name}</Text>
-                    <Text style={styles.textStyle}>{userData?.email}</Text>
+                    <Text style={{ fontSize: 12, marginLeft: 5 }}>
+                      {userData?.email}
+                    </Text>
                   </View>
                 </View>
               </View>

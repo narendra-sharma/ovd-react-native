@@ -73,8 +73,24 @@ const CompanyInfo = ({ companyData, navigation }) => {
           <Text>{companyData?.phoneNo}</Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Location: </Text>
-          <Text style={styles.wrapField}>{companyData?.address}</Text>
+          <Text style={styles.fieldName}>VAT Number: </Text>
+          <Text>{companyData?.vat_number}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Address: </Text>
+          <Text> {companyData?.address} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>State/UT: </Text>
+          <Text> {companyData?.state} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Country: </Text>
+          <Text> {companyData?.country} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Zip Code: </Text>
+          <Text> {companyData?.zip_code} </Text>
         </View>
       </View>
 
@@ -99,6 +115,28 @@ const CompanyInfo = ({ companyData, navigation }) => {
 const CompanyDetail = ({ navigation, route }) => {
   const [companyData, setCompanyData] = useState({});
   const [selectedTab, setSelectedTab] = useState(0);
+  const [defaultConsultantManager, setDefaultConsultantManager] = useState(0);
+  const [defaultConsultant, setDeafultConsulatnt] = useState(0);
+  const [defaultContractor, setDefaultContractor] = useState(0);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const tempCmObj = {
+      ...users[users.findIndex((obj) => obj.user_type == 3)],
+    };
+    setDefaultConsultantManager(tempCmObj.id);
+
+    const tempConsultObj = {
+      ...users[users.findIndex((obj) => obj.user_type == 4)],
+    };
+    setDeafultConsulatnt(tempConsultObj.id);
+
+    const tempContractObj = {
+      ...users[users.findIndex((obj) => obj.user_type == 5)],
+    };
+    setDefaultContractor(tempContractObj.id);
+    console.log("c m: ", defaultConsultantManager);
+  }, [users]);
 
   useFocusEffect(
     useCallback(() => {
@@ -112,6 +150,7 @@ const CompanyDetail = ({ navigation, route }) => {
             title: res.data.data.name,
           });
           setCompanyData(res.data.data);
+          setUsers([...res.data.users]);
         } catch (error) {
           console.log(error);
         }
@@ -179,7 +218,7 @@ const CompanyDetail = ({ navigation, route }) => {
       case 4:
         return <CommissionsList navigation={navigation} />;
       case 5:
-        return <UsersList navigation={navigation} />;
+        return <UsersList navigation={navigation} usersList={users} />;
       case 6:
         return <Text>Analytics</Text>;
       default:
