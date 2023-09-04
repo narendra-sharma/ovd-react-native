@@ -19,15 +19,17 @@ import { Country, State, City } from "country-state-city";
 
 const initialCompanyData = {
   name: "",
+  vat_number: "",
   email: "",
   phoneNo: "",
   address: "",
+  country: "",
+  state: "",
+  zip_code: "",
 };
 
 const EditCompanyDetails = ({ navigation, route }) => {
   const [companyData, setCompanyData] = useState(initialCompanyData);
-  const [nameError, setNameError] = useState(null);
-  const [addressError, setAddressError] = useState(null);
   const [contractorsList, setContractorsList] = useState([]);
   const [consultantList, setConsultantList] = useState([]);
   const [consultantManagerList, setConsultantManagerList] = useState([]);
@@ -35,6 +37,17 @@ const EditCompanyDetails = ({ navigation, route }) => {
   const [defaultConsultantManager, setDefaultConsultantManager] = useState(0);
   const [defaultConsultant, setDeafultConsulatnt] = useState(0);
   const [defaultContractor, setDefaultContractor] = useState(0);
+  const [nameError, setNameError] = useState(null);
+  const [addressError, setAddressError] = useState(null);
+  const [vatError, setVatError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [phoneError, setPhoneError] = useState(null);
+  const [cmError, setCmError] = useState(null);
+  const [consultantError, setConsultantError] = useState(null);
+  const [contractorError, setContractorError] = useState(null);
+  const [countryError, setCountryError] = useState(null);
+  const [stateError, setStateError] = useState(null);
+  const [zipcodeError, setZipcodeError] = useState(null);
 
   useEffect(() => {
     const tempCmObj = {
@@ -53,8 +66,6 @@ const EditCompanyDetails = ({ navigation, route }) => {
     setDefaultContractor(tempContractObj.id);
     console.log("c m: ", defaultConsultantManager);
   }, [users]);
-
-  // console.log("params: ", route.params);
 
   useEffect(() => {
     const getCompanyDetails = async () => {
@@ -94,6 +105,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
     getAllUsers();
   }, []);
 
+  //validation functions
   const validateCompanyName = (name) => {
     if (name == "") {
       setNameError("Required*");
@@ -103,19 +115,135 @@ const EditCompanyDetails = ({ navigation, route }) => {
   };
 
   const validateAddress = (address) => {
-    if (address == "") {
+    if (address == "" || address == null) {
       setAddressError("Required*");
       return false;
     }
     return true;
   };
 
+  const validateVat = (vat) => {
+    if (vat == "") {
+      setVatError("Required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9a-zA-z]{5}$/;
+    if (reg.test(vat) == false) {
+      setVatError("Please enter a valid vat number");
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const validateEmail = (email) => {
+    if (email == "" || email == null) {
+      setEmailError("*Required");
+      return false;
+    }
+
+    // setEmailError(null);
+    // return true;
+
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+    if (reg.test(email) === false) {
+      setEmailError("Please Enter a valid email address");
+      return false; //return false if in wrong format
+    } else {
+      setEmailError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validatePhone = (num) => {
+    if (num == "" || num == null) {
+      setPhoneError("Required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9]{10}$/g;
+
+    if (reg.test(num) === false) {
+      setPhoneError("Please Enter a valid phone number");
+      return false; //return false if in wrong format
+    } else {
+      setPhoneError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validateCm = (cm) => {
+    if (cm == "" || cm == null) {
+      setCmError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateConsultant = (consultant) => {
+    if (consultant == "" || consultant == null) {
+      setConsultantError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateContractor = (contractor) => {
+    if (contractor == "" || contractor == null) {
+      setContractorError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCountry = (country) => {
+    if (country == "" || country == null) {
+      setCountryError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateZipcode = (zipcode) => {
+    if (zipcode == "") {
+      setZipcodeError("Required*");
+      return false;
+    }
+    // return true;
+    let reg = /^[0-9]{5,6}$/g;
+    if (reg.test(zipcode) == false) {
+      setZipcodeError("Please enter a valid zip code");
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const validateState = (state) => {
+    if (state == "" || state == null) {
+      setStateError("Required*");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
-    // const index = mockData.findIndex((item) => item.id == companyData.id);
-    // mockData[index] = { ...mockData[index], companyData };
     if (
       validateCompanyName(companyData.name) &&
-      validateAddress(companyData.address)
+      validateAddress(companyData.address) &&
+      validateVat(companyData.vat_number) &&
+      validateEmail(companyData.email) &&
+      validatePhone(companyData.phoneNo) &&
+      // validateCm(companyData.consultantManager) &&
+      // validateConsultant(companyData.consultant) &&
+      // validateContractor(companyData.contractor) &&
+      validateCountry(companyData.country) &&
+      validateState(companyData.state) &&
+      validateZipcode(companyData.zip_code)
     ) {
       try {
         // console.log("api data: ", {
@@ -145,13 +273,18 @@ const EditCompanyDetails = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
       }
-    }
-
-    if (!validateCompanyName(companyData.companyName)) {
-      console.log(nameError);
-    }
-    if (!validateAddress(companyData.address)) {
-      console.log(addressError);
+    } else {
+      validateCompanyName(companyData.name);
+      validateAddress(companyData.address);
+      validateVat(companyData.vat_number);
+      validateEmail(companyData.email);
+      validateCm(companyData.consultantManager);
+      validateConsultant(companyData.consultant);
+      validateContractor(companyData.contractor);
+      validateCountry(companyData.country);
+      validateZipcode(companyData.zip_code);
+      validateState(companyData.state);
+      validatePhone(companyData.phoneNo);
     }
   };
 
@@ -179,29 +312,41 @@ const EditCompanyDetails = ({ navigation, route }) => {
             value={companyData.vat_number}
             onChangeText={(text) => {
               setCompanyData({ ...companyData, vat_number: text });
-              setNameError(null);
+              setVatError(null);
             }}
             placeholder="VAT Number"
           />
+          {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
             name="email"
             value={companyData.email}
-            onChangeText={(text) =>
-              setCompanyData({ ...companyData, email: text })
-            }
+            onChangeText={(text) => {
+              setCompanyData({ ...companyData, email: text });
+              setEmailError(null);
+            }}
+            placeholder="Email"
           />
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
+
           <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="phoneNo"
             value={companyData.phoneNo}
-            onChangeText={(text) =>
-              setCompanyData({ ...companyData, phoneNo: text })
-            }
+            onChangeText={(text) => {
+              setCompanyData({ ...companyData, phoneNo: text });
+              setPhoneError(null);
+            }}
+            placeholder="Phone Number"
           />
+          {phoneError ? (
+            <Text style={styles.errorText}>{phoneError}</Text>
+          ) : null}
 
           {/* Dropdowns */}
           <Text style={styles.fieldName}>Consultant Manager:</Text>
@@ -353,8 +498,13 @@ const EditCompanyDetails = ({ navigation, route }) => {
                 country: item.label,
                 state: null,
               });
+              setCountryError(null);
             }}
           />
+          {countryError ? (
+            <Text style={styles.errorText}>{countryError}</Text>
+          ) : null}
+
           <Text>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
@@ -376,18 +526,27 @@ const EditCompanyDetails = ({ navigation, route }) => {
             value={companyData.state}
             onChange={(item) => {
               setCompanyData({ ...companyData, state: item.label });
+              setStateError(null);
             }}
           />
+          {stateError ? (
+            <Text style={styles.errorText}>{stateError}</Text>
+          ) : null}
 
           <Text>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zipcode"
             value={companyData.zip_code}
-            onChangeText={(text) =>
-              setCompanyData({ ...companyData, zip_code: text })
-            }
+            onChangeText={(text) => {
+              setCompanyData({ ...companyData, zip_code: text });
+              setZipcodeError(null);
+            }}
+            placeholder="Zip Code"
           />
+          {zipcodeError ? (
+            <Text style={styles.errorText}>{zipcodeError}</Text>
+          ) : null}
         </View>
 
         <View
@@ -421,6 +580,7 @@ const DropdownMenu = ({
   setValue,
   label,
   originalObj,
+  setErrorState,
 }) => {
   return (
     <Dropdown
@@ -438,6 +598,7 @@ const DropdownMenu = ({
       value={value}
       onChange={(item) => {
         setValue({ ...originalObj, [label]: item.value });
+        setErrorState(null);
       }}
     />
   );

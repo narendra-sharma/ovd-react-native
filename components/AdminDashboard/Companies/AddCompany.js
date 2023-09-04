@@ -16,19 +16,32 @@ import { Country, State, City } from "country-state-city";
 
 const initialFormData = {
   companyName: "",
+  vatNumber: "",
   email: "",
   phoneNo: "",
-  address: "",
   contractor: [],
   consultant: [],
   consultantManager: [],
-  vat_number: "",
+  address: "",
+  country: "",
+  state: "",
+  zipcode: "",
 };
 
 const AddCompany = ({ navigation }) => {
   const [newCompanyData, setNewCompanyData] = useState(initialFormData);
   const [nameError, setNameError] = useState(null);
   const [addressError, setAddressError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [phoneError, setPhoneError] = useState(null);
+  const [vatError, setVatError] = useState(null);
+  const [cmError, setCmError] = useState(null);
+  const [consultantError, setConsultantError] = useState(null);
+  const [contractorError, setContractorError] = useState(null);
+  const [countryError, setCountryError] = useState(null);
+  const [stateError, setStateError] = useState(null);
+  const [zipcodeError, setZipcodeError] = useState(null);
+
   const [contractorsList, setContractorsList] = useState([]);
   const [consultantList, setConsultantList] = useState([]);
   const [consultantManagerList, setConsultantManagerList] = useState([]);
@@ -64,6 +77,7 @@ const AddCompany = ({ navigation }) => {
     getAllUsers();
   }, []);
 
+  //validation functions
   const validateCompanyName = (name) => {
     if (name == "") {
       setNameError("Required*");
@@ -80,10 +94,114 @@ const AddCompany = ({ navigation }) => {
     return true;
   };
 
+  const validateVat = (vat) => {
+    if (vat == "") {
+      setVatError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateEmail = (email) => {
+    if (email == "" || email == null) {
+      setEmailError("*Required");
+      return false;
+    }
+
+    // setEmailError(null);
+    // return true;
+
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+    if (reg.test(email) === false) {
+      setEmailError("Please Enter a valid email address");
+      return false; //return false if in wrong format
+    } else {
+      setEmailError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validatePhone = (num) => {
+    if (num == "" || num == null) {
+      setPhoneError("Required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9]{10}$/g;
+
+    if (reg.test(num) === false) {
+      setPhoneError("Please Enter a valid phone number");
+      return false; //return false if in wrong format
+    } else {
+      setPhoneError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validateCm = (cm) => {
+    if (cm == "") {
+      setCmError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateConsultant = (consultant) => {
+    if (consultant == "") {
+      setConsultantError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateContractor = (contractor) => {
+    if (contractor == "") {
+      setContractorError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCountry = (country) => {
+    if (country == "" || country == null) {
+      setCountryError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateZipcode = (zipcode) => {
+    if (zipcode == "") {
+      setZipcodeError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateState = (state) => {
+    if (state == "" || state == null) {
+      setStateError("Required*");
+      return false;
+    }
+    return true;
+  };
+
+  //handle new company submit
   const handleNewCompanySubmit = async () => {
     if (
       validateCompanyName(newCompanyData.companyName) &&
-      validateAddress(newCompanyData.address)
+      validateAddress(newCompanyData.address) &&
+      validateVat(newCompanyData.vatNumber) &&
+      validateEmail(newCompanyData.email) &&
+      validatePhone(newCompanyData.phoneNo) &&
+      validateCm(newCompanyData.consultantManager) &&
+      validateConsultant(newCompanyData.consultant) &&
+      validateContractor(newCompanyData.contractor) &&
+      validateCountry(newCompanyData.country) &&
+      validateState(newCompanyData.state) &&
+      validateZipcode(newCompanyData.zipcode)
     ) {
       try {
         const res = await apiCreateNewCompany({
@@ -107,12 +225,18 @@ const AddCompany = ({ navigation }) => {
         console.log(error);
       }
       // setNewCompanyData(initialFormData);
-    }
-    if (!validateCompanyName(newCompanyData.companyName)) {
-      console.log(nameError);
-    }
-    if (!validateAddress(newCompanyData.address)) {
-      console.log(addressError);
+    } else {
+      validateCompanyName(newCompanyData.companyName);
+      validateAddress(newCompanyData.address);
+      validateVat(newCompanyData.vatNumber);
+      validateCm(newCompanyData.consultantManager);
+      validateConsultant(newCompanyData.consultant);
+      validateContractor(newCompanyData.contractor);
+      validateCountry(newCompanyData.country);
+      validateZipcode(newCompanyData.zipcode);
+      validateState(newCompanyData.state);
+      validateEmail(newCompanyData.email);
+      validatePhone(newCompanyData.phoneNo);
     }
   };
 
@@ -144,10 +268,11 @@ const AddCompany = ({ navigation }) => {
             value={newCompanyData.vatNumber}
             onChangeText={(text) => {
               setNewCompanyData({ ...newCompanyData, vatNumber: text });
-              setNameError(null);
+              setVatError(null);
             }}
-            placeholder="vat"
+            placeholder="VAT Number"
           />
+          {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -155,20 +280,29 @@ const AddCompany = ({ navigation }) => {
             name="email"
             placeholder="Email"
             value={newCompanyData.email}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, email: text })
-            }
+            onChangeText={(text) => {
+              setNewCompanyData({ ...newCompanyData, email: text });
+              setEmailError(null);
+            }}
           />
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
+
           <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="phonenumber"
             placeholder="Phone Number"
-            value={newCompanyData.phone_number}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, phone_number: text })
-            }
+            value={newCompanyData.phoneNo}
+            onChangeText={(text) => {
+              setNewCompanyData({ ...newCompanyData, phoneNo: text });
+              setPhoneError(null);
+            }}
           />
+          {phoneError ? (
+            <Text style={styles.errorText}>{phoneError}</Text>
+          ) : null}
 
           <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
@@ -178,7 +312,10 @@ const AddCompany = ({ navigation }) => {
             setValue={setNewCompanyData}
             label="consultantManager"
             originalObj={newCompanyData}
+            setErrorState={setCmError}
           />
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+
           <Text style={styles.fieldName}>Assign Consultant:</Text>
           <DropdownMenu
             data={consultantList}
@@ -187,7 +324,11 @@ const AddCompany = ({ navigation }) => {
             setValue={setNewCompanyData}
             label="consultant"
             originalObj={newCompanyData}
+            setErrorState={setConsultantError}
           />
+          {consultantError ? (
+            <Text style={styles.errorText}>{consultantError}</Text>
+          ) : null}
 
           <Text style={styles.fieldName}>Assign Contractor:</Text>
           <DropdownMenu
@@ -197,7 +338,11 @@ const AddCompany = ({ navigation }) => {
             setValue={setNewCompanyData}
             label="contractor"
             originalObj={newCompanyData}
+            setErrorState={setContractorError}
           />
+          {contractorError ? (
+            <Text style={styles.errorText}>{contractorError}</Text>
+          ) : null}
 
           <Text>Address:</Text>
           <GooglePlacesAutocomplete
@@ -211,6 +356,9 @@ const AddCompany = ({ navigation }) => {
               onChangeText: (text) => {
                 setNewCompanyData({ ...newCompanyData, address: text });
                 setAddressError(null);
+                setCountryError(null);
+                setStateError(null);
+                setZipcodeError(null);
               },
             }}
             onPress={(data, details = null) => {
@@ -317,8 +465,13 @@ const AddCompany = ({ navigation }) => {
                 country: item.label,
                 state: null,
               });
+              setCountryError(null);
             }}
           />
+          {countryError ? (
+            <Text style={styles.errorText}>{countryError}</Text>
+          ) : null}
+
           <Text>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
@@ -340,18 +493,27 @@ const AddCompany = ({ navigation }) => {
             value={newCompanyData.state}
             onChange={(item) => {
               setNewCompanyData({ ...newCompanyData, state: item.label });
+              setStateError(null);
             }}
           />
+          {stateError ? (
+            <Text style={styles.errorText}>{stateError}</Text>
+          ) : null}
 
           <Text>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zipcode"
             value={newCompanyData.zipcode}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, zipcode: text })
-            }
+            onChangeText={(text) => {
+              setNewCompanyData({ ...newCompanyData, zipcode: text });
+              setZipcodeError(null);
+            }}
+            placeholder="Zip Code"
           />
+          {zipcodeError ? (
+            <Text style={styles.errorText}>{zipcodeError}</Text>
+          ) : null}
         </View>
 
         <View
@@ -388,6 +550,7 @@ const DropdownMenu = ({
   setValue,
   label,
   originalObj,
+  setErrorState,
 }) => {
   return (
     <Dropdown
@@ -405,6 +568,7 @@ const DropdownMenu = ({
       value={value}
       onChange={(item) => {
         setValue({ ...originalObj, [label]: item.value });
+        setErrorState(null);
       }}
     />
   );

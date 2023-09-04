@@ -7,15 +7,24 @@ import {
   View,
   Alert,
   ToastAndroid,
+  TouchableNativeFeedback,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
+import Signature from "./TechnicianComponents/DigitalSign";
+
+const randomHexColor = () => {
+  return "#b7d0d1";
+};
 
 const AllCompanies = ({ navigation }) => {
   const [companiesList, setCompaniesList] = useState([]);
   const [deleteFlag, setDeteleFlag] = useState(false);
+  const [rippleColor, setRippleColor] = useState(randomHexColor());
+  const [rippleRadius, setRippleRadius] = useState(10);
+  const [rippleOverflow, setRippleOverflow] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -111,29 +120,56 @@ const AllCompanies = ({ navigation }) => {
               >
                 <Text style={styles.item}>{item.name}</Text>
               </Pressable>
+
               <View style={styles.iconsContainer}>
-                <Icon
-                  onPress={() =>
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
                     navigation.navigate("Edit Company Details", {
                       company: item,
                       id: item.id,
-                    })
-                  }
-                  name="pen"
-                  size={22}
-                  // color="blue"
-                />
-                <Icon
-                  onPress={() => handleDeleteCompany(item.name, item.id)}
-                  name="trash-alt"
-                  size={22}
-                  color="red"
-                />
+                    });
+                    // setRippleOverflow(!rippleOverflow);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon
+                        name="pen"
+                        size={18}
+                        // color="blue"
+                      />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
+                    handleDeleteCompany(item.name, item.id);
+                    // setRippleOverflow(!rippleOverflow);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon name="trash-alt" size={18} color="red" />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
               </View>
             </Pressable>
           </>
         )}
       />
+      {/* <Signature /> */}
     </ScrollView>
   );
 };
@@ -189,6 +225,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     width: "20%",
     justifyContent: "space-between",
+  },
+
+  rippleView: {
+    padding: 2,
+    borderRadius: 10,
+    overflow: "hidden",
   },
 
   addButton: {

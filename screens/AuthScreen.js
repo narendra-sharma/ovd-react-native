@@ -27,13 +27,31 @@ const AuthScreen = ({ navigation }) => {
   const [token, setToken] = useState(null);
   const [profile, setProfile] = useState(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [userType, setUserType] = useState(null);
+
+  useEffect(() => {
+    const checkUserExists = async () => {
+      const profile = await AsyncStorage.getItem("profile");
+      const parsedProfile = JSON.parse(profile);
+      console.log(parsedProfile.user_type);
+
+      if (parsedProfile.user_type) {
+        setUserType(parsedProfile.user_type); // Set the user type in the state
+      }
+
+      handleUserType(parsedProfile.user_type);
+    };
+
+    checkUserExists();
+  }, []);
 
   useEffect(() => {
     const setLocalStorage = async () => {
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("profile", profile);
     };
-    setLocalStorage();
+
+    if (token || profile) setLocalStorage();
   }, [token, profile]);
 
   //handle change in input text

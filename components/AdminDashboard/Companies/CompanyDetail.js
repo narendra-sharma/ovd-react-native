@@ -27,7 +27,13 @@ const initialCompanyData = {
   address: "Indian bank, jhujhar nagar",
 };
 
-const CompanyInfo = ({ companyData, navigation }) => {
+const CompanyInfo = ({
+  companyData,
+  navigation,
+  consultantManager,
+  consultant,
+  contractor,
+}) => {
   // console.log(navigation);
   const handleDeleteCompany = async () => {
     const deleteCompany = async () => {
@@ -65,6 +71,10 @@ const CompanyInfo = ({ companyData, navigation }) => {
           <Text>{companyData?.name}</Text>
         </View>
         <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>VAT Number: </Text>
+          <Text>{companyData?.vat_number}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Email: </Text>
           <Text>{companyData?.email}</Text>
         </View>
@@ -73,8 +83,16 @@ const CompanyInfo = ({ companyData, navigation }) => {
           <Text>{companyData?.phoneNo}</Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>VAT Number: </Text>
-          <Text>{companyData?.vat_number}</Text>
+          <Text style={styles.fieldName}>Consultant Manager: </Text>
+          <Text>{consultantManager}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Consultant: </Text>
+          <Text>{consultant}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Contractor: </Text>
+          <Text>{contractor}</Text>
         </View>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Address: </Text>
@@ -115,28 +133,46 @@ const CompanyInfo = ({ companyData, navigation }) => {
 const CompanyDetail = ({ navigation, route }) => {
   const [companyData, setCompanyData] = useState({});
   const [selectedTab, setSelectedTab] = useState(0);
-  const [defaultConsultantManager, setDefaultConsultantManager] = useState(0);
-  const [defaultConsultant, setDeafultConsulatnt] = useState(0);
-  const [defaultContractor, setDefaultContractor] = useState(0);
+  const [consultantManager, setConsultantManager] = useState("");
+  const [consultant, setConsulatnt] = useState("");
+  const [contractor, setContractor] = useState("");
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const tempCmObj = {
       ...users[users.findIndex((obj) => obj.user_type == 3)],
     };
-    setDefaultConsultantManager(tempCmObj.id);
+    setConsultantManager(tempCmObj.name);
 
     const tempConsultObj = {
       ...users[users.findIndex((obj) => obj.user_type == 4)],
     };
-    setDeafultConsulatnt(tempConsultObj.id);
+    setConsulatnt(tempConsultObj.name);
 
     const tempContractObj = {
       ...users[users.findIndex((obj) => obj.user_type == 5)],
     };
-    setDefaultContractor(tempContractObj.id);
-    console.log("c m: ", defaultConsultantManager);
+    setContractor(tempContractObj.name);
+    console.log("c m: ", consultantManager);
   }, [users]);
+
+  const renderUserTypes = () => {
+    switch (userData.user_type) {
+      case 1:
+        return <Text>Super Admin</Text>;
+      case 2:
+        return <Text>Admin</Text>;
+      case 3:
+        return <Text>Consultant Manager </Text>;
+      case 4:
+        return <Text>Consultant </Text>;
+
+      case 5:
+        return <Text>Contractor </Text>;
+      default:
+        return <Text>User </Text>;
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -207,7 +243,13 @@ const CompanyDetail = ({ navigation, route }) => {
     switch (selectedTab) {
       case 0:
         return (
-          <CompanyInfo companyData={companyData} navigation={navigation} />
+          <CompanyInfo
+            companyData={companyData}
+            navigation={navigation}
+            consultantManager={consultantManager}
+            consultant={consultant}
+            contractor={contractor}
+          />
         );
       case 1:
         return <ProjectsList navigation={navigation} />;
