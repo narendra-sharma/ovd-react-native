@@ -1,12 +1,99 @@
-import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
+import { useEffect, useState, useCallback } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  TouchableNativeFeedback,
+  Alert,
+  ToastAndroid,
+} from "react-native";
 import { MockQuotes } from "./MockQuotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { apiDeleteQuote, apiGetAllQuotes } from "../../../../apis/quotes";
+import { useFocusEffect } from "@react-navigation/native";
 
-const QuotesList = ({ navigation }) => {
+const randomHexColor = () => {
+  return "#b7d0d1";
+};
+
+const QuotesList = ({ navigation, companyId }) => {
   const [quotesList, setQuotesList] = useState(MockQuotes);
+  const [rippleColor, setRippleColor] = useState(randomHexColor());
+  const [rippleOverflow, setRippleOverflow] = useState(true);
+  const [deleteFlag, setDeteleFlag] = useState(false);
 
-  useEffect(() => {}, [quotesList]);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getAllQuotes = async () => {
+        const res = await apiGetAllQuotes();
+        // console.log(res.data.quotations);
+        //listing of quotes for a specific company
+        if (companyId) {
+          const quotes = res.data.quotations.filter(
+            (quote) => quote.company_id == companyId
+          );
+          setQuotesList(quotes);
+        } else {
+          //listing all quotes
+          setQuotesList(res.data.quotations);
+        }
+      };
+
+      getAllQuotes();
+
+      return () => {
+        isActive = false;
+      };
+    }, [deleteFlag])
+  );
+
+  // useEffect(() => {
+  //   const getAllQuotes = async () => {
+  //     const res = await apiGetAllQuotes();
+  //     console.log(res.data.quotations);
+  //     //listing of quotes for a specific company
+  //     if (companyId) {
+  //       const quotes = res.data.quotations.filter(
+  //         (quote) => quote.company_id == companyId
+  //       );
+  //       setQuotesList(quotes);
+  //     } else {
+  //       //listing all quotes
+  //       setQuotesList(res.data.quotations);
+  //     }
+  //   };
+
+  //   getAllQuotes();
+  // }, []);
+
+  //function to delete the quote
+  const handleDelete = async (id) => {
+    const deleteQuote = async () => {
+      try {
+        const res = await apiDeleteQuote(id);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          setDeteleFlag((prev) => !prev);
+          ToastAndroid.show("Quote Deleted Successfully", ToastAndroid.SHORT);
+          // navigation.navigate("All Companies");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Alert.alert(`Delete Quote`, `Are you sure you want to delete this quote?`, [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => deleteQuote() },
+    ]);
+  };
 
   return (
     <View style={styles.container}>
@@ -14,26 +101,63 @@ const QuotesList = ({ navigation }) => {
         // style={{ height: 100 }}
         data={quotesList}
         renderItem={({ item }) => (
-          <Pressable
-            onPress={() => navigation.navigate("Quote Details", item)}
-            style={styles.listItem}
-          >
-            <Text style={styles.item}>{item.customerName}</Text>
-            <View style={styles.iconsContainer}>
-              <Icon
-                onPress={() => navigation.navigate("Edit Quote", item)}
-                name="pen"
-                size={22}
-                // color="blue"
-              />
-              <Icon
-                // onPress={() => handleDelete(item.name, item.id)}
-                name="trash-alt"
-                size={22}
-                color="red"
-              />
-            </View>
-          </Pressable>
+          <>
+            <Pressable style={styles.listItem}>
+              <Pressable
+                style={{ width: "76%" }}
+                onPress={() => {
+                  navigation.navigate("Quote Details", item);
+                }}
+              >
+                <Text style={styles.item}>{item.description}</Text>
+              </Pressable>
+
+              <View style={styles.iconsContainer}>
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
+                    navigation.navigate("Edit Quote", {
+                      company: item,
+                      id: item.id,
+                    });
+                    // setRippleOverflow(!rippleOverflow);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon
+                        name="pen"
+                        size={18}
+                        // color="blue"
+                      />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
+                    handleDelete(item.id);
+                    // setRippleOverflow(!rippleOverflow);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon name="trash-alt" size={18} color="red" />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+              </View>
+            </Pressable>
+          </>
         )}
       />
     </View>

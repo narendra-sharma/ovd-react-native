@@ -1,26 +1,103 @@
-import { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Pressable, FlatList } from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ScrollView,
+} from "react-native";
+import { apiGetQuoteDetails } from "../../../../apis/quotes";
+import { useFocusEffect } from "@react-navigation/native";
 
 const QuoteDetail = ({ navigation, route }) => {
   const [quoteData, setQuoteData] = useState({});
 
-  useEffect(() => {
-    setQuoteData({ ...route.params });
-    navigation.setOptions({
-      title: `${route.params.companyName} - ${route.params.customerName}`,
-    });
-  }, []);
+  console.log("params got: ", route.params);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getAllData = async () => {
+        const res = await apiGetQuoteDetails(route.params.id);
+        console.log("quotes res:", res.data.company);
+        setQuoteData({ ...res.data.quotes });
+        //   setCustomerList([...]);
+        //   setProjectList([...]);
+      };
+      getAllData();
+
+      return () => (isActive = false);
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   const getAllData = async () => {
+  //     const res = await apiGetQuoteDetails(route.params.id);
+  //     console.log("quotes res:", res.data.company);
+  //     setQuoteData({ ...res.data.quotes });
+  //     //   setCustomerList([...]);
+  //     //   setProjectList([...]);
+  //   };
+  //   getAllData();
+  //   // navigation.setOptions({
+  //   //   title: `${route.params.company} - ${route.params.customer}`,
+  //   // });
+  // }, []);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
-      <View style={styles.centeredView}>
-        <Text style={styles.item}>{quoteData.companyName}</Text>
+    <View style={styles.mainContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ justifyContent: "center", padding: 10 }}
+        keyboardShouldPersistTaps="always"
+      >
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Customer: </Text>
-          <Text>{quoteData.customerName} </Text>
+          <Text style={styles.fieldName}>Company: </Text>
+          <Text>{quoteData?.company?.name} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Customer: </Text>
+          <Text>{quoteData.customer_id} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Project: </Text>
+          <Text>{quoteData.project_id} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Quantity: </Text>
+          <Text>{quoteData.quantity} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Cost: </Text>
+          <Text>{quoteData.cost} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Tax: </Text>
+          <Text>{quoteData.tax} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Discount: </Text>
+          <Text>{quoteData.discount} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Total Cost: </Text>
+          <Text>{quoteData.total_cost} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Description: </Text>
+          <Text>{quoteData.description} </Text>
+        </View>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Items: </Text>
         </View>
         <FlatList
@@ -53,12 +130,14 @@ const QuoteDetail = ({ navigation, route }) => {
               <Text>{item.cust_details}</Text>
             </View>
           )}
-        />
+        /> */}
 
         <View style={styles.buttonsContainer}>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={() => navigation.navigate("Edit Quote")}
+            onPress={() =>
+              navigation.navigate("Edit Quote", { id: quoteData.id })
+            }
           >
             <Text style={styles.textStyle}>Edit Quote</Text>
           </Pressable>
@@ -69,7 +148,7 @@ const QuoteDetail = ({ navigation, route }) => {
             <Text style={styles.textStyle}>Delete Quote</Text>
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -77,6 +156,10 @@ const QuoteDetail = ({ navigation, route }) => {
 export default QuoteDetail;
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    padding: 22,
+  },
+
   centeredView: {
     flex: 1,
     justifyContent: "space-between",

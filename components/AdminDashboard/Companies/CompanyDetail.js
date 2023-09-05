@@ -254,7 +254,9 @@ const CompanyDetail = ({ navigation, route }) => {
       case 1:
         return <ProjectsList navigation={navigation} />;
       case 2:
-        return <QuotesList navigation={navigation} />;
+        return (
+          <QuotesList companyId={companyData.id} navigation={navigation} />
+        );
       case 3:
         return <Text>Tasks</Text>;
       case 4:

@@ -13,26 +13,22 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiGetAllCompanies } from "../../../../apis/companies";
-import {
-  apiAddQuote,
-  apiGetQuoteDetails,
-  apiUpdateQuoteDetails,
-} from "../../../../apis/quotes";
+import { apiAddQuote } from "../../../../apis/quotes";
 
 const initialFormData = {
-  company_id: "",
-  customer_id: "",
-  project_id: "",
+  company: "",
+  customer: "",
+  project: "",
   quantity: "",
   cost: "",
   tax: "",
   discount: "",
-  total_cost: "",
+  total_amount: "",
   description: "",
   status: 1,
 };
 
-const EditQuote = ({ navigation, route }) => {
+const AddQuote = ({ navigation }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [nameError, setNameError] = useState(null);
   const [customerError, setCustomerError] = useState(null);
@@ -48,11 +44,10 @@ const EditQuote = ({ navigation, route }) => {
   const [customerList, setCustomerList] = useState([]);
   const [projectList, setProjectList] = useState([]);
 
+  const [responseError, setResponseError] = useState(null);
+
   useEffect(() => {
     const getAllData = async () => {
-      const quotesRes = await apiGetQuoteDetails(route.params.id);
-      console.log("quotes res:", quotesRes.data.quotes);
-      setFormData({ ...quotesRes.data.quotes });
       const res = await apiGetAllCompanies();
       const tempCompanies = res.data.data.map((company) => {
         return { label: company.name, value: company.id };
@@ -165,7 +160,7 @@ const EditQuote = ({ navigation, route }) => {
   };
 
   const validateTotalAmount = (total_amount) => {
-    if (total_amount == "" || total_amount == null) {
+    if (total_amount == "") {
       setTotalAmountError("Required*");
       return false;
     }
@@ -200,34 +195,28 @@ const EditQuote = ({ navigation, route }) => {
       validateCost(formData.cost) &&
       validateTax(formData.tax) &&
       validateDiscount(formData.discount) &&
-      validateTotalAmount(formData.total_cost) &&
+      validateTotalAmount(formData.total_amount) &&
       validateDescription(formData.description)
     ) {
       try {
         console.log(formData);
-        const res = await apiUpdateQuoteDetails(
-          {
-            ...formData,
-            company: formData.company_id,
-            customer: formData.customer_id,
-            project: formData.project_id,
-            total_amount: formData.total_cost,
-          },
-          route.params.id
-        );
+        const res = await apiAddQuote({
+          ...formData,
+          status: 1,
+        });
         console.log("response: ");
-        console.log(res.data);
+        console.log(res);
         if (res.status == 200) {
-          ToastAndroid.show("Quote Updated", ToastAndroid.SHORT);
+          ToastAndroid.show("New Quote Added", ToastAndroid.SHORT);
           navigation.goBack();
+          setFormData(initialFormData);
         } else {
-          ToastAndroid.show("Cannot Update Quote", ToastAndroid.SHORT);
+          ToastAndroid.show("Cannot Add New Quote", ToastAndroid.SHORT);
         }
       } catch (error) {
-        ToastAndroid.show("Error in API call", ToastAndroid.SHORT);
+        ToastAndroid.show("Error in quote", ToastAndroid.SHORT);
         console.log(error);
       }
-      // setFormData(initialFormData);
     } else {
       validateCompanyName(formData.company);
       validateCustomer(formData.customer);
@@ -236,7 +225,7 @@ const EditQuote = ({ navigation, route }) => {
       validateCost(formData.cost);
       validateTax(formData.tax);
       validateDiscount(formData.discount);
-      validateTotalAmount(formData.total_cost);
+      validateTotalAmount(formData.total_amount);
       validateDescription(formData.description);
     }
   };
@@ -253,9 +242,9 @@ const EditQuote = ({ navigation, route }) => {
           <DropdownMenu
             data={companyList}
             placeholder="Select Company"
-            value={formData.company_id}
+            value={formData.company}
             setValue={setFormData}
-            label="company_id"
+            label="company"
             originalObj={formData}
             setErrorState={setNameError}
           />
@@ -271,9 +260,9 @@ const EditQuote = ({ navigation, route }) => {
               { label: "Jack the Customer", value: 5 },
             ]}
             placeholder="Select Customer"
-            value={formData.customer_id}
+            value={formData.customer}
             setValue={setFormData}
-            label="customer_id"
+            label="customer"
             originalObj={formData}
             setErrorState={setCustomerError}
           />
@@ -291,9 +280,9 @@ const EditQuote = ({ navigation, route }) => {
               { label: "Overhold", value: 5 },
             ]}
             placeholder="Select Project"
-            value={formData.project_id}
+            value={formData.project}
             setValue={setFormData}
-            label="project_id"
+            label="project"
             originalObj={formData}
             setErrorState={setProjectError}
           />
@@ -360,10 +349,10 @@ const EditQuote = ({ navigation, route }) => {
           <Text style={styles.fieldName}>Total Amount:</Text>
           <TextInput
             style={styles.input}
-            name="total_cost"
-            value={formData.total_cost}
+            name="total_amount"
+            value={formData.total_amount}
             onChangeText={(text) => {
-              setFormData({ ...formData, total_cost: text });
+              setFormData({ ...formData, total_amount: text });
               setTotalAmountError(null);
             }}
             placeholder="Total Amount"
@@ -410,7 +399,7 @@ const EditQuote = ({ navigation, route }) => {
   );
 };
 
-export default EditQuote;
+export default AddQuote;
 
 const DropdownMenu = ({
   data,

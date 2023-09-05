@@ -23,6 +23,8 @@ import ViewUsers from "./Users/ViewUsers";
 import UserDetail from "./Users/UserDetails";
 import EditUser from "./Users/EditUser";
 import AddUser from "./Users/AddUser";
+import AddQuote from "./Quotes/AddQuote";
+import EditQuote from "./Quotes/EditQuote";
 
 const Stack = createNativeStackNavigator();
 
@@ -77,6 +79,7 @@ const CompanyStackScreen = ({ navigation }) => {
               style={{ marginRight: 30 }}
             />
           ),
+          headerRight: () => <DropdownMenu navigation={navigation} />,
         })}
       />
       <Stack.Screen
@@ -138,25 +141,33 @@ const CompanyStackScreen = ({ navigation }) => {
           title: "Edit Task",
         })}
       />
-      <Stack.Screen
-        name="Quote Details"
-        component={QuoteDetail}
-        options={({ navigation }) => ({
-          title: "Quotes",
-        })}
-      />
+
       <Stack.Screen
         name="View Quotes"
         component={ViewQuotes}
+        options={({ navigation }) => ({
+          title: "All Quotes",
+        })}
+      />
+      <Stack.Screen
+        name="Add Quote"
+        component={AddQuote}
         options={({ navigation }) => ({
           title: "Quotes",
         })}
       />
       <Stack.Screen
         name="Edit Quote"
-        component={EditProject}
+        component={EditQuote}
         options={({ navigation }) => ({
           title: "Edit Quote",
+        })}
+      />
+      <Stack.Screen
+        name="Quote Details"
+        component={QuoteDetail}
+        options={({ navigation }) => ({
+          title: "Quotes",
         })}
       />
       <Stack.Screen name="Commissions" component={ViewCommissions} />

@@ -47,3 +47,10 @@ export const apiGetAllUsers = async () => {
   });
   return response;
 };
+
+export const apiGetAllQuotes = async () => {
+  const response = await request({
+    path: "auth/view-all-quotes",
+  });
+  return response;
+};

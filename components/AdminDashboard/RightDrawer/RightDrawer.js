@@ -6,6 +6,7 @@ import {
   Text,
   View,
   Alert,
+  StatusBar,
 } from "react-native";
 import {
   DrawerItemList,
@@ -99,6 +100,7 @@ const RightDrawer = ({ navigation }) => {
               height: "100%",
             }}
           >
+            <StatusBar style="auto" />
             <View>
               <Pressable
                 style={styles.detailsContainer}
