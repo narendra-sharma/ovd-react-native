@@ -22,91 +22,18 @@ const initialFormData = {
 };
 
 const ViewProjects = ({ navigation }) => {
-  const [addCompanyModalVisible, setAddCompanyModalVisible] = useState(false);
-  const [companiesList, setCompaniesList] = useState(mockData);
-  const [newCompanyData, setNewCompanyData] = useState(initialFormData);
-  useEffect(() => {}, [companiesList]);
-
-  const handleNewCompanySubmit = () => {
-    setCompaniesList([...companiesList, newCompanyData]);
-    setAddCompanyModalVisible(!addCompanyModalVisible);
-    setNewCompanyData(initialFormData);
-  };
-
   return (
     <View style={styles.container}>
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          setAddCompanyModalVisible(true);
-          navigation.se;
+          navigation.navigate("Add Project");
         }}
       >
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
-
-      {/* Add new project form */}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={addCompanyModalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setAddCompanyModalVisible(!addCompanyModalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <Text>Project Name:</Text>
-          <TextInput
-            placeholder="Company Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.companyName}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, companyName: text })
-            }
-          />
-
-          <Text>Email:</Text>
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            name="email"
-            value={newCompanyData.email}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, email: text })
-            }
-          />
-
-          <Text>Phone Number:</Text>
-          <TextInput
-            placeholder="Company Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.phoneNo}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, phoneNo: text })
-            }
-          />
-
-          <View>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setAddCompanyModalVisible(false)}
-            >
-              <Text style={styles.textStyle}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={handleNewCompanySubmit}
-            >
-              <Text style={styles.textStyle}>Add</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
 
       <ProjectsList navigation={navigation} />
     </View>

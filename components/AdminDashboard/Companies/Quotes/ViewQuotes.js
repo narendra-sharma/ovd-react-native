@@ -26,7 +26,6 @@ const ViewQuotes = ({ navigation }) => {
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          setAddCompanyModalVisible(true);
           navigation.navigate("Add Quote");
         }}
       >

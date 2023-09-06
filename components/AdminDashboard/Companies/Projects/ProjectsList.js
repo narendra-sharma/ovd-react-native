@@ -1,11 +1,71 @@
-import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
+import { useEffect, useState, useCallback } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Alert,
+  ToastAndroid,
+} from "react-native";
 import { mockProjects } from "./MockProjects";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useFocusEffect } from "@react-navigation/native";
+import { apiDeleteProject, apiGetAllProjects } from "../../../../apis/projects";
 
-const ProjectsList = ({ navigation }) => {
+const ProjectsList = ({ navigation, companyId }) => {
   const [projectsList, setProjectsList] = useState(mockProjects);
-  useEffect(() => {}, [projectsList]);
+  const [deleteFlag, setDeteleFlag] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getAllProjects = async () => {
+        const res = await apiGetAllProjects();
+        console.log("projects", res.data.projects);
+        //listing of quotes for a specific company
+        if (companyId) {
+          const projects = res.data.projects.filter(
+            (project) => project.company_id == companyId
+          );
+          setProjectsList(projects);
+        } else {
+          //listing all projects
+          setProjectsList(res.data.projects);
+        }
+      };
+
+      getAllProjects();
+
+      return () => {
+        isActive = false;
+      };
+    }, [deleteFlag])
+  );
+
+  const handleDelete = async (name, id) => {
+    const deleteProject = async () => {
+      try {
+        const res = await apiDeleteProject(id);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          setDeteleFlag((prev) => !prev);
+          ToastAndroid.show("Project Deleted Successfully", ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => deleteProject() },
+    ]);
+  };
 
   return (
     <View style={styles.container}>
@@ -21,7 +81,7 @@ const ProjectsList = ({ navigation }) => {
               }}
               style={styles.listItem}
             >
-              <Text style={styles.item}>{item.projectName}</Text>
+              <Text style={styles.item}>{item.project_name}</Text>
               <View style={styles.iconsContainer}>
                 <Icon
                   onPress={() => navigation.navigate("Edit Project", item)}
@@ -30,7 +90,7 @@ const ProjectsList = ({ navigation }) => {
                   // color="blue"
                 />
                 <Icon
-                  // onPress={() => handleDelete(item.name, item.id)}
+                  onPress={() => handleDelete(item.project_name, item.id)}
                   name="trash-alt"
                   size={22}
                   color="red"

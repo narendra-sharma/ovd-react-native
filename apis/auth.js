@@ -1,9 +1,7 @@
 import { request } from "./index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const apiAuth = async (formData) => {
-  // const response = await request({
-  //   path: "https://jsonplaceholder.typicode.com/todos/1",
-  // });
   const response = await request({
     path: "auth/login",
     method: "post",
@@ -12,31 +10,38 @@ export const apiAuth = async (formData) => {
   return response;
 };
 
-export const apiLogout = async (token) => {
+export const apiLogout = async () => {
+  const token = await AsyncStorage.getItem("token");
   const response = await request({
     path: "auth/logout",
     method: "post",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${JSON.parse(token)}`,
     },
   });
   return response;
 };
 
 export const apiUpdateProfile = async (userData) => {
-  console.log("at api ", userData);
+  const token = await AsyncStorage.getItem("token");
   const response = await request({
     path: "auth/updateProfile",
     method: "post",
     body: userData,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
   });
   return response;
 };
 
 export const apiGetProfileDetails = async () => {
-  // console.log("At get profile");
+  const token = await AsyncStorage.getItem("token");
   const response = await request({
     path: "auth/edit-profile",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
   });
   return response;
 };
@@ -69,10 +74,14 @@ export const apiResetPassword = async (formData) => {
 };
 
 export const apiChangePasswordFromDashboard = async (formData) => {
+  const token = await AsyncStorage.getItem("token");
   const response = await request({
     path: "auth/change-user-password",
     method: "post",
     body: formData,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
   });
   return response;
 };

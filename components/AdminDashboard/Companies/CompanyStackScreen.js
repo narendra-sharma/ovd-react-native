@@ -25,6 +25,7 @@ import EditUser from "./Users/EditUser";
 import AddUser from "./Users/AddUser";
 import AddQuote from "./Quotes/AddQuote";
 import EditQuote from "./Quotes/EditQuote";
+import AddProject from "./Projects/AddProject";
 
 const Stack = createNativeStackNavigator();
 
@@ -114,6 +115,13 @@ const CompanyStackScreen = ({ navigation }) => {
         })}
       />
       <Stack.Screen
+        name="Add Project"
+        component={AddProject}
+        options={({ navigation }) => ({
+          title: "Add Project",
+        })}
+      />
+      <Stack.Screen
         name="Project Details"
         component={ProjectDetail}
         options={({ navigation }) => ({
@@ -167,7 +175,7 @@ const CompanyStackScreen = ({ navigation }) => {
         name="Quote Details"
         component={QuoteDetail}
         options={({ navigation }) => ({
-          title: "Quotes",
+          title: "Quote Detail",
         })}
       />
       <Stack.Screen name="Commissions" component={ViewCommissions} />

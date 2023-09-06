@@ -37,7 +37,7 @@ const initialFormData = {
   number: "",
 };
 
-const EditProject = ({ navigation }) => {
+const AddProject = ({ navigation }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [endDate, setEndDate] = useState();
   const [isEndDatePickerVisible, setEndDateVisibility] = useState(false);
@@ -468,7 +468,8 @@ const EditProject = ({ navigation }) => {
   );
 };
 
-export default EditProject;
+export default AddProject;
+
 const DropdownMenu = ({
   data,
   placeholder,

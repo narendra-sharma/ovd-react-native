@@ -48,6 +48,12 @@ const ProjectDetail = ({ navigation, route }) => {
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Tasks: </Text>
       </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Start Date: </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Deadline: </Text>
+      </View>
 
       <TasksList tasks={route.params.tasks} navigation={navigation} />
 

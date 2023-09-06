@@ -6,12 +6,15 @@ import {
   Pressable,
   FlatList,
   ScrollView,
+  Alert,
+  ToastAndroid,
 } from "react-native";
-import { apiGetQuoteDetails } from "../../../../apis/quotes";
+import { apiGetQuoteDetails, apiDeleteQuote } from "../../../../apis/quotes";
 import { useFocusEffect } from "@react-navigation/native";
 
 const QuoteDetail = ({ navigation, route }) => {
   const [quoteData, setQuoteData] = useState({});
+  const [deleteFlag, setDeteleFlag] = useState(false);
 
   console.log("params got: ", route.params);
 
@@ -31,6 +34,30 @@ const QuoteDetail = ({ navigation, route }) => {
       return () => (isActive = false);
     }, [])
   );
+
+  const handleDelete = async (id) => {
+    const deleteQuote = async () => {
+      try {
+        const res = await apiDeleteQuote(id);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          setDeteleFlag((prev) => !prev);
+          ToastAndroid.show("Quote Deleted Successfully", ToastAndroid.SHORT);
+          navigation.goBack();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Alert.alert(`Delete Quote`, `Are you sure you want to delete this quote?`, [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => deleteQuote() },
+    ]);
+  };
 
   // useEffect(() => {
   //   const getAllData = async () => {
@@ -143,7 +170,7 @@ const QuoteDetail = ({ navigation, route }) => {
           </Pressable>
           <Pressable
             style={styles.button}
-            // onPress={handleDeleteCompany}
+            onPress={() => handleDelete(quoteData.id)}
           >
             <Text style={styles.textStyle}>Delete Quote</Text>
           </Pressable>

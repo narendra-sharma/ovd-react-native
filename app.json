@@ -8,12 +8,13 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/bigger.png",
-      "resizeMode": "native",
+      "resizeMode": "contain",
       "backgroundColor": "#ADD8E6"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.manyavv.NewNativeApp"
     },
     "android": {
       "adaptiveIcon": {

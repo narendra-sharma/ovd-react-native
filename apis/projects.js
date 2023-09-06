@@ -1,11 +1,11 @@
+import { useEffect } from "react";
 import { request } from "./index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const apiGetAllCompanies = async () => {
+export const apiGetAllProjects = async () => {
   const token = await AsyncStorage.getItem("token");
-  console.log(token);
   const response = await request({
-    path: "auth/view-all-companies",
+    path: "auth/view-all-projects",
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },
@@ -13,11 +13,22 @@ export const apiGetAllCompanies = async () => {
   return response;
 };
 
-export const apiCreateNewCompany = async (formData) => {
+export const apiGetProjectsDropdownData = async () => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
+    path: "auth/create-project",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiAddNewProject = async (formData) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: "auth/add-project",
     method: "post",
-    path: "auth/create-company",
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
@@ -26,10 +37,12 @@ export const apiCreateNewCompany = async (formData) => {
   return response;
 };
 
-export const apiGetCompanyDetails = async (id) => {
+export const apiGetPrefilledProjectDetails = async (formData, id) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
-    path: `auth/edit-company/${id}`,
+    method: "post",
+    path: `auth/edit-project/${id}`,
+    body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },
@@ -37,46 +50,24 @@ export const apiGetCompanyDetails = async (id) => {
   return response;
 };
 
-export const apiDeleteCompany = async (id) => {
+export const apiUpdateProjectDetails = async (formData, id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    method: "post",
+    path: `auth/update-project/${id}`,
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiDeleteProject = async (id) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
     method: "delete",
-    path: `auth/delete-company/${id}`,
-    headers: {
-      Authorization: `Bearer ${JSON.parse(token)}`,
-    },
-  });
-  return response;
-};
-
-export const apiUpdateCompanyDetails = async (formData, id) => {
-  const token = await AsyncStorage.getItem("token");
-  const response = await request({
-    method: "post",
-    path: `auth/update-company/${id}`,
-    body: formData,
-    headers: {
-      Authorization: `Bearer ${JSON.parse(token)}`,
-    },
-  });
-  return response;
-};
-
-export const apiGetAllUsers = async () => {
-  const token = await AsyncStorage.getItem("token");
-  const response = await request({
-    path: "auth/get-all-users",
-    headers: {
-      Authorization: `Bearer ${JSON.parse(token)}`,
-    },
-  });
-  return response;
-};
-
-export const apiGetAllQuotes = async () => {
-  const token = await AsyncStorage.getItem("token");
-  const response = await request({
-    path: "auth/view-all-quotes",
+    path: `auth/delete-project/${id}`,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },
