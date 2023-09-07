@@ -7,24 +7,28 @@ const ProjectDetail = ({ navigation, route }) => {
   const [totalCost, setTotalCost] = useState(0);
 
   useEffect(() => {
-    setProjectData({ ...route.params });
-    navigation.setOptions({
-      title: `Project - ${route.params.projectName}`,
-    });
+    const getAllData = async () => {
+      const res = await apiGetPreFilledProjectDetails(route.params.id);
+      console.log(res);
+      setProjectData({ ...res.data.project });
+      const tempCompanies = res.data.companies.map((company) => {
+        return { label: company.name, value: company.id };
+      });
+      setCompanyList([...tempCompanies]);
+
+      const tempConsultants = res.data.consultant.map((consultant) => {
+        return { label: consultant.name, value: consultant.id };
+      });
+      setConsultantList([...tempConsultants]);
+
+      const tempCustomers = res.data.customers.map((customer) => {
+        return { label: customer.name, value: customer.id };
+      });
+      setCustomersList([...tempCustomers]);
+    };
+
+    getAllData();
   }, []);
-
-  useEffect(() => {
-    const costArr = projectData?.tasks?.map((task, index) => {
-      return Number(task.cost.slice(1));
-    });
-    console.log("cost arr: ", costArr);
-    const sumOfCosts = costArr?.reduce(
-      (prevCost, currCost, index) => prevCost + currCost,
-      0
-    );
-    setTotalCost(sumOfCosts);
-  }, [projectData]);
-
   return (
     <View style={styles.centeredView}>
       <Text style={styles.item}>{projectData.companyName}</Text>
@@ -66,7 +70,6 @@ const ProjectDetail = ({ navigation, route }) => {
         <Text style={styles.fieldName}>Total cost of all tasks:</Text>
         <Text>{totalCost}</Text>
       </View>
-      <View></View>
 
       <View style={styles.buttonsContainer}>
         <Pressable
@@ -75,7 +78,9 @@ const ProjectDetail = ({ navigation, route }) => {
         >
           <Text
             style={styles.textStyle}
-            onPress={() => navigation.navigate("Edit Project")}
+            onPress={() =>
+              navigation.navigate("Edit Project", { id: projectData.id })
+            }
           >
             Edit Project Details
           </Text>

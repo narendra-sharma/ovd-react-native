@@ -37,12 +37,10 @@ export const apiAddNewProject = async (formData) => {
   return response;
 };
 
-export const apiGetPrefilledProjectDetails = async (formData, id) => {
+export const apiGetPreFilledProjectDetails = async (id) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
-    method: "post",
     path: `auth/edit-project/${id}`,
-    body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },

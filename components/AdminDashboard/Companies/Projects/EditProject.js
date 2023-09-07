@@ -15,7 +15,9 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import {
   apiAddNewProject,
+  apiGetPreFilledProjectDetails,
   apiGetProjectsDropdownData,
+  apiUpdateProjectDetails,
 } from "../../../../apis/projects";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
@@ -37,7 +39,7 @@ const initialFormData = {
   number: "",
 };
 
-const EditProject = ({ navigation }) => {
+const EditProject = ({ navigation, route }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [endDate, setEndDate] = useState();
   const [isEndDatePickerVisible, setEndDateVisibility] = useState(false);
@@ -59,14 +61,14 @@ const EditProject = ({ navigation }) => {
 
   useEffect(() => {
     const getAllData = async () => {
-      const res = await apiGetProjectsDropdownData();
-      console.log("res: ", res);
+      const res = await apiGetPreFilledProjectDetails(route.params.id);
+      setFormData({ ...res.data.project });
       const tempCompanies = res.data.companies.map((company) => {
         return { label: company.name, value: company.id };
       });
       setCompanyList([...tempCompanies]);
 
-      const tempConsultants = res.data.consultants.map((consultant) => {
+      const tempConsultants = res.data.consultant.map((consultant) => {
         return { label: consultant.name, value: consultant.id };
       });
       setConsultantList([...tempConsultants]);
@@ -75,7 +77,6 @@ const EditProject = ({ navigation }) => {
         return { label: customer.name, value: customer.id };
       });
       setCustomersList([...tempCustomers]);
-      console.log(customersList);
     };
 
     getAllData();
@@ -87,25 +88,8 @@ const EditProject = ({ navigation }) => {
 
   const handleStartDateConfirm = (date) => {
     setStartDate(date);
+    setFormData({ ...formData, start_date: date });
     hideStartDatePicker();
-  };
-
-  const handleSubmit = async () => {
-    try {
-      console.log("add project obj:", formData);
-      const res = await apiAddNewProject({
-        ...formData,
-      });
-      if (res.status == 200) {
-        ToastAndroid.show("New Project Added", ToastAndroid.SHORT);
-        navigation.goBack();
-      } else {
-        ToastAndroid.show("Cannot Add New Project", ToastAndroid.SHORT);
-      }
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const hideEndDatePicker = () => {
@@ -118,16 +102,55 @@ const EditProject = ({ navigation }) => {
       moment(date).format("MM/DD/YYYY")
     ) {
       setEndDate(date);
+      setFormData({ ...formData, end_date: date });
     } else {
       setDeadlineError("Deadline cannot be before the start date");
     }
     hideEndDatePicker();
   };
 
+  const handleSubmit = async () => {
+    try {
+      // console.log("edit project obj:", {
+      //   ...formData,
+      //   company: formData.company_id,
+      //   customer: formData.customer_id,
+      //   name: formData.project_name,
+      //   consultant: formData.consultant_id,
+      //   estimated_hour: formData.estimated_hours,
+      //   deadline: formData.end_date,
+      //   number: formData.contact_number,
+      // });
+      const res = await apiUpdateProjectDetails(
+        {
+          ...formData,
+          company: formData.company_id,
+          customer: formData.customer_id,
+          name: formData.project_name,
+          consultant: formData.consultant_id,
+          estimated_hour: formData.estimated_hours,
+          deadline: formData.end_date,
+          number: formData.contact_number,
+        },
+        route.params.id
+      );
+      console.log("res: ", res);
+      if (res.status == 200) {
+        ToastAndroid.show("Project Updated", ToastAndroid.SHORT);
+        navigation.goBack();
+      } else {
+        ToastAndroid.show("Project Updated", ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
+        estimated_hours
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
         keyboardShouldPersistTaps="always"
       >
@@ -135,10 +158,10 @@ const EditProject = ({ navigation }) => {
           <Text>Project Name:</Text>
           <TextInput
             style={styles.input}
-            name="name"
-            value={formData.name}
+            name="project_name"
+            value={formData.project_name}
             onChangeText={(text) => {
-              setFormData({ ...formData, name: text });
+              setFormData({ ...formData, project_name: text });
               setNameError(null);
             }}
             placeholder="Project Name"
@@ -149,23 +172,21 @@ const EditProject = ({ navigation }) => {
           <DropdownMenu
             data={companyList}
             placeholder="Select Company"
-            value={formData.company}
+            value={formData.company_id}
             setValue={setFormData}
-            label="company"
+            label="company_id"
             originalObj={formData}
             setErrorState={setNameError}
           />
-          {/* <Text>Status:</Text>
-          <DropdownMenu /> */}
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
           <Text>Customer:</Text>
           <DropdownMenu
             data={customersList}
             placeholder="Select Customer"
-            value={formData.customer}
+            value={formData.customer_id}
             setValue={setFormData}
-            label="customer"
+            label="customer_id"
             originalObj={formData}
             setErrorState={setCustomerError}
           />
@@ -224,10 +245,10 @@ const EditProject = ({ navigation }) => {
           <Text>Phone Number:</Text>
           <TextInput
             style={styles.input}
-            name="number"
-            value={formData.number}
+            name="contact_number"
+            value={formData.contact_number}
             onChangeText={(text) => {
-              setFormData({ ...formData, number: text });
+              setFormData({ ...formData, contact_number: text });
             }}
             placeholder="Number"
           />
@@ -236,10 +257,6 @@ const EditProject = ({ navigation }) => {
           <Pressable
             onPress={() => {
               setStartDateVisibility(true);
-              setFormData({
-                ...formData,
-                start_date: moment(startDate).format("MM/DD/YYYY"),
-              });
               setStartDateError(null);
             }}
             style={[
@@ -251,13 +268,13 @@ const EditProject = ({ navigation }) => {
                 color: "#d9d9d9",
               },
             ]}
-            name="startDate"
+            name="start_date"
             value={formData.start_date}
           >
             <Icon name="calendar-alt" size={25} color="#A9A9AC" />
-            {startDate ? (
+            {formData.start_date ? (
               <Text style={{ color: "#000", marginLeft: 10 }}>
-                {moment(startDate).format("MM/DD/YYYY")}
+                {moment(formData.start_date).format("MM/DD/YYYY")}
               </Text>
             ) : (
               <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>
@@ -279,10 +296,6 @@ const EditProject = ({ navigation }) => {
           <Pressable
             onPress={() => {
               setEndDateVisibility(true);
-              setFormData({
-                ...formData,
-                deadline: moment(endDate).format("MM/DD/YYYY"),
-              });
               setDeadlineError(null);
             }}
             style={[
@@ -298,9 +311,9 @@ const EditProject = ({ navigation }) => {
             value={formData.deadline}
           >
             <Icon name="calendar-alt" size={25} color="#A9A9AC" />
-            {endDate ? (
+            {formData.end_date ? (
               <Text style={{ color: "#000", marginLeft: 10 }}>
-                {moment(endDate).format("MM/DD/YYYY")}
+                {moment(formData.end_date).format("MM/DD/YYYY")}
               </Text>
             ) : (
               <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>Deadline</Text>
@@ -314,9 +327,9 @@ const EditProject = ({ navigation }) => {
           <TextInput
             style={styles.input}
             name="estimated_hour"
-            value={formData.estimated_hour}
+            value={formData.estimated_hours}
             onChangeText={(text) => {
-              setFormData({ ...formData, estimated_hour: text });
+              setFormData({ ...formData, estimated_hours: text });
               setDescriptionError;
             }}
             placeholder="Total Estimated Hours"
@@ -327,9 +340,9 @@ const EditProject = ({ navigation }) => {
           <DropdownMenu
             data={consultantList}
             placeholder="Select Consultant"
-            value={formData.consultant}
+            value={formData.consultant_id}
             setValue={setFormData}
-            label="consultant"
+            label="consultant_id"
             originalObj={formData}
             setErrorState={setConsultantError}
           />
@@ -437,7 +450,7 @@ const EditProject = ({ navigation }) => {
               { label: "UPI", value: 4 },
             ]}
             placeholder="Select Company"
-            value={formData.billing_type}
+            value={Number(formData.billing_type)}
             setValue={setFormData}
             label="billing_type"
             originalObj={formData}
@@ -469,6 +482,7 @@ const EditProject = ({ navigation }) => {
 };
 
 export default EditProject;
+
 const DropdownMenu = ({
   data,
   placeholder,
