@@ -1,62 +1,117 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Text, View, StyleSheet, Pressable, FlatList } from "react-native";
 import TasksList from "./Tasks/TaskList";
+import { apiGetPreFilledProjectDetails } from "../../../../apis/projects";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProjectDetail = ({ navigation, route }) => {
-  const [projectData, setProjectData] = useState({});
+  const [projectData, setProjectData] = useState({ consultant: "" });
+  const [consultant, setConsultant] = useState("");
+  const [customer, setCustomer] = useState("");
+  const [company, setCompany] = useState("");
+  const [users, setUsers] = useState([]);
+
   const [totalCost, setTotalCost] = useState(0);
 
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getAllData = async () => {
+        try {
+          const res = await apiGetPreFilledProjectDetails(route.params.id);
+          setProjectData({ ...res.data.project });
+
+          const tempConsultant = res.data.consultant.filter(
+            (consultant) => consultant.id == projectData.consultant_id
+          );
+          setConsultant(
+            res.data.consultant[
+              res.data.consultant.findIndex(
+                (consultant) => consultant.id == projectData.consultant_id
+              )
+            ].name
+          );
+
+          const tempCustomer = res.data.customers.filter(
+            (customer) => customer.id == projectData.customer_id
+          );
+          setCustomer(tempCustomer[0].name);
+
+          const tempCompany = res.data.companies.filter(
+            (company) => company.id == projectData.company_id
+          );
+          setCompany(tempCompany[0].name);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      getAllData();
+      return () => (isActive = false);
+    }, [])
+  );
+
   useEffect(() => {
-    const getAllData = async () => {
-      const res = await apiGetPreFilledProjectDetails(route.params.id);
-      console.log(res);
-      setProjectData({ ...res.data.project });
-      const tempCompanies = res.data.companies.map((company) => {
-        return { label: company.name, value: company.id };
-      });
-      setCompanyList([...tempCompanies]);
+    setProjectData({
+      ...projectData,
+      company: company,
+      customer: customer,
+      consultant: consultant,
+    });
+  }, [company, customer, consultant]);
 
-      const tempConsultants = res.data.consultant.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
-      });
-      setConsultantList([...tempConsultants]);
-
-      const tempCustomers = res.data.customers.map((customer) => {
-        return { label: customer.name, value: customer.id };
-      });
-      setCustomersList([...tempCustomers]);
-    };
-
-    getAllData();
-  }, []);
   return (
     <View style={styles.centeredView}>
       <Text style={styles.item}>{projectData.companyName}</Text>
 
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Name: </Text>
-        <Text> {projectData.projectName} </Text>
+        <Text> {projectData.project_name} </Text>
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Consutant: </Text>
+        <Text style={styles.fieldName}>Consultant: </Text>
         <Text> {projectData.consultant} </Text>
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Point of Contact: </Text>
-        <Text> {projectData.pointOfContact} </Text>
+        <Text style={styles.fieldName}>Customer: </Text>
+        <Text> {consultant} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Company: </Text>
+        <Text> {company} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Phone Number: </Text>
+        <Text> {projectData.contact_number} </Text>
       </View>
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Project Location: </Text>
-        <Text> {projectData.projectLocation} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Tasks: </Text>
+        <Text> {projectData.address} </Text>
       </View>
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Start Date: </Text>
+        <Text> {projectData.start_date} </Text>
       </View>
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Deadline: </Text>
+        <Text> {projectData.end_date} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Description: </Text>
+        <Text> {projectData.description} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Total Estimated Hours: </Text>
+        <Text> {projectData.estimated_hours} </Text>
+      </View>
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Billing Type: </Text>
+        <Text> {projectData.billing_type} </Text>
+      </View>
+
+      <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Tasks: </Text>
       </View>
 
       <TasksList tasks={route.params.tasks} navigation={navigation} />

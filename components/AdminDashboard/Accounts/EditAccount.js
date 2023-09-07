@@ -1,37 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
-  View,
-  Text,
-  Button,
+  FlatList,
   StyleSheet,
+  Text,
   Pressable,
-  TextInput,
-  ScrollView,
+  View,
+  Alert,
   ToastAndroid,
+  TouchableNativeFeedback,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { apiGetProfileDetails, apiUpdateProfile } from "../../../apis/auth";
-import { Country, State, City } from "country-state-city";
-import { Dropdown } from "react-native-element-dropdown";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { ScrollView } from "react-native-gesture-handler";
+import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
+import { useFocusEffect } from "@react-navigation/native";
+import { apiUpdateProfile } from "../../../apis/auth";
 
-// import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-
-const initialUserData = {
-  // name: "",
-  // email: "",
-  // organization: "",
-  // phonenumber: "",
-  // address: "",
-  // country: "",
-  // state: "",
-  // zipcode: "",
-  // latitude: "",
-  // longitude: "",
-};
-
-const EditProfile = ({ navigation }) => {
+const EditAccount = () => {
   const [userData, setUserData] = useState(initialUserData);
   const [isFocus, setIsFocus] = useState(false);
 
@@ -87,35 +71,6 @@ const EditProfile = ({ navigation }) => {
       console.log(error);
     }
   };
-
-  // const handleUploadPhoto = async () => {
-  //   const options = {
-  //     selectionLimit: 1,
-  //     mediaType: "photo",
-  //     includeBase64: false,
-  //   };
-  //   const result = await launchImageLibrary(options);
-  // };
-
-  // const allCountries = Country.getAllCountries().map((country) => {
-  //   return {
-  //     label: country.name,
-  //     value: country.isoCode,
-  //   };
-  // });
-
-  // console.log(allCountries);
-
-  // const renderLabel = () => {
-  //   if (value || isFocus) {
-  //     return (
-  //       <Text style={[styles.label, isFocus && { color: "blue" }]}>
-  //         Dropdown label
-  //       </Text>
-  //     );
-  //   }
-  //   return null;
-  // };
 
   return (
     <View style={styles.centeredView}>
@@ -358,59 +313,16 @@ const EditProfile = ({ navigation }) => {
   );
 };
 
-export default EditProfile;
-
-const placesStyle = StyleSheet.create({
-  textInputContainer: {
-    // backgroundColor: "rgba(0,0,0,0)",
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    width: "100%",
-    borderColor: "gray",
-  },
-  textInput: {
-    backgroundColor: "transparent",
-    height: 45,
-    color: "#5d5d5d",
-    fontSize: 16,
-    borderWidth: 0.5,
-    borderColor: "gray",
-  },
-  predefinedPlacesDescription: {
-    color: "#1faadb",
-  },
-  listView: {
-    color: "black",
-    borderColor: "gray",
-    maxWidth: "100%",
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "blue",
-  },
-  description: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    fontSize: 14,
-    maxWidth: "89%",
-  },
-});
+export default EditAccount;
 
 const styles = StyleSheet.create({
-  centeredView: {
-    display: "flex",
-    padding: 22,
-    width: "100%",
-  },
-
   dropdown: {
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
-    width: "100%",
+    width: "90%",
     marginBottom: 5,
   },
   icon: {
@@ -455,7 +367,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: "100%",
+    width: 300,
     height: 35,
     marginTop: 2,
     marginBottom: 10,

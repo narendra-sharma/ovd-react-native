@@ -21,6 +21,7 @@ import CompanyStackScreen from "../Companies/CompanyStackScreen";
 import ProfileStackScreen from "../Profile/ProfileStackScreen";
 import { useFocusEffect } from "@react-navigation/native";
 import ChangePassword from "../Settings/ChangePassword";
+import AccountsStackScreen from "../Accounts/AccountsStackScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -155,6 +156,15 @@ const RightDrawer = ({ navigation }) => {
         }}
         name="Manage Companies"
         component={CompanyStackScreen}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => <Icon name="users" size={28} />,
+          title: "Accounts",
+          headerShown: false,
+        }}
+        name="Accounts"
+        component={AccountsStackScreen}
       />
       <Drawer.Screen
         options={{

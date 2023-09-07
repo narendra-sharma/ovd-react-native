@@ -13,7 +13,6 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
-import Signature from "./TechnicianComponents/DigitalSign";
 
 const randomHexColor = () => {
   return "#b7d0d1";

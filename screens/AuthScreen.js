@@ -71,7 +71,7 @@ const AuthScreen = ({ navigation }) => {
   //handle email validation
   const validateEmail = (email) => {
     if (email == "") {
-      setEmailError("Email is required");
+      setEmailError("Please enter valid email / username");
       return false;
     }
 
@@ -187,7 +187,7 @@ const AuthScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           name="email"
-          placeholder="Email"
+          placeholder="Email / Username"
           value={formData.email}
           onChangeText={(text) => handleChange(text, "email")}
           type="email"

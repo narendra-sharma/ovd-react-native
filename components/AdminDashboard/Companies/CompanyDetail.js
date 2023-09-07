@@ -134,7 +134,7 @@ const CompanyDetail = ({ navigation, route }) => {
   const [companyData, setCompanyData] = useState({});
   const [selectedTab, setSelectedTab] = useState(0);
   const [consultantManager, setConsultantManager] = useState("");
-  const [consultant, setConsulatnt] = useState("");
+  const [consultant, setConsultant] = useState("");
   const [contractor, setContractor] = useState("");
   const [users, setUsers] = useState([]);
 
@@ -147,7 +147,7 @@ const CompanyDetail = ({ navigation, route }) => {
     const tempConsultObj = {
       ...users[users.findIndex((obj) => obj.user_type == 4)],
     };
-    setConsulatnt(tempConsultObj.name);
+    setConsultant(tempConsultObj.name);
 
     const tempContractObj = {
       ...users[users.findIndex((obj) => obj.user_type == 5)],

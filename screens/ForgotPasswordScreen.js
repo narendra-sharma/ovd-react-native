@@ -40,18 +40,22 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   //handle form submit
   const handleSubmit = async () => {
-    ToastAndroid.show("Please Wait", ToastAndroid.LONG);
+    // ToastAndroid.show("Please Wait", ToastAndroid.LONG);
     try {
       if (validateEmail(email)) {
         const res = await apiSendForgotPasswordCode({ email: email });
-        // console.log(res);
-        if (res.status == 200) {
+        console.log(res.data);
+        if (res.data.success == true) {
           ToastAndroid.show("Code Sent", ToastAndroid.SHORT);
           navigation.navigate("OTP", { email });
+          // navigation.navigate("OTP", { email });
+        } else {
+          ToastAndroid.show("Email does not exist", ToastAndroid.SHORT);
         }
-        // navigation.navigate("OTP", { email });
       }
     } catch (error) {
+      ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+
       console.log(error);
     }
   };

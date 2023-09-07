@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { apiResetPassword } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 const passwords = {
   newPassword: "",
@@ -19,6 +20,9 @@ const ResetPasswordScreen = ({ navigation, route }) => {
   const [formData, setFormData] = useState(passwords);
   const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
 
   //handle change in input text
   const handleChange = (value, label) => {
@@ -42,12 +46,15 @@ const ResetPasswordScreen = ({ navigation, route }) => {
     }
   };
 
-  console.log(route);
+  useEffect(() => {
+    setNewPasswordError(null);
+    setConfirmPasswordError(null);
+  }, [navigation]);
 
   //handle password validation
   const validatePassword = (password) => {
     if (password == "") {
-      setNewPasswordError("*Required");
+      setNewPasswordError("New password is required");
       return false;
     }
 
@@ -66,7 +73,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
   //check if the passwords are matching
   const validateConfirmPassword = (value) => {
     if (value == "") {
-      setConfirmPasswordError("*Required");
+      setConfirmPasswordError("Confirm password is required");
       return false;
     }
     if (value == formData.newPassword) {
@@ -123,10 +130,10 @@ const ResetPasswordScreen = ({ navigation, route }) => {
         justifyContent: "center",
       }}
     >
-      <Text>Reset Password</Text>
+      <Text style={styles.heading}>Reset Password</Text>
       {/**********  INPUT PASSWORDS VIEW *********/}
       <View style={{ width: "80%", display: "flex" }}>
-        <TextInput
+        {/* <TextInput
           style={styles.input}
           name="newPassword"
           placeholder="New Password"
@@ -136,15 +143,62 @@ const ResetPasswordScreen = ({ navigation, route }) => {
         />
         {newPasswordError ? (
           <Text style={styles.errorText}>{newPasswordError}</Text>
+        ) : null} */}
+
+        <View
+          style={[
+            {
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            },
+            styles.input,
+          ]}
+        >
+          <TextInput
+            name="newPassword"
+            placeholder="New Password"
+            value={formData.newPassword}
+            onChangeText={(text) => handleChange(text, "newPassword")}
+            secureTextEntry={isNewPasswordVisible ? false : true}
+          />
+          {formData.newPassword.length > 0 ? (
+            <Icon
+              onPress={() => setIsNewPasswordVisible((prev) => !prev)}
+              name={isNewPasswordVisible ? "eye-slash" : "eye"}
+              size={20}
+            />
+          ) : null}
+        </View>
+        {newPasswordError ? (
+          <Text style={styles.errorText}>{newPasswordError}</Text>
         ) : null}
-        <TextInput
-          style={styles.input}
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          value={formData.confirmPassword}
-          onChangeText={(text) => handleChange(text, "confirmPassword")}
-          secureTextEntry={true}
-        />
+
+        <View
+          style={[
+            {
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            },
+            styles.input,
+          ]}
+        >
+          <TextInput
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChangeText={(text) => handleChange(text, "confirmPassword")}
+            secureTextEntry={isConfirmPasswordVisible ? false : true}
+          />
+          {formData.confirmPassword.length > 0 ? (
+            <Icon
+              onPress={() => setIsConfirmPasswordVisible((prev) => !prev)}
+              name={isConfirmPasswordVisible ? "eye-slash" : "eye"}
+              size={20}
+            />
+          ) : null}
+        </View>
         {confirmPasswordError ? (
           <Text style={styles.errorText}>{confirmPasswordError}</Text>
         ) : null}

@@ -1,41 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, Pressable } from "react-native";
-import { apiGetProfileDetails, apiUpdateProfile } from "../../../apis/auth";
-import { useFocusEffect } from "@react-navigation/native";
+import { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 
-// import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+const AccountDetails = ({ navigation, route }) => {
+  const [userData, setUserData] = useState({ ...route.params });
 
-const Profile = ({ navigation }) => {
-  const [userData, setUserData] = useState({});
+  //  useFocusEffect(
+  //    React.useCallback(() => {
+  //      let isActive = true;
 
-  useFocusEffect(
-    React.useCallback(() => {
-      let isActive = true;
+  //      const fetchUser = async () => {
+  //        try {
+  //          const res = await apiGetProfileDetails();
+  //          // console.log("we got from api: ", res.data);
+  //          setUserData(res.data.users);
+  //          // await AsyncStorage.setItem("profile", JSON.stringify(res.data.users));
+  //          // const user = await AsyncStorage.getItem("profile");
+  //          // // console.log("local storage: ", user);
+  //          // const parsedUser = JSON.parse(user);
+  //          // setUserData({
+  //          //   ...parsedUser,
+  //          // });
+  //        } catch (err) {
+  //          console.log(err);
+  //        }
+  //      };
 
-      const fetchUser = async () => {
-        try {
-          const res = await apiGetProfileDetails();
-          // console.log("we got from api: ", res.data);
-          setUserData(res.data.users);
-          // await AsyncStorage.setItem("profile", JSON.stringify(res.data.users));
-          // const user = await AsyncStorage.getItem("profile");
-          // // console.log("local storage: ", user);
-          // const parsedUser = JSON.parse(user);
-          // setUserData({
-          //   ...parsedUser,
-          // });
-        } catch (err) {
-          console.log(err);
-        }
-      };
+  //      fetchUser();
 
-      fetchUser();
-
-      return () => {
-        isActive = false;
-      };
-    }, [])
-  );
+  //      return () => {
+  //        isActive = false;
+  //      };
+  //    }, [])
+  //  );
 
   // useEffect(() => {
   //   const getProfileData = async () => {
@@ -65,27 +61,6 @@ const Profile = ({ navigation }) => {
     <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
       <>
         <View style={{ width: "80%", maxWidth: "85%" }}>
-          {/* <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
-              <Icon name="user-circle-o" size={55} />
-              <Pressable
-                style={{
-                  backgroundColor: "#B76E79",
-                  padding: 12,
-                  padding: 12,
-                  borderRadius: 8,
-                  marginLeft: 10,
-                  width: "70%",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                }}
-                onPress={handleUploadPhoto}
-              >
-                <Text style={styles.submitText}>Upload New Photo</Text>
-                <Icon name="edit" size={20} style={{ color: "#fff" }} />
-              </Pressable>
-            </View> */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Name: </Text>
             <Text>{userData.name}</Text>
@@ -124,7 +99,7 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
         <Pressable
-          onPress={() => navigation.navigate("Edit Profile")}
+          onPress={() => navigation.navigate("Edit Account")}
           style={styles.submitButton}
         >
           <Text style={styles.submitText}>Edit</Text>
@@ -133,6 +108,8 @@ const Profile = ({ navigation }) => {
     </View>
   );
 };
+
+export default AccountDetails;
 
 const styles = StyleSheet.create({
   dropdown: {
@@ -230,5 +207,3 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
-
-export default Profile;

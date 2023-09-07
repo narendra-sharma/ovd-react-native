@@ -73,7 +73,7 @@ const ChangePassword = ({ navigation }) => {
   //check if the passwords are matching
   const validateOldPassword = (value) => {
     if (value == "") {
-      setOldPasswordError("*Required");
+      setOldPasswordError("Old password is required");
       return false;
     }
     return true;
@@ -82,7 +82,7 @@ const ChangePassword = ({ navigation }) => {
   //handle password validation
   const validatePassword = (password) => {
     if (password == "") {
-      setNewPasswordError("*Required");
+      setNewPasswordError("New password is required");
       return false;
     }
 
@@ -101,7 +101,7 @@ const ChangePassword = ({ navigation }) => {
   //check if the passwords are matching
   const validateConfirmPassword = (value) => {
     if (value == "") {
-      setConfirmPasswordError("*Required");
+      setConfirmPasswordError("Confirm password is required");
       return false;
     }
     if (value == formData.newPassword) {
@@ -138,19 +138,10 @@ const ChangePassword = ({ navigation }) => {
         ToastAndroid.show("Password changed failed", ToastAndroid.SHORT);
         console.log(error);
       }
-    }
-    if (
-      !validateOldPassword(formData.oldPassword) ||
-      !validatePassword(formData.newPassword) ||
-      !validateConfirmPassword(formData.confirmPassword)
-    ) {
-      console.log("no");
-    }
-    if (
-      !validatePassword(formData.newPassword) ||
-      !validateConfirmPassword(formData.confirmPassword)
-    ) {
-      console.log("no");
+    } else {
+      validateOldPassword(formData.oldPassword);
+      validatePassword(formData.newPassword);
+      validateConfirmPassword(formData.confirmPassword);
     }
   };
 
@@ -164,7 +155,7 @@ const ChangePassword = ({ navigation }) => {
     >
       {/**********  INPUT PASSWORDS VIEW *********/}
       <View style={{ width: "80%", display: "flex" }}>
-        <Text>Enter Old Password: </Text>
+        <Text>Enter Current Password: </Text>
         <View
           style={[
             {
