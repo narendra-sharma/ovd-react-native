@@ -13,6 +13,11 @@ import { mockData } from "../MOCK_DATA";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import ProjectsList from "./ProjectsList";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import EditProject from "./EditProject";
+import AddProject from "./AddProject";
+import ProjectDetail from "./ProjectDetail";
 
 const initialFormData = {
   companyName: "",
@@ -21,7 +26,9 @@ const initialFormData = {
   jobs: [{}],
 };
 
-const ViewProjects = ({ navigation }) => {
+const Stack = createNativeStackNavigator();
+
+const ProjectsLayout = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Pressable
@@ -37,6 +44,30 @@ const ViewProjects = ({ navigation }) => {
 
       <ProjectsList navigation={navigation} />
     </View>
+  );
+};
+
+const ViewProjects = ({ navigation }) => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="My Projects"
+        component={ProjectsLayout}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <MaterialIcons
+              onPress={() => navigation.toggleDrawer()}
+              name="menu"
+              size={25}
+              style={{ marginRight: 30 }}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen name="Edit Project" component={EditProject} />
+      <Stack.Screen name="Add Project" component={AddProject} />
+      <Stack.Screen name="Project Details" component={ProjectDetail} />
+    </Stack.Navigator>
   );
 };
 

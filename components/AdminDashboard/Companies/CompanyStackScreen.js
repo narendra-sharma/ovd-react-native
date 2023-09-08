@@ -107,13 +107,13 @@ const CompanyStackScreen = ({ navigation }) => {
         name="Edit Company Details"
         component={EditCompanyDetails}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Projects"
         component={ViewProjects}
         options={({ navigation }) => ({
           title: "My Projects",
         })}
-      />
+      /> */}
       <Stack.Screen
         name="Add Project"
         component={AddProject}

@@ -14,7 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteProject, apiGetAllProjects } from "../../../../apis/projects";
 
 const ProjectsList = ({ navigation, companyId }) => {
-  const [projectsList, setProjectsList] = useState(mockProjects);
+  const [projectsList, setProjectsList] = useState([]);
   const [deleteFlag, setDeteleFlag] = useState(false);
 
   useFocusEffect(

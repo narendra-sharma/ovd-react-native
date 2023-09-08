@@ -14,6 +14,7 @@ import SalesManagerScreen from "./screens/SalesManagerScreen";
 import CustomerScreen from "./screens/CustomerScreen";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FirstLoginScreen from "./screens/FirstLoginScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,11 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={AuthScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="First Login"
+          component={FirstLoginScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

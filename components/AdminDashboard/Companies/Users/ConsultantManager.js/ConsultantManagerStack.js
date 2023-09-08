@@ -9,49 +9,20 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { mockData } from "../MOCK_DATA";
-import QuotesList from "./QuotesList";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import EditQuote from "./EditQuote";
-import AddQuote from "./AddQuote";
-import QuoteDetail from "./QuoteDetail";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AllConsultantManagers from "./AllConsultantManagers";
 
 const Stack = createNativeStackNavigator();
 
-const QuotesLayout = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Pressable
-        style={[styles.button, styles.addButton]}
-        onPress={() => {
-          navigation.navigate("Add Quote");
-        }}
-      >
-        <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New Quote
-        </Text>
-      </Pressable>
-
-      <QuotesList navigation={navigation} />
-    </View>
-  );
-};
-
-const initialFormData = {
-  companyName: "",
-  email: "",
-  phoneNo: "",
-  jobs: [{}],
-};
-
-const ViewQuotes = ({ navigation }) => {
+const ConsultantManagerStack = ({ navigation }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="My Quotes"
-        component={QuotesLayout}
+        name="All Consultant Managers"
+        component={AllConsultantManagers}
         options={({ navigation }) => ({
           headerLeft: () => (
             <MaterialIcons
@@ -63,14 +34,11 @@ const ViewQuotes = ({ navigation }) => {
           ),
         })}
       />
-      <Stack.Screen name="Edit Quotes" component={EditQuote} />
-      <Stack.Screen name="Add Quote" component={AddQuote} />
-      <Stack.Screen name="Quote Details" component={QuoteDetail} />
     </Stack.Navigator>
   );
 };
 
-export default ViewQuotes;
+export default ConsultantManagerStack;
 
 const styles = StyleSheet.create({
   container: {

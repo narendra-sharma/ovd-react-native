@@ -39,7 +39,9 @@ const AuthScreen = ({ navigation }) => {
         setUserType(parsedProfile.user_type); // Set the user type in the state
       }
 
-      handleUserType(parsedProfile.user_type);
+      if (res.data.first_login == 1) {
+        handleUserType(parsedProfile.user_type);
+      }
     };
 
     checkUserExists();
@@ -71,7 +73,7 @@ const AuthScreen = ({ navigation }) => {
   //handle email validation
   const validateEmail = (email) => {
     if (email == "") {
-      setEmailError("Please enter valid email / username");
+      setEmailError("Email / username is required");
       return false;
     }
 
@@ -142,7 +144,11 @@ const AuthScreen = ({ navigation }) => {
       try {
         const res = await apiAuth(formData);
         console.log(res.data);
-        if (res.status == 200) {
+        setToken(JSON.stringify(res.data.token));
+        setProfile(JSON.stringify(res.data.users));
+        if (res.data.first_login == 0) {
+          navigation.navigate("First Login");
+        } else if (res.status == 200) {
           // handleUserType(16);
           handleUserType(
             res.data.users.user_type,
@@ -150,8 +156,6 @@ const AuthScreen = ({ navigation }) => {
             res.data.users
           );
           // navigation.navigate("Dashboard");
-          setToken(JSON.stringify(res.data.token));
-          setProfile(JSON.stringify(res.data.users));
         }
       } catch (error) {
         ToastAndroid.show(
