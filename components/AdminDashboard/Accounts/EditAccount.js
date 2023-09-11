@@ -6,9 +6,9 @@ import {
   Pressable,
   View,
   Alert,
-  ToastAndroid,
   TouchableNativeFeedback,
 } from "react-native";
+import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
@@ -58,7 +58,14 @@ const EditAccount = () => {
       // console.log(userData);
       //   console.log(res);
       if (res.status == 200) {
-        ToastAndroid.show("Profile Updated Successfully", ToastAndroid.SHORT);
+        Toast.show("Profile Updated Successfully", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
         const resp = await apiGetProfileDetails();
         console.log("we got from api: ", res.data);
         setUserData(resp.data.users);

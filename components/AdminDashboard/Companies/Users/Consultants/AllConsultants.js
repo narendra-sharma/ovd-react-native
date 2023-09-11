@@ -3,47 +3,41 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  View,
   Pressable,
-  TouchableNativeFeedback,
+  View,
   Alert,
+  TouchableNativeFeedback,
 } from "react-native";
-import Toast from "react-native-root-toast";
-import { MockQuotes } from "./MockQuotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { apiDeleteQuote, apiGetAllQuotes } from "../../../../apis/quotes";
+import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
+import { apiDeleteUser, apiGetUsersFromUsers } from "../../../../../apis/users";
+import Toast from "react-native-root-toast";
 
 const randomHexColor = () => {
   return "#b7d0d1";
 };
 
-const QuotesList = ({ navigation, companyId }) => {
-  const [quotesList, setQuotesList] = useState([]);
-  const [rippleColor, setRippleColor] = useState(randomHexColor());
-  const [rippleOverflow, setRippleOverflow] = useState(true);
+const AllConsultants = ({ navigation }) => {
+  const [consultantList, setConsultantList] = useState([]);
   const [deleteFlag, setDeteleFlag] = useState(false);
+  const [rippleColor, setRippleColor] = useState(randomHexColor());
+  const [rippleRadius, setRippleRadius] = useState(10);
+  const [rippleOverflow, setRippleOverflow] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
-      const getAllQuotes = async () => {
-        const res = await apiGetAllQuotes();
-        // console.log(res.data.quotations);
-        //listing of quotes for a specific company
-        if (companyId) {
-          const quotes = res.data.quotations.filter(
-            (quote) => quote.company_id == companyId
-          );
-          setQuotesList(quotes);
-        } else {
-          //listing all quotes
-          setQuotesList(res.data.quotations);
-        }
+      const getConsultantManagers = async () => {
+        const res = await apiGetUsersFromUsers();
+        console.log(res.data);
+        // console.log(res.data.data);
+
+        setConsultantList([...res.data.consultants]);
       };
 
-      getAllQuotes();
+      getConsultantManagers();
 
       return () => {
         isActive = false;
@@ -51,34 +45,15 @@ const QuotesList = ({ navigation, companyId }) => {
     }, [deleteFlag])
   );
 
-  // useEffect(() => {
-  //   const getAllQuotes = async () => {
-  //     const res = await apiGetAllQuotes();
-  //     console.log(res.data.quotations);
-  //     //listing of quotes for a specific company
-  //     if (companyId) {
-  //       const quotes = res.data.quotations.filter(
-  //         (quote) => quote.company_id == companyId
-  //       );
-  //       setQuotesList(quotes);
-  //     } else {
-  //       //listing all quotes
-  //       setQuotesList(res.data.quotations);
-  //     }
-  //   };
-
-  //   getAllQuotes();
-  // }, []);
-
-  //function to delete the quote
-  const handleDelete = async (id) => {
-    const deleteQuote = async () => {
+  //function to delete the user
+  const handleDelete = async (user, userId) => {
+    const deleteUser = async () => {
       try {
-        const res = await apiDeleteQuote(id);
+        const res = await apiDeleteUser(userId);
         console.log(res.data);
         if (res.data.message == "Deleted successfully") {
           setDeteleFlag((prev) => !prev);
-          Toast.show("Quote Deleted Successfully", {
+          Toast.show("User Deleted Successfully", {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
             shadow: true,
@@ -92,39 +67,52 @@ const QuotesList = ({ navigation, companyId }) => {
         console.log(error);
       }
     };
-    Alert.alert(`Delete Quote`, `Are you sure you want to delete this quote?`, [
+    Alert.alert(`Delete ${user}`, `Are you sure you want to delete ${user}?`, [
       {
         text: "Cancel",
         onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
-      { text: "OK", onPress: () => deleteQuote() },
+      { text: "OK", onPress: () => deleteUser() },
     ]);
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Pressable
+        style={[styles.button, styles.addButton]}
+        onPress={() => {
+          navigation.navigate("Add Consultant");
+          // setAddCompanyModalVisible(true);
+        }}
+      >
+        <Text style={styles.addText}>
+          <Icon name="plus-circle" /> Add New
+        </Text>
+      </Pressable>
+
       <FlatList
+        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
-        data={quotesList}
+        data={consultantList}
         renderItem={({ item }) => (
           <>
             <Pressable style={styles.listItem}>
               <Pressable
                 style={{ width: "76%" }}
                 onPress={() => {
-                  navigation.navigate("Quote Details", item);
+                  navigation.navigate("Consultant Details", { id: item.id });
+                  // navigation.setOptions({ title: "Updated!" });
                 }}
               >
-                <Text style={styles.item}>{item.description}</Text>
+                <Text style={styles.item}>{item.name}</Text>
               </Pressable>
 
               <View style={styles.iconsContainer}>
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
-                    navigation.navigate("Edit Quote", {
-                      company: item,
+                    navigation.navigate("Edit Consultant", {
                       id: item.id,
                     });
                     // setRippleOverflow(!rippleOverflow);
@@ -148,7 +136,7 @@ const QuotesList = ({ navigation, companyId }) => {
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
-                    handleDelete(item.id);
+                    handleDelete(item.name, item.id);
                     // setRippleOverflow(!rippleOverflow);
                   }}
                   background={TouchableNativeFeedback.Ripple(
@@ -167,28 +155,33 @@ const QuotesList = ({ navigation, companyId }) => {
           </>
         )}
       />
-    </View>
+      {/* <Signature /> */}
+    </ScrollView>
   );
 };
 
-export default QuotesList;
+export default AllConsultants;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 22,
-    justifyContent: "center",
-    alignItems: "center",
     width: "100%",
     height: "100%",
-  },
-
-  centeredView: {
-    flex: 1,
+    padding: 12,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
-    height: "100%",
+  },
+
+  button: {
+    margin: 10,
+    backgroundColor: "#B76E79",
+    padding: 12,
+    borderRadius: 8,
+    width: "40%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    alignContent: "space-around",
   },
 
   listItem: {
@@ -220,15 +213,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
 
+  rippleView: {
+    padding: 2,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+
   addButton: {
-    margin: 10,
+    margin: 5,
     backgroundColor: "#B76E79",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "40%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
+    marginBottom: 20,
   },
 
   addText: {

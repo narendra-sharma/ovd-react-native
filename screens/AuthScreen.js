@@ -7,11 +7,11 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
-  ToastAndroid,
 } from "react-native";
 import { apiAuth } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import Toast from "react-native-root-toast";
 
 const initialValues = {
   email: "",
@@ -32,6 +32,7 @@ const AuthScreen = ({ navigation }) => {
   useEffect(() => {
     const checkUserExists = async () => {
       const profile = await AsyncStorage.getItem("profile");
+      const firstLogin = await AsyncStorage.getItem("firstLogin");
       const parsedProfile = JSON.parse(profile);
       console.log(parsedProfile.user_type);
 
@@ -39,7 +40,7 @@ const AuthScreen = ({ navigation }) => {
         setUserType(parsedProfile.user_type); // Set the user type in the state
       }
 
-      if (res.data.first_login == 1) {
+      if (JSON.parse(firstLogin) == 1) {
         handleUserType(parsedProfile.user_type);
       }
     };
@@ -109,12 +110,26 @@ const AuthScreen = ({ navigation }) => {
       case 1:
         //userCode: 1 => admin
         navigation.navigate("Admin Dashboard");
-        ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+        Toast.show("This is a message", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
         return;
       case 2:
         //userCode: 2 => admin
         navigation.navigate("Admin Dashboard");
-        ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+        Toast.show("Logged in successfully", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
         return;
       case 3:
         //userCode: 3 => Consultant Manager / Sales Manager
@@ -157,12 +172,16 @@ const AuthScreen = ({ navigation }) => {
           );
           // navigation.navigate("Dashboard");
         }
+        // await AsyncStorage.setItem("firstLogin", res.data.first_login);
       } catch (error) {
-        ToastAndroid.show(
-          "Invalid Credentials",
-          ToastAndroid.SHORT,
-          ToastAndroid.TOP
-        );
+        Toast.show("Invalid Credentials", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
         console.log(error);
       }
 

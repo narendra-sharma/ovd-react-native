@@ -27,7 +27,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import ViewProjects from "../Companies/Projects/ViewProjects";
 import ViewQuotes from "../Companies/Quotes/ViewQuotes";
 import AddProject from "../Companies/Projects/AddProject";
-import ConsultantManagerStack from "../Companies/Users/ConsultantManager.js/ConsultantManagerStack";
+import ConsultantManagerStack from "../Companies/Users/ConsultantManagers/ConsultantManagerStack";
+import ConsultantStack from "../Companies/Users/Consultants/ConsultantStack";
+import ContractorStack from "../Companies/Users/Contractors/ContractorStack";
+import CustomerStack from "../Companies/Users/Customers/CustomerStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -239,33 +242,43 @@ const RightDrawer = ({ navigation }) => {
                       </Pressable>
                       <Pressable
                         onPress={() => {
+                          props.navigation.navigate("Consultants");
+                          setActiveScreenName("Consultants");
                           // Handle sub-menu item click here
                         }}
-                        style={styles.subMenuItem}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreenName == "Consultants" &&
+                            styles.activeSubMenu,
+                        ]}
                       >
                         <Text>Consultants</Text>
                       </Pressable>
                       <Pressable
                         onPress={() => {
+                          props.navigation.navigate("Contractors");
+                          setActiveScreenName("Contractors");
                           // Handle sub-menu item click here
                         }}
-                        style={styles.subMenuItem}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreenName == "Contractors" &&
+                            styles.activeSubMenu,
+                        ]}
                       >
                         <Text>Contractors</Text>
                       </Pressable>
                       <Pressable
                         onPress={() => {
+                          props.navigation.navigate("Customers");
+                          setActiveScreenName("Customers");
                           // Handle sub-menu item click here
                         }}
-                        style={styles.subMenuItem}
-                      >
-                        <Text>Customers</Text>
-                      </Pressable>
-                      <Pressable
-                        onPress={() => {
-                          // Handle sub-menu item click here
-                        }}
-                        style={styles.subMenuItem}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreenName == "Customers" &&
+                            styles.activeSubMenu,
+                        ]}
                       >
                         <Text>Customers</Text>
                       </Pressable>
@@ -442,6 +455,46 @@ const RightDrawer = ({ navigation }) => {
         component={AccountsStackScreen}
       />
 
+      {/* Consultant Manager Screens */}
+      <Drawer.Screen
+        name="Consultant Managers"
+        component={ConsultantManagerStack}
+        options={({ navigation }) => ({
+          title: "Consultant Managers",
+          headerShown: false,
+        })}
+      />
+
+      {/* Consultants Screens */}
+      <Drawer.Screen
+        name="Consultants"
+        component={ConsultantStack}
+        options={({ navigation }) => ({
+          title: "Consultants",
+          headerShown: false,
+        })}
+      />
+
+      {/* Contractors Screens */}
+      <Drawer.Screen
+        name="Contractors"
+        component={ContractorStack}
+        options={({ navigation }) => ({
+          title: "Contractors",
+          headerShown: false,
+        })}
+      />
+
+      {/* Customers Screens */}
+      <Drawer.Screen
+        name="Customers"
+        component={CustomerStack}
+        options={({ navigation }) => ({
+          title: "Customers",
+          headerShown: false,
+        })}
+      />
+
       {/* Profile Stack */}
       <Drawer.Screen
         options={{
@@ -459,16 +512,6 @@ const RightDrawer = ({ navigation }) => {
         component={ViewQuotes}
         options={({ navigation }) => ({
           title: "All Quotes",
-          headerShown: false,
-        })}
-      />
-
-      {/* Quotes Screens */}
-      <Drawer.Screen
-        name="Consultant Managers"
-        component={ConsultantManagerStack}
-        options={({ navigation }) => ({
-          title: "Consultant Managers",
           headerShown: false,
         })}
       />

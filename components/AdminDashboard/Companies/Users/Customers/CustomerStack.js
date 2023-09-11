@@ -13,16 +13,19 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import AllConsultantManagers from "./AllConsultantManagers";
+import AllCustomers from "./AllCustomers";
+import AddCustomer from "./AddCustomer";
+import EditCustomer from "./EditCustomer";
+import CustomerDetails from "./CustomerDetails";
 
 const Stack = createNativeStackNavigator();
 
-const ConsultantManagerStack = ({ navigation }) => {
+const CustomerStack = ({ navigation }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="All Consultant Managers"
-        component={AllConsultantManagers}
+        name="All Customers"
+        component={AllCustomers}
         options={({ navigation }) => ({
           headerLeft: () => (
             <MaterialIcons
@@ -34,11 +37,14 @@ const ConsultantManagerStack = ({ navigation }) => {
           ),
         })}
       />
+      <Stack.Screen name="Customer Details" component={CustomerDetails} />
+      <Stack.Screen name="Add Customer" component={AddCustomer} />
+      <Stack.Screen name="Edit Customer" component={EditCustomer} />
     </Stack.Navigator>
   );
 };
 
-export default ConsultantManagerStack;
+export default CustomerStack;
 
 const styles = StyleSheet.create({
   container: {

@@ -10,72 +10,42 @@ import {
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { apiCreateNewCompany, apiGetAllUsers } from "../../../apis/companies";
 import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
+import { apiCreateNewUser } from "../../../../../apis/users";
+import { apiGetAllUsers } from "../../../../../apis/companies";
+
+const CUSTOMER_USER_TYPE = 6;
 
 const initialFormData = {
-  companyName: "",
-  vatNumber: "",
+  name: "",
+  username: "",
   email: "",
-  phoneNo: "",
-  contractor: [],
-  consultant: [],
-  consultantManager: [],
+  parent_id: "",
+  org: "",
+  phone_number: "",
   address: "",
+  zip_code: "",
   country: "",
+  country_code: "",
   state: "",
-  zipcode: "",
+  user_type: CUSTOMER_USER_TYPE,
+  lat: "",
+  long: "",
 };
 
-const AddCompany = ({ navigation }) => {
-  const [newCompanyData, setNewCompanyData] = useState(initialFormData);
+const AddCustomer = ({ navigation }) => {
+  const [formData, setFormData] = useState(initialFormData);
   const [nameError, setNameError] = useState(null);
   const [addressError, setAddressError] = useState(null);
   const [emailError, setEmailError] = useState(null);
   const [phoneError, setPhoneError] = useState(null);
-  const [vatError, setVatError] = useState(null);
-  const [cmError, setCmError] = useState(null);
-  const [consultantError, setConsultantError] = useState(null);
-  const [contractorError, setContractorError] = useState(null);
+  const [userNameError, setUsernameError] = useState(null);
   const [countryError, setCountryError] = useState(null);
   const [stateError, setStateError] = useState(null);
   const [zipcodeError, setZipcodeError] = useState(null);
 
-  const [contractorsList, setContractorsList] = useState([]);
-  const [consultantList, setConsultantList] = useState([]);
-  const [consultantManagerList, setConsultantManagerList] = useState([]);
-
   const [responseError, setResponseError] = useState(null);
-
-  useEffect(() => {
-    const getAllUsers = async () => {
-      const res = await apiGetAllUsers();
-      // console.log(res.data.data);
-      const contractors = res.data.data.filter((user) => user.user_type == 5);
-      const consultants = res.data.data.filter((user) => user.user_type == 4);
-      const consultantManager = res.data.data.filter(
-        (user) => user.user_type == 3
-      );
-
-      const tempContractors = contractors.map((contractor) => {
-        return { label: contractor.name, value: contractor.id };
-      });
-
-      const tempConsultants = consultants.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
-      });
-
-      const tempConsultantManager = consultantManager.map((manager) => {
-        return { label: manager.name, value: manager.id };
-      });
-
-      setContractorsList([...tempContractors]);
-      setConsultantList([...tempConsultants]);
-      setConsultantManagerList([...tempConsultantManager]);
-    };
-    getAllUsers();
-  }, []);
 
   //validation functions
   const validateCompanyName = (name) => {
@@ -96,7 +66,7 @@ const AddCompany = ({ navigation }) => {
 
   const validateVat = (vat) => {
     if (vat == "") {
-      setVatError("Required*");
+      setUsernameError("Required*");
       return false;
     }
     return true;
@@ -189,53 +159,32 @@ const AddCompany = ({ navigation }) => {
   };
 
   //handle new company submit
-  const handleNewCompanySubmit = async () => {
-    if (
-      validateCompanyName(newCompanyData.companyName) &&
-      validateAddress(newCompanyData.address) &&
-      validateVat(newCompanyData.vatNumber) &&
-      validateEmail(newCompanyData.email) &&
-      validatePhone(newCompanyData.phoneNo) &&
-      validateCm(newCompanyData.consultantManager) &&
-      validateConsultant(newCompanyData.consultant) &&
-      // validateContractor(newCompanyData.contractor) &&
-      validateCountry(newCompanyData.country) &&
-      validateState(newCompanyData.state) &&
-      validateZipcode(newCompanyData.zipcode)
-    ) {
-      try {
-        const res = await apiCreateNewCompany({
-          ...newCompanyData,
-          name: newCompanyData.companyName,
-          address: newCompanyData.address,
-          status: 1,
-          vat_number: newCompanyData.vatNumber,
-          consultant_manager: newCompanyData.consultantManager,
-        });
-        console.log("response: ");
-        console.log(res);
-        if (res.data.success == true) {
-          Toast.show("New Company Added", {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-          });
-          navigation.goBack();
-        } else {
-          Toast.show("Cannot Add New Company", {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-          });
-        }
-      } catch (error) {
-        Toast.show("Cannot Add New Company", {
+  const handleSubmit = async () => {
+    // if (
+    //   validateCompanyName(formData.companyName) &&
+    //   validateAddress(formData.address) &&
+    //   validateVat(formData.username) &&
+    //   validateEmail(formData.email) &&
+    //   validatePhone(formData.phoneNo) &&
+    //   validateCm(formData.consultantManager) &&
+    //   validateConsultant(formData.consultant) &&
+    //   validateContractor(formData.contractor) &&
+    //   validateCountry(formData.country) &&
+    //   validateState(formData.state) &&
+    //   validateZipcode(formData.zipcode)
+    // ) {
+    try {
+      console.log("final form data: ", formData);
+      const res = await apiCreateNewUser({
+        ...formData,
+      });
+      console.log("response: ");
+      console.log(res);
+      if (
+        res.data.message ==
+        "Added Successfully, We have e-mailed your login details."
+      ) {
+        Toast.show("New Customer Added", {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -243,22 +192,42 @@ const AddCompany = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
+        navigation.goBack();
+      } else {
+        Toast.show("Cannot Add New Customer", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
       }
-      // setNewCompanyData(initialFormData);
-    } else {
-      validateCompanyName(newCompanyData.companyName);
-      validateAddress(newCompanyData.address);
-      validateVat(newCompanyData.vatNumber);
-      validateCm(newCompanyData.consultantManager);
-      validateConsultant(newCompanyData.consultant);
-      // validateContractor(newCompanyData.contractor);
-      validateCountry(newCompanyData.country);
-      validateZipcode(newCompanyData.zipcode);
-      validateState(newCompanyData.state);
-      validateEmail(newCompanyData.email);
-      validatePhone(newCompanyData.phoneNo);
+    } catch (error) {
+      Toast.show("Cannot Add New Customer", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
+      console.log(error);
     }
+    // setFormData(initialFormData);
+    // } else {
+    //   validateCompanyName(formData.companyName);
+    //   validateAddress(formData.address);
+    //   validateVat(formData.username);
+    //   validateCm(formData.consultantManager);
+    //   validateConsultant(formData.consultant);
+    //   validateContractor(formData.contractor);
+    //   validateCountry(formData.country);
+    //   validateZipcode(formData.zipcode);
+    //   validateState(formData.state);
+    //   validateEmail(formData.email);
+    //   validatePhone(formData.phoneNo);
+    // }
   };
 
   return (
@@ -273,36 +242,38 @@ const AddCompany = ({ navigation }) => {
           <TextInput
             style={styles.input}
             name="name"
-            value={newCompanyData.companyName}
+            value={formData.name}
             onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, companyName: text });
+              setFormData({ ...formData, name: text });
               setNameError(null);
             }}
             placeholder="Name"
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>VAT Number:</Text>
+          <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
-            name="vat"
-            value={newCompanyData.vatNumber}
+            name="username"
+            value={formData.username}
             onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, vatNumber: text });
-              setVatError(null);
+              setFormData({ ...formData, username: text });
+              setUsernameError(null);
             }}
-            placeholder="VAT Number"
+            placeholder="Username"
           />
-          {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
+          {userNameError ? (
+            <Text style={styles.errorText}>{userNameError}</Text>
+          ) : null}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
             name="email"
             placeholder="Email"
-            value={newCompanyData.email}
+            value={formData.email}
             onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, email: text });
+              setFormData({ ...formData, email: text });
               setEmailError(null);
             }}
           />
@@ -313,11 +284,11 @@ const AddCompany = ({ navigation }) => {
           <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
-            name="phonenumber"
+            name="phone_number"
             placeholder="Phone Number"
-            value={newCompanyData.phoneNo}
+            value={formData.phone_number}
             onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, phoneNo: text });
+              setFormData({ ...formData, phone_number: text });
               setPhoneError(null);
             }}
           />
@@ -325,45 +296,20 @@ const AddCompany = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
-          <DropdownMenu
-            data={consultantManagerList}
-            placeholder="Select Consultant Manager"
-            value={newCompanyData.consultantManager}
-            setValue={setNewCompanyData}
-            label="consultantManager"
-            originalObj={newCompanyData}
-            setErrorState={setCmError}
+          <Text style={styles.fieldName}>Organisation:</Text>
+          <TextInput
+            style={styles.input}
+            name="org"
+            placeholder="Organisation"
+            value={formData.org}
+            onChangeText={(text) => {
+              setFormData({ ...formData, org: text });
+              setEmailError(null);
+            }}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
-
-          <Text style={styles.fieldName}>Assign Consultant:</Text>
-          <DropdownMenu
-            data={consultantList}
-            placeholder="Select Consultant"
-            value={newCompanyData.consultant}
-            setValue={setNewCompanyData}
-            label="consultant"
-            originalObj={newCompanyData}
-            setErrorState={setConsultantError}
-          />
-          {consultantError ? (
-            <Text style={styles.errorText}>{consultantError}</Text>
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
           ) : null}
-
-          {/* <Text style={styles.fieldName}>Assign Contractor:</Text>
-          <DropdownMenu
-            data={contractorsList}
-            placeholder="Select Contractor"
-            value={newCompanyData.contractor}
-            setValue={setNewCompanyData}
-            label="contractor"
-            originalObj={newCompanyData}
-            setErrorState={setContractorError}
-          />
-          {contractorError ? (
-            <Text style={styles.errorText}>{contractorError}</Text>
-          ) : null} */}
 
           <Text>Address:</Text>
           <GooglePlacesAutocomplete
@@ -373,9 +319,9 @@ const AddCompany = ({ navigation }) => {
             returnKeyType={"search"}
             fetchDetails={true}
             textInputProps={{
-              value: newCompanyData.address,
+              value: formData.address,
               onChangeText: (text) => {
-                setNewCompanyData({ ...newCompanyData, address: text });
+                setFormData({ ...formData, address: text });
                 setAddressError(null);
                 setCountryError(null);
                 setStateError(null);
@@ -436,13 +382,13 @@ const AddCompany = ({ navigation }) => {
 
               // props.notifyChange(details.geometry.location, data);
 
-              setNewCompanyData({
-                ...newCompanyData,
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
+              setFormData({
+                ...formData,
+                lat: details.geometry.location.lat,
+                long: details.geometry.location.lng,
                 address: details.formatted_address,
                 state: stateName,
-                zipcode: areaZip,
+                zip_code: areaZip,
                 country_code: countryCode,
                 country: countryName,
               });
@@ -478,10 +424,10 @@ const AddCompany = ({ navigation }) => {
             valueField="value"
             placeholder="Select Country"
             searchPlaceholder="Search..."
-            value={newCompanyData.country_code}
+            value={formData.country_code}
             onChange={(item) => {
-              setNewCompanyData({
-                ...newCompanyData,
+              setFormData({
+                ...formData,
                 country_code: item.value,
                 country: item.label,
                 state: null,
@@ -500,7 +446,7 @@ const AddCompany = ({ navigation }) => {
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
-            data={State.getStatesOfCountry(newCompanyData.country_code).map(
+            data={State.getStatesOfCountry(formData.country_code).map(
               (state) => {
                 return { label: state.name, value: state.name };
               }
@@ -511,9 +457,9 @@ const AddCompany = ({ navigation }) => {
             valueField="value"
             placeholder="Select State/UT"
             searchPlaceholder="Search..."
-            value={newCompanyData.state}
+            value={formData.state}
             onChange={(item) => {
-              setNewCompanyData({ ...newCompanyData, state: item.label });
+              setFormData({ ...formData, state: item.label });
               setStateError(null);
             }}
           />
@@ -524,10 +470,10 @@ const AddCompany = ({ navigation }) => {
           <Text>Zip Code: </Text>
           <TextInput
             style={styles.input}
-            name="zipcode"
-            value={newCompanyData.zipcode}
+            name="zip_code"
+            value={formData.zip_code}
             onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, zipcode: text });
+              setFormData({ ...formData, zip_code: text });
               setZipcodeError(null);
             }}
             placeholder="Zip Code"
@@ -544,10 +490,7 @@ const AddCompany = ({ navigation }) => {
             justifyContent: "space-around",
           }}
         >
-          <Pressable
-            onPress={handleNewCompanySubmit}
-            style={styles.submitButton}
-          >
+          <Pressable onPress={handleSubmit} style={styles.submitButton}>
             <Text>Submit</Text>
           </Pressable>
           <Pressable
@@ -562,38 +505,7 @@ const AddCompany = ({ navigation }) => {
   );
 };
 
-export default AddCompany;
-
-const DropdownMenu = ({
-  data,
-  placeholder,
-  value,
-  setValue,
-  label,
-  originalObj,
-  setErrorState,
-}) => {
-  return (
-    <Dropdown
-      style={styles.dropdown}
-      placeholder={placeholder}
-      placeholderStyle={styles.placeholderStyle}
-      selectedTextStyle={styles.selectedTextStyle}
-      iconStyle={styles.iconStyle}
-      data={data}
-      maxHeight={300}
-      labelField="label"
-      valueField="value"
-      containerStyle={styles.listStyle}
-      dropdownPosition="bottom"
-      value={value}
-      onChange={(item) => {
-        setValue({ ...originalObj, [label]: item.value });
-        setErrorState(null);
-      }}
-    />
-  );
-};
+export default AddCustomer;
 
 const placesStyle = StyleSheet.create({
   textInputContainer: {

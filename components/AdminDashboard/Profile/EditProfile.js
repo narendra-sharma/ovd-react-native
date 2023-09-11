@@ -7,8 +7,8 @@ import {
   Pressable,
   TextInput,
   ScrollView,
-  ToastAndroid,
 } from "react-native";
+import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -74,7 +74,14 @@ const EditProfile = ({ navigation }) => {
       // console.log(userData);
       //   console.log(res);
       if (res.status == 200) {
-        ToastAndroid.show("Profile Updated Successfully", ToastAndroid.SHORT);
+        Toast.show("Profile updated successfully", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
         const resp = await apiGetProfileDetails();
         console.log("we got from api: ", res.data);
         setUserData(resp.data.users);
@@ -84,6 +91,14 @@ const EditProfile = ({ navigation }) => {
       }
       //   console.log(res.data);
     } catch (error) {
+      Toast.show("Cannot update profile", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
       console.log(error);
     }
   };

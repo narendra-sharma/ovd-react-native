@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Pressable,
-  ToastAndroid,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { apiResetPassword } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import Toast from "react-native-root-toast";
 
 const passwords = {
   newPassword: "",
@@ -96,15 +90,20 @@ const ResetPasswordScreen = ({ navigation, route }) => {
           email: route.params.email,
           password: formData.newPassword,
           password_confirmation: formData.confirmPassword,
+          otp: route.params.otp,
         });
         console.log(res);
         if (res.status == 200) {
           // await AsyncStorage.setItem("token", token);
           // await AsyncStorage.setItem("profile", profile);
-          ToastAndroid.show(
-            "Password changed successfully",
-            ToastAndroid.SHORT
-          );
+          Toast.show("Password changed successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
           navigation.navigate("Login");
         }
       } catch (error) {

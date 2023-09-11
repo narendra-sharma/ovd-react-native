@@ -6,19 +6,20 @@ import {
   Pressable,
   View,
   Alert,
-  ToastAndroid,
   TouchableNativeFeedback,
 } from "react-native";
+import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
+import { apiDeleteUser, apiGetUsersFromUsers } from "../../../../../apis/users";
 
 const randomHexColor = () => {
   return "#b7d0d1";
 };
 
-const AllConsultantManagers = ({ navigation }) => {
-  const [companiesList, setCompaniesList] = useState([]);
+const AllContractors = ({ navigation }) => {
+  const [contractorList, setContractorList] = useState([]);
   const [deleteFlag, setDeteleFlag] = useState(false);
   const [rippleColor, setRippleColor] = useState(randomHexColor());
   const [rippleRadius, setRippleRadius] = useState(10);
@@ -28,17 +29,15 @@ const AllConsultantManagers = ({ navigation }) => {
     useCallback(() => {
       let isActive = true;
 
-      const getAllCompanies = async () => {
-        try {
-          const res = await apiGetAllCompanies();
-          console.log(res.data.data);
-          setCompaniesList([...res.data.data]);
-        } catch (err) {
-          console.log(err);
-        }
+      const getContractors = async () => {
+        const res = await apiGetUsersFromUsers();
+        console.log(res.data);
+        // console.log(res.data.data);
+
+        setContractorList([...res.data.contratrors]);
       };
 
-      getAllCompanies();
+      getContractors();
 
       return () => {
         isActive = false;
@@ -46,46 +45,35 @@ const AllConsultantManagers = ({ navigation }) => {
     }, [deleteFlag])
   );
 
-  // useEffect(() => {
-  //   const getAllCompanies = async () => {
-  //     try {
-  //       const res = await apiGetAllCompanies();
-  //       console.log(res.data.data);
-  //       setCompaniesList([...res.data.data]);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getAllCompanies();
-  // }, []);
-
-  //function to delete the company
-  const handleDeleteCompany = async (companyName, companyId) => {
-    const deleteCompany = async () => {
+  //function to delete the user
+  const handleDelete = async (user, userId) => {
+    const deleteUser = async () => {
       try {
-        const res = await apiDeleteCompany(companyId);
+        const res = await apiDeleteUser(userId);
         console.log(res.data);
         if (res.data.message == "Deleted successfully") {
           setDeteleFlag((prev) => !prev);
-          ToastAndroid.show("Company Deleted Successfully", ToastAndroid.SHORT);
-          // navigation.navigate("All Companies");
+          Toast.show("User Deleted Successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          }); // navigation.navigate("All Companies");
         }
       } catch (error) {
         console.log(error);
       }
     };
-    Alert.alert(
-      `Delete ${companyName}`,
-      `Are you sure you want to delete ${companyName}?`,
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        { text: "OK", onPress: () => deleteCompany() },
-      ]
-    );
+    Alert.alert(`Delete ${user}`, `Are you sure you want to delete ${user}?`, [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => deleteUser() },
+    ]);
   };
 
   return (
@@ -93,7 +81,7 @@ const AllConsultantManagers = ({ navigation }) => {
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          navigation.navigate("Add Company");
+          navigation.navigate("Add Contractor");
           // setAddCompanyModalVisible(true);
         }}
       >
@@ -105,14 +93,14 @@ const AllConsultantManagers = ({ navigation }) => {
       <FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
-        data={companiesList}
+        data={contractorList}
         renderItem={({ item }) => (
           <>
             <Pressable style={styles.listItem}>
               <Pressable
                 style={{ width: "76%" }}
                 onPress={() => {
-                  navigation.navigate("Company Details", { id: item.id });
+                  navigation.navigate("Contractor Details", { id: item.id });
                   // navigation.setOptions({ title: "Updated!" });
                 }}
               >
@@ -123,8 +111,7 @@ const AllConsultantManagers = ({ navigation }) => {
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
-                    navigation.navigate("Edit Company Details", {
-                      company: item,
+                    navigation.navigate("Edit Contractor", {
                       id: item.id,
                     });
                     // setRippleOverflow(!rippleOverflow);
@@ -148,7 +135,7 @@ const AllConsultantManagers = ({ navigation }) => {
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
-                    handleDeleteCompany(item.name, item.id);
+                    handleDelete(item.name, item.id);
                     // setRippleOverflow(!rippleOverflow);
                   }}
                   background={TouchableNativeFeedback.Ripple(
@@ -172,7 +159,7 @@ const AllConsultantManagers = ({ navigation }) => {
   );
 };
 
-export default AllConsultantManagers;
+export default AllContractors;
 
 const styles = StyleSheet.create({
   container: {
@@ -247,4 +234,3 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
 });
-AllConsultantManagers;
