@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { apiChangePasswordFromDashboard } from "../../../apis/auth";
 import Toast from "react-native-root-toast";
+import { useFocusEffect } from "@react-navigation/native";
 
 const passwords = {
   oldPassword: "",
@@ -27,11 +28,17 @@ const ChangePassword = ({ navigation }) => {
     console.log(passRef.current);
   }, []);
 
-  useEffect(() => {
-    setOldPasswordError(null);
-    setNewPasswordError(null);
-    setConfirmPasswordError(null);
-  }, [navigation]);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      setOldPasswordError(null);
+      setNewPasswordError(null);
+      setConfirmPasswordError(null);
+
+      return () => (isActive = false);
+    }, [])
+  );
 
   // useEffect(() => {});
 
@@ -67,7 +74,7 @@ const ChangePassword = ({ navigation }) => {
   //check if the passwords are matching
   const validateOldPassword = (value) => {
     if (value == "") {
-      setOldPasswordError("Old password is required");
+      setOldPasswordError("Current password is required");
       return false;
     }
     return true;
@@ -172,10 +179,11 @@ const ChangePassword = ({ navigation }) => {
           ]}
         >
           <TextInput
+            style={{ width: "90%" }}
             ref={passRef}
             autoCorrect={false}
             name="oldPassword"
-            placeholder="Old Password"
+            placeholder="Current Password"
             value={formData.oldPassword}
             onChangeText={(text) => handleChange(text, "oldPassword")}
             secureTextEntry={isOldPasswordVisible ? false : true}
@@ -205,6 +213,7 @@ const ChangePassword = ({ navigation }) => {
         >
           <TextInput
             name="newPassword"
+            style={{ width: "90%" }}
             placeholder="New Password"
             value={formData.newPassword}
             onChangeText={(text) => handleChange(text, "newPassword")}
@@ -235,6 +244,7 @@ const ChangePassword = ({ navigation }) => {
         >
           <TextInput
             name="confirmPassword"
+            style={{ width: "90%" }}
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChangeText={(text) => handleChange(text, "confirmPassword")}

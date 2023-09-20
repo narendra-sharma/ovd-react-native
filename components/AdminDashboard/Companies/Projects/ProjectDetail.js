@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Text, View, StyleSheet, Pressable, FlatList } from "react-native";
-import TasksList from "./Tasks/TaskList";
+// import TasksList from "./Tasks/TaskList";
 import { apiGetPreFilledProjectDetails } from "../../../../apis/projects";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -114,7 +114,7 @@ const ProjectDetail = ({ navigation, route }) => {
         <Text style={styles.fieldName}>Tasks: </Text>
       </View>
 
-      <TasksList tasks={route.params.tasks} navigation={navigation} />
+      {/* <TasksList tasks={route.params.tasks} navigation={navigation} /> */}
 
       <View
         style={[

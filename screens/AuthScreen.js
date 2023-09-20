@@ -14,15 +14,15 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import Toast from "react-native-root-toast";
 
 const initialValues = {
-  email: "",
+  username: "",
   password: "",
 };
 
 const AuthScreen = ({ navigation }) => {
-  //state for password and email
+  //state for password and username
   const [formData, setFormData] = useState(initialValues);
   //state for email error
-  const [emailError, setEmailError] = useState(null);
+  const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const [token, setToken] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -40,9 +40,9 @@ const AuthScreen = ({ navigation }) => {
         setUserType(parsedProfile.user_type); // Set the user type in the state
       }
 
-      if (JSON.parse(firstLogin) == 1) {
-        handleUserType(parsedProfile.user_type);
-      }
+      // if (JSON.parse(firstLogin) == 1) {
+      handleUserType(parsedProfile.user_type);
+      // }
     };
 
     checkUserExists();
@@ -62,8 +62,8 @@ const AuthScreen = ({ navigation }) => {
     setFormData({ ...formData, [label]: value });
 
     switch (label) {
-      case "email":
-        return validateEmail(value);
+      case "username":
+        return validateUsername(value);
       case "password":
         return validatePassword(value);
       default:
@@ -72,22 +72,22 @@ const AuthScreen = ({ navigation }) => {
   };
 
   //handle email validation
-  const validateEmail = (email) => {
-    if (email == "") {
-      setEmailError("Email / username is required");
+  const validateUsername = (username) => {
+    if (username == "") {
+      setUsernameError("Username is required");
       return false;
     }
 
-    setEmailError(null);
+    setUsernameError(null);
     return true;
 
     // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
     // if (reg.test(email) === false) {
-    //   setEmailError("Please Enter a valid email address");
+    //   setUsernameError("Please Enter a valid email address");
     //   return false; //return false if in wrong format
     // } else {
-    //   setEmailError(null);
+    //   setUsernameError(null);
     //   return true; //return true if in right format
     // }
   };
@@ -154,7 +154,7 @@ const AuthScreen = ({ navigation }) => {
 
   //handle form submit
   const handleSubmit = async () => {
-    if (formData.password.length > 0 && validateEmail(formData.email)) {
+    if (formData.password.length > 0 && validateUsername(formData.username)) {
       //call the api function
       try {
         const res = await apiAuth(formData);
@@ -191,9 +191,9 @@ const AuthScreen = ({ navigation }) => {
 
       // console.log(jwtDecode(res.data.token));
     }
-    if (!validateEmail(formData.email)) {
-      //   setEmailError("Please enter a valid email address");
-      console.log(emailError);
+    if (!validateUsername(formData.username)) {
+      //   setUsernameError("Please enter a valid email address");
+      console.log(usernameError);
     }
     if (formData.password.length == 0) {
       setPasswordError("Password is required");
@@ -209,13 +209,15 @@ const AuthScreen = ({ navigation }) => {
       <View style={{ width: "80%", display: "flex" }}>
         <TextInput
           style={styles.input}
-          name="email"
-          placeholder="Email / Username"
-          value={formData.email}
-          onChangeText={(text) => handleChange(text, "email")}
-          type="email"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChangeText={(text) => handleChange(text, "username")}
+          type="username"
         />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+        {usernameError ? (
+          <Text style={styles.errorText}>{usernameError}</Text>
+        ) : null}
 
         <View
           style={[
@@ -228,6 +230,7 @@ const AuthScreen = ({ navigation }) => {
           ]}
         >
           <TextInput
+            style={{ width: "90%" }}
             name="password"
             placeholder="Password"
             value={formData.password}

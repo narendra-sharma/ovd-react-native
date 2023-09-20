@@ -17,12 +17,16 @@ import {
   apiAddQuote,
   apiGetQuoteDetails,
   apiUpdateQuoteDetails,
+  apiGetConsultantsForQuotes,
+  apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
 
 const initialFormData = {
+  name: "",
+  company: "",
   company_id: "",
-  customer_id: "",
-  project_id: "",
+  // customer_id: "",
+  // project_id: "",
   quantity: "",
   cost: "",
   tax: "",
@@ -37,82 +41,120 @@ const EditQuote = ({ navigation, route }) => {
   const [nameError, setNameError] = useState(null);
   const [customerError, setCustomerError] = useState(null);
   const [projectError, setProjectError] = useState(null);
+  const [cmError, setCmError] = useState(null);
+  const [consultantError, setConsultantError] = useState(null);
   const [quantityError, setQuantityError] = useState(null);
   const [costError, setCostError] = useState(null);
   const [taxError, setTaxError] = useState(null);
   const [discountError, setDiscountError] = useState(null);
   const [totalAmountError, setTotalAmountError] = useState(null);
   const [descriptionError, setDescriptionError] = useState(null);
+  const [titleError, setTitleError] = useState(null);
 
   const [companyList, setCompanyList] = useState([]);
   const [customerList, setCustomerList] = useState([]);
   const [projectList, setProjectList] = useState([]);
+  const [consultantList, setConsultantList] = useState([]);
+  const [consultantManagerList, setConsultantManagerList] = useState([]);
+
+  // console.log(route.params.id);
 
   useEffect(() => {
     const getAllData = async () => {
-      const quotesRes = await apiGetQuoteDetails(route.params.id);
-      console.log("quotes res:", quotesRes.data.quotes);
-      setFormData({ ...quotesRes.data.quotes });
-      const res = await apiGetAllCompanies();
-      const tempCompanies = res.data.data.map((company) => {
+      const res = await apiGetQuoteDetails(route.params.id);
+      console.log("quotes data:", res.data);
+      setFormData({ ...res.data.quotes });
+
+      const tempCompanies = res.data.companies.map((company) => {
         return { label: company.name, value: company.id };
       });
-
       setCompanyList([...tempCompanies]);
-      //   setCustomerList([...]);
-      //   setProjectList([...]);
+
+      const tempCms = res.data.consManager.map((cm) => {
+        return { label: cm.name, value: cm.id };
+      });
+      setConsultantManagerList([...tempCms]);
     };
     getAllData();
   }, []);
 
+  useEffect(() => {
+    const getConsultantData = async () => {
+      const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
+      // console.log("consultants", res.data);
+
+      const tempConsultants = res.data.data.map((consultant) => {
+        return { label: consultant.name, value: consultant.id };
+      });
+      setConsultantList([...tempConsultants]);
+    };
+
+    getConsultantData();
+  }, [formData.consultant_manager]);
+
   //validation functions
-  const validateCompanyName = (name) => {
+  const validateTitle = (name) => {
     if (name == "") {
-      setNameError("Required*");
+      setTitleError("Title is required*");
       return false;
     }
     return true;
   };
 
-  const validateCustomer = (customer) => {
-    if (customer == "") {
-      setCustomerError("Required*");
+  const validateCompanyName = (name) => {
+    if (name == "" || null) {
+      setNameError("Company is required*");
       return false;
     }
     return true;
   };
 
-  const validateProject = (project) => {
-    if (project == "") {
-      setProjectError("Required*");
+  const validateCm = (cm) => {
+    if (cm == "" || null) {
+      setCmError("Consultant manager is required*");
       return false;
     }
     return true;
   };
+  // const validateCustomer = (customer) => {
+  //   if (customer == "") {
+  //     setCustomerError("Required*");
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-  const validateQuantity = (quantity) => {
-    if (quantity == "" || quantity == null) {
-      setQuantityError("*Required");
-      return false;
-    }
+  // const validateProject = (project) => {
+  //   if (project == "") {
+  //     setProjectError("Required*");
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-    // setProjectError(null);
-    // return true;
+  // const validateQuantity = (quantity) => {
+  //   if (quantity == "" || quantity == null) {
+  //     setQuantityError("*Required");
+  //     return false;
+  //   }
 
-    let reg = /^\d*\.?\d*$/;
+  //   // setProjectError(null);
+  //   // return true;
 
-    if (reg.test(quantity) === false) {
-      setQuantityError("Only number values are allowed");
-      return false; //return false if in wrong format
-    } else {
-      setQuantityError(null);
-      return true; //return true if in right format
-    }
-  };
+  //   let reg = /^\d*\.?\d*$/;
+
+  //   if (reg.test(quantity) === false) {
+  //     setQuantityError("Only number values are allowed");
+  //     return false; //return false if in wrong format
+  //   } else {
+  //     setQuantityError(null);
+  //     return true; //return true if in right format
+  //   }
+  // };
 
   const validateCost = (cost) => {
     if (cost == "" || cost == null) {
-      setCostError("Required*");
+      setCostError("Cost is required*");
       return false;
     }
     // return true;
@@ -130,7 +172,7 @@ const EditQuote = ({ navigation, route }) => {
 
   const validateTax = (tax) => {
     if (tax == "") {
-      setTaxError("Required*");
+      setTaxError("Tax is required*");
       return false;
     }
     // return true;
@@ -148,7 +190,7 @@ const EditQuote = ({ navigation, route }) => {
 
   const validateDiscount = (discount) => {
     if (discount == "") {
-      setDiscountError("Required*");
+      setDiscountError("Discount is required*");
       return false;
     }
     // return true;
@@ -166,7 +208,7 @@ const EditQuote = ({ navigation, route }) => {
 
   const validateTotalAmount = (total_amount) => {
     if (total_amount == "" || total_amount == null) {
-      setTotalAmountError("Required*");
+      setTotalAmountError("Amount is required*");
       return false;
     }
     // return true;
@@ -184,7 +226,7 @@ const EditQuote = ({ navigation, route }) => {
 
   const validateDescription = (description) => {
     if (description == "" || description == null) {
-      setDescriptionError("Required*");
+      setDescriptionError("Description is required*");
       return false;
     }
     return true;
@@ -194,14 +236,16 @@ const EditQuote = ({ navigation, route }) => {
   const handleSubmit = async () => {
     if (
       validateCompanyName(formData.company) &&
-      validateCustomer(formData.customer) &&
-      validateProject(formData.project) &&
-      validateQuantity(formData.quantity) &&
+      // validateCustomer(formData.customer) &&
+      // validateProject(formData.project) &&
+      // validateQuantity(formData.quantity) &&
       validateCost(formData.cost) &&
       validateTax(formData.tax) &&
       validateDiscount(formData.discount) &&
       validateTotalAmount(formData.total_cost) &&
-      validateDescription(formData.description)
+      validateDescription(formData.description) &&
+      validateTitle(formData.name) &&
+      validateCm(formData.cons_manager_id)
     ) {
       try {
         console.log(formData);
@@ -209,8 +253,8 @@ const EditQuote = ({ navigation, route }) => {
           {
             ...formData,
             company: formData.company_id,
-            customer: formData.customer_id,
-            project: formData.project_id,
+            consultant_manager: formData.cons_manager_id,
+            consultant: formData.consultant_id,
             total_amount: formData.total_cost,
           },
           route.params.id
@@ -259,14 +303,16 @@ const EditQuote = ({ navigation, route }) => {
       // setFormData(initialFormData);
     } else {
       validateCompanyName(formData.company);
-      validateCustomer(formData.customer);
-      validateProject(formData.project);
-      validateQuantity(formData.quantity);
+      // validateCustomer(formData.customer);
+      // validateProject(formData.project);
+      // validateQuantity(formData.quantity);
       validateCost(formData.cost);
       validateTax(formData.tax);
       validateDiscount(formData.discount);
       validateTotalAmount(formData.total_cost);
       validateDescription(formData.description);
+      validateTitle(formData.name);
+      validateCm(formData.cons_manager_id);
     }
   };
 
@@ -278,7 +324,22 @@ const EditQuote = ({ navigation, route }) => {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text style={styles.fieldName}>Company Name:</Text>
+          <Text style={styles.fieldName}>Title:</Text>
+          <TextInput
+            style={styles.input}
+            name="name"
+            value={formData.name}
+            onChangeText={(text) => {
+              setFormData({ ...formData, name: text });
+              setTitleError(null);
+            }}
+            placeholder="Title"
+          />
+          {titleError ? (
+            <Text style={styles.errorText}>{titleError}</Text>
+          ) : null}
+
+          <Text style={styles.fieldName}>Company:</Text>
           <DropdownMenu
             data={companyList}
             placeholder="Select Company"
@@ -290,7 +351,33 @@ const EditQuote = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Customer:</Text>
+          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          <DropdownMenu
+            data={consultantManagerList}
+            placeholder="Select Consultant Manager"
+            value={formData.cons_manager_id}
+            setValue={setFormData}
+            label="cons_manager_id"
+            originalObj={formData}
+            setErrorState={setCmError}
+          />
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+
+          <Text style={styles.fieldName}>Assign Consultant:</Text>
+          <DropdownMenu
+            data={consultantList}
+            placeholder="Select Consultant"
+            value={formData.consultant_id}
+            setValue={setFormData}
+            label="consultant_id"
+            originalObj={formData}
+            setErrorState={setConsultantError}
+          />
+          {consultantError ? (
+            <Text style={styles.errorText}>{consultantError}</Text>
+          ) : null}
+
+          {/* <Text style={styles.fieldName}>Customer:</Text>
           <DropdownMenu
             data={[
               { label: "John the Customer", value: 1 },
@@ -328,9 +415,9 @@ const EditQuote = ({ navigation, route }) => {
           />
           {projectError ? (
             <Text style={styles.errorText}>{projectError}</Text>
-          ) : null}
+          ) : null} */}
 
-          <Text style={styles.fieldName}>Quantity:</Text>
+          {/* <Text style={styles.fieldName}>Quantity:</Text>
           <TextInput
             style={styles.input}
             name="quantity"
@@ -343,7 +430,7 @@ const EditQuote = ({ navigation, route }) => {
           />
           {quantityError ? (
             <Text style={styles.errorText}>{quantityError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Cost:</Text>
           <TextInput

@@ -9,68 +9,30 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { mockData } from "../MOCK_DATA";
-import QuotesList from "./QuotesList";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import EditQuote from "./EditQuote";
-import AddQuote from "./AddQuote";
-import QuoteDetail from "./QuoteDetail";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import TasksList from "./TaskList";
 
-const Stack = createNativeStackNavigator();
-
-const QuotesLayout = ({ navigation }) => {
+const AllTasks = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          navigation.navigate("Add Quote");
+          navigation.navigate("Add Task");
         }}
       >
         <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New Quote
+          <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
+      <TasksList navigation={navigation} />
 
-      <QuotesList navigation={navigation} />
+      {/* <TasksList navigation={navigation} /> */}
     </View>
   );
 };
 
-const initialFormData = {
-  companyName: "",
-  email: "",
-  phoneNo: "",
-  jobs: [{}],
-};
-
-const ViewQuotes = ({ navigation }) => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="My Quotes"
-        component={QuotesLayout}
-        options={({ navigation }) => ({
-          headerLeft: () => (
-            <MaterialIcons
-              onPress={() => navigation.toggleDrawer()}
-              name="menu"
-              size={25}
-              style={{ marginRight: 30 }}
-            />
-          ),
-        })}
-      />
-      <Stack.Screen name="Edit Quote" component={EditQuote} />
-      <Stack.Screen name="Add Quote" component={AddQuote} />
-      <Stack.Screen name="Quote Details" component={QuoteDetail} />
-    </Stack.Navigator>
-  );
-};
-
-export default ViewQuotes;
+export default AllTasks;
 
 const styles = StyleSheet.create({
   container: {

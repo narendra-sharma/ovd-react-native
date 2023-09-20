@@ -13,8 +13,8 @@ import ViewQuotes from "./Quotes/ViewQuotes";
 import EditProject from "./Projects/EditProject";
 import QuoteDetail from "./Quotes/QuoteDetail";
 import ProjectDetail from "./Projects/ProjectDetail";
-import TaskDetail from "./Projects/Tasks/TaskDetail";
-import EditTask from "./Projects/Tasks/EditTask";
+// import TaskDetail from "./Projects/Tasks/TaskDetail";
+// import EditTask from "./Projects/Tasks/EditTask";
 import AddCompany from "./AddCompany";
 import ViewCommissions from "./Commissions/ViewCommissions";
 import CommissionDetail from "./Commissions/CommissionDetail";
@@ -135,20 +135,20 @@ const CompanyStackScreen = ({ navigation }) => {
           title: "Edit Project",
         })}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Task Detail"
         component={TaskDetail}
         options={({ navigation }) => ({
           title: "Task Detail",
         })}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="Edit Task"
         component={EditTask}
         options={({ navigation }) => ({
           title: "Edit Task",
         })}
-      />
+      /> */}
 
       <Stack.Screen
         name="View Quotes"

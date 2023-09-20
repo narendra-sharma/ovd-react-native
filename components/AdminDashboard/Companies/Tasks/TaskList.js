@@ -1,11 +1,60 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useFocusEffect } from "@react-navigation/native";
+import { apiGetAllTasks } from "../../../../apis/tasks";
 
-const TasksList = ({ navigation, tasks = [] }) => {
-  const [taskList, setTasksList] = useState([...tasks]);
+const TasksList = ({ navigation }) => {
+  const [taskList, setTasksList] = useState([]);
+
   // console.log(taskList);
-  useEffect(() => {}, [taskList]);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const getAllTasks = async () => {
+        const res = await apiGetAllTasks();
+        console.log("tasks", res.data.tasks);
+
+        setTasksList(res.data.tasks);
+      };
+
+      getAllTasks();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const handleDelete = async (name, id) => {
+    const deleteTask = async () => {
+      try {
+        const res = await apiDeleteProject(id);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          Toast.show("Project Deleted Successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => deleteTask() },
+    ]);
+  };
 
   //ok, so we gotta sort the task according to the status
   function sortTasks(a, b) {
@@ -25,27 +74,29 @@ const TasksList = ({ navigation, tasks = [] }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={taskList.sort(sortTasks)}
+        // data={taskList.sort(sortTasks)}
+        data={taskList}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {
               navigation.navigate("Task Detail", item);
               // navigation.setOptions({ title: "Updated!" });
             }}
-            style={
-              (item.status == "completed" && [
-                styles.listItem,
-                { backgroundColor: "lightgreen" },
-              ]) ||
-              (item.status == "in progress" && [
-                styles.listItem,
-                { backgroundColor: "lightblue" },
-              ]) ||
-              (item.status == "to do" && [
-                styles.listItem,
-                { backgroundColor: "orange" },
-              ])
-            }
+            // style={
+            //   (item.status == "completed" && [
+            //     styles.listItem,
+            //     { backgroundColor: "lightgreen" },
+            //   ]) ||
+            //   (item.status == "in progress" && [
+            //     styles.listItem,
+            //     { backgroundColor: "lightblue" },
+            //   ]) ||
+            //   (item.status == "to do" && [
+            //     styles.listItem,
+            //     { backgroundColor: "orange" },
+            //   ])
+            // }
+            style={styles.listItem}
           >
             <View
               style={{
@@ -60,7 +111,7 @@ const TasksList = ({ navigation, tasks = [] }) => {
                 size={30}
               />
               <View>
-                <Text style={styles.item}>Name: {item.taskName}</Text>
+                <Text style={styles.item}>Name: {item.name}</Text>
                 <Text style={styles.subText}>Status: {item.status}</Text>
               </View>
             </View>

@@ -9,49 +9,21 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { mockData } from "../MOCK_DATA";
-import QuotesList from "./QuotesList";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import EditQuote from "./EditQuote";
-import AddQuote from "./AddQuote";
-import QuoteDetail from "./QuoteDetail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AllTasks from "./AllTasks";
+import EditTask from "./EditTask";
+import AddTask from "./AddTask";
+import TaskDetail from "./TaskDetail";
 
 const Stack = createNativeStackNavigator();
 
-const QuotesLayout = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Pressable
-        style={[styles.button, styles.addButton]}
-        onPress={() => {
-          navigation.navigate("Add Quote");
-        }}
-      >
-        <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New Quote
-        </Text>
-      </Pressable>
-
-      <QuotesList navigation={navigation} />
-    </View>
-  );
-};
-
-const initialFormData = {
-  companyName: "",
-  email: "",
-  phoneNo: "",
-  jobs: [{}],
-};
-
-const ViewQuotes = ({ navigation }) => {
+const TasksStackScreen = ({ navigation }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="My Quotes"
-        component={QuotesLayout}
+        name="My Tasks"
+        component={AllTasks}
         options={({ navigation }) => ({
           headerLeft: () => (
             <MaterialIcons
@@ -63,14 +35,14 @@ const ViewQuotes = ({ navigation }) => {
           ),
         })}
       />
-      <Stack.Screen name="Edit Quote" component={EditQuote} />
-      <Stack.Screen name="Add Quote" component={AddQuote} />
-      <Stack.Screen name="Quote Details" component={QuoteDetail} />
+      <Stack.Screen name="Edit Task" component={EditTask} />
+      <Stack.Screen name="Add Task" component={AddTask} />
+      <Stack.Screen name="Task Details" component={TaskDetail} />
     </Stack.Navigator>
   );
 };
 
-export default ViewQuotes;
+export default TasksStackScreen;
 
 const styles = StyleSheet.create({
   container: {
