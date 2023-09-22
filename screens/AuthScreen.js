@@ -203,7 +203,9 @@ const AuthScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={styles.heading}>Login</Text>
+      <View style={styles.containerMain}>
+       
+        <Text style={styles.heading}>Login</Text>
 
       {/**********  INPUTS VIEW *********/}
       <View style={{ width: "80%", display: "flex" }}>
@@ -246,25 +248,26 @@ const AuthScreen = ({ navigation }) => {
           ) : null}
         </View>
 
-        {passwordError ? (
-          <Text style={styles.errorText}>{passwordError}</Text>
-        ) : null}
-      </View>
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
+          </View>
 
-      <Pressable
-        onPress={handleSubmit}
-        // onPress={() => navigation.navigate("Dashboard")}
-        style={styles.submitButton}
-      >
-        <Text style={styles.submitText}> Login </Text>
-      </Pressable>
-      <Pressable
-        style={styles.opacity}
-        // onPress={() => navigation.navigate("OTP")}
-        onPress={() => navigation.navigate("Forgot Password")}
-      >
-        <Text>Forgot Password? Click here</Text>
-      </Pressable>
+        <Pressable
+          onPress={handleSubmit}
+          // onPress={() => navigation.navigate("Dashboard")}
+          style={styles.submitButton}
+        >
+          <Text style={styles.submitText}> Login </Text>
+        </Pressable>
+        <Pressable
+          style={styles.opacity}
+          // onPress={() => navigation.navigate("OTP")}
+          onPress={() => navigation.navigate("Forgot Password")}
+        >
+          <Text style={{textAlign:'center'}}>Forgot Password? Click here</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -273,32 +276,40 @@ export default AuthScreen;
 
 const styles = StyleSheet.create({
   heading: {
-    fontSize: 24,
+    fontSize: 28,
+    marginBottom: 10,
+    textAlign: "center",
+
     fontWeight: "bold",
   },
-
+  containerMain: {
+    width: "85%",
+    marginHorizontal: "auto",
+  },
   input: {
     borderWidth: 1,
-    width: 300,
-    height: 35,
+    height: 40,
     marginBottom: 5,
     marginTop: 10,
-    padding: 5,
-    borderRadius: 8,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
     width: "100%",
   },
 
   submitButton: {
     marginTop: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "80%",
+    width: "100%",
     alignItems: "center",
   },
 
   submitText: {
     color: "white",
+    textAlign: "center",
+    fontSize: 16,
   },
 
   opacity: {
