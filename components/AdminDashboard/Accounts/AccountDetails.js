@@ -58,44 +58,53 @@ const AccountDetails = ({ navigation, route }) => {
   useEffect(() => {}, [userData]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <>
-        <View style={{ width: "80%", maxWidth: "85%" }}>
+        <View style={{width: "85%", marginHorizontal: "auto"}}>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Name: </Text>
-            <Text>{userData.name}</Text>
+            <Text style={styles.fieldName}>Name</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}>{userData.name}</Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Email: </Text>
-            <Text> {userData.email} </Text>
+            <Text style={styles.fieldName}>Email</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.email} </Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Username: </Text>
-            <Text> {userData.username} </Text>
+            <Text style={styles.fieldName}>Username</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.username} </Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Organization: </Text>
-            <Text> {userData.org} </Text>
+            <Text style={styles.fieldName}>Organization</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.org} </Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Phone Number: </Text>
-            <Text> {userData.phone_number} </Text>
+            <Text style={styles.fieldName}>Phone Number</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.phone_number} </Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Address: </Text>
-            <Text> {userData.address} </Text>
+            <Text style={styles.fieldName}>Address</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.address} </Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>State/UT: </Text>
-            <Text> {userData.state} </Text>
+            <Text style={styles.fieldName}>State/UT</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.state} </Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Country: </Text>
-            <Text> {userData.country} </Text>
+            <Text style={styles.fieldName}>Country</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.country} </Text>
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Zip Code: </Text>
-            <Text> {userData.zip_code} </Text>
+            <Text style={styles.fieldName}>Zip Code</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {userData.zip_code} </Text>
           </View>
         </View>
         <Pressable
@@ -155,16 +164,16 @@ const styles = StyleSheet.create({
   },
 
   fieldContainer: {
+    width: "100%",
     display: "flex",
     flexDirection: "row",
-    marginTop: 5,
-    marginBottom: 5,
-    // padding: 2,
+    marginTop: 20,
+    justifyContent: "space-between"
   },
 
   input: {
     width: 300,
-    height: 35,
+    height: 44,
     marginTop: 2,
     marginBottom: 10,
     padding: 5,
@@ -197,9 +206,18 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
+    width: "40%",
     fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
+    fontSize: 16,
+    textAlign: "left"
+  },
+
+  fielContent: {
+    width: "50%",
+  },
+
+  span: {
+    width: "10%"
   },
 
   errorText: {

@@ -204,11 +204,13 @@ const AuthScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <View style={styles.containerMain}>
+
+      
        
         <Text style={styles.heading}>Login</Text>
 
       {/**********  INPUTS VIEW *********/}
-      <View style={{ width: "80%", display: "flex" }}>
+      <View style={{ width: "100%", display: "flex" }}>
         <TextInput
           style={styles.input}
           name="username"
@@ -232,7 +234,7 @@ const AuthScreen = ({ navigation }) => {
           ]}
         >
           <TextInput
-            style={{ width: "90%" }}
+            style={styles.passwordInput}
             name="password"
             placeholder="Password"
             value={formData.password}
@@ -276,7 +278,7 @@ export default AuthScreen;
 
 const styles = StyleSheet.create({
   heading: {
-    fontSize: 28,
+    fontSize: 24,
     marginBottom: 10,
     textAlign: "center",
 
@@ -287,8 +289,11 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
   },
   input: {
+    display: "flex",
+    alignItems: "center",
+    fontSize: 16,
     borderWidth: 1,
-    height: 40,
+    height: 44,
     marginBottom: 5,
     marginTop: 10,
     paddingLeft: 15,
@@ -296,7 +301,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "100%",
   },
-
+  passwordInput: {
+    fontSize: 16,
+  },
   submitButton: {
     marginTop: 10,
     backgroundColor: "#696cff",

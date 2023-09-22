@@ -420,6 +420,7 @@ const AddCompany = ({ navigation }) => {
 
           <Text style={styles.fieldName}>Assign Customer:</Text>
           <DropdownMenu
+           style={[styles.dropdown]}
             data={customersList}
             placeholder="Select Customer"
             value={newCompanyData.customer_id}
@@ -434,6 +435,7 @@ const AddCompany = ({ navigation }) => {
 
           <Text>Address:</Text>
           <GooglePlacesAutocomplete
+            style={styles.input}
             placeholder="Search"
             autoFocus={true}
             listViewDisplayed="auto"
@@ -728,17 +730,18 @@ const styles = StyleSheet.create({
 
   input: {
     width: "100%",
-    height: 35,
+    height: 44,
+    fontSize: 16,
     marginTop: 2,
-    // marginBottom: 10,
+    marginBottom: 10,
     padding: 5,
-    borderRadius: 8,
+    borderRadius: 5,
     minWidth: 80,
     paddingHorizontal: 8,
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
-  },
+  }, 
 
   submitButton: {
     marginTop: 10,
@@ -766,12 +769,18 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    height: 50,
+    height: 44,
+    fontSize: 16,
     borderColor: "gray",
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
-    marginBottom: 5,
+    marginTop: 2,
+    marginBottom: 20,
   },
+
+  addresSerach: {
+    marginBottom: 10,
+  }
 });

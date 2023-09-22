@@ -102,44 +102,47 @@ const ForgotPasswordScreen = ({ navigation }) => {
         {usernameError ? (
           <Text style={styles.errorText}>{usernameError}</Text>
         ) : null}
-      </View>
-      <Pressable
+
+        <Pressable
         onPress={handleSubmit}
         // onPress={() => setResetTokenExists(true)}
-        style={styles.submitButton}
-      >
+        style={styles.submitButton}>
+        
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   heading: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: "bold",
   },
 
   inputContainer: {
-    width: "80%",
-    display: "flex",
+    width: "85%",
+    marginHorizontal: "auto",
   },
 
   input: {
     borderWidth: 1,
-    height: 35,
+    height: 44,
     marginBottom: 5,
     marginTop: 10,
-    padding: 5,
-    borderRadius: 8,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+    width: "100%",
   },
 
   submitButton: {
-    margin: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 10,
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "80%",
+    width: "100%",
     alignItems: "center",
   },
 
