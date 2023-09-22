@@ -40,11 +40,13 @@ const initialFormData = {
 
 const EditContractor = ({ navigation, route }) => {
   const [formData, setFormData] = useState(initialFormData);
+
   const [nameError, setNameError] = useState(null);
-  const [addressError, setAddressError] = useState(null);
+  const [usernameError, setUsernameError] = useState(null);
   const [emailError, setEmailError] = useState(null);
+  const [orgError, setOrgError] = useState(null);
   const [phoneError, setPhoneError] = useState(null);
-  const [userNameError, setUsernameError] = useState(null);
+  const [addressError, setAddressError] = useState(null);
   const [countryError, setCountryError] = useState(null);
   const [stateError, setStateError] = useState(null);
   const [zipcodeError, setZipcodeError] = useState(null);
@@ -62,25 +64,75 @@ const EditContractor = ({ navigation, route }) => {
   }, []);
 
   //validation functions
-  const validateCompanyName = (name) => {
+  const validateName = (name) => {
     if (name == "") {
-      setNameError("Required*");
+      setNameError("Name is required*");
       return false;
     }
     return true;
+  };
+
+  const validateUsername = (username) => {
+    if (username == "") {
+      setUsernameError("Username is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateOrg = (org) => {
+    if (org == "") {
+      setOrgError("Organization is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validatePhone = (num) => {
+    if (num == "" || num == null) {
+      setPhoneError("Phone number is required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9]{10}$/g;
+
+    if (reg.test(num) === false) {
+      setPhoneError("Please Enter a valid phone number");
+      return false; //return false if in wrong format
+    } else {
+      setPhoneError(null);
+      return true; //return true if in right format
+    }
   };
 
   const validateAddress = (address) => {
     if (address == "") {
-      setAddressError("Required*");
+      setAddressError("Address is required*");
       return false;
     }
     return true;
   };
 
-  const validateVat = (vat) => {
-    if (vat == "") {
-      setUsernameError("Required*");
+  const validateCountry = (country) => {
+    if (country == "" || country == null) {
+      setCountryError("Country is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateZipcode = (zipcode) => {
+    if (zipcode == "" || zipcode == null) {
+      setZipcodeError("Zip code is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateState = (state) => {
+    if (state == "" || state == null) {
+      setStateError("State is required*");
       return false;
     }
     return true;
@@ -88,7 +140,7 @@ const EditContractor = ({ navigation, route }) => {
 
   const validateEmail = (email) => {
     if (email == "" || email == null) {
-      setEmailError("*Required");
+      setEmailError("Email is required*");
       return false;
     }
 
@@ -106,94 +158,46 @@ const EditContractor = ({ navigation, route }) => {
     }
   };
 
-  const validatePhone = (num) => {
-    if (num == "" || num == null) {
-      setPhoneError("Required*");
-      return false;
-    }
-    // return true;
-
-    let reg = /^[0-9]{10}$/g;
-
-    if (reg.test(num) === false) {
-      setPhoneError("Please Enter a valid phone number");
-      return false; //return false if in wrong format
-    } else {
-      setPhoneError(null);
-      return true; //return true if in right format
-    }
-  };
-
-  const validateCm = (cm) => {
-    if (cm == "") {
-      setCmError("Required*");
-      return false;
-    }
-    return true;
-  };
-
-  const validateConsultant = (consultant) => {
-    if (consultant == "") {
-      setConsultantError("Required*");
-      return false;
-    }
-    return true;
-  };
-
-  const validateContractor = (contractor) => {
-    if (contractor == "") {
-      setContractorError("Required*");
-      return false;
-    }
-    return true;
-  };
-
-  const validateCountry = (country) => {
-    if (country == "" || country == null) {
-      setCountryError("Required*");
-      return false;
-    }
-    return true;
-  };
-
-  const validateZipcode = (zipcode) => {
-    if (zipcode == "") {
-      setZipcodeError("Required*");
-      return false;
-    }
-    return true;
-  };
-
-  const validateState = (state) => {
-    if (state == "" || state == null) {
-      setStateError("Required*");
-      return false;
-    }
-    return true;
-  };
-
   //handle new company submit
   const handleSubmit = async () => {
-    // if (
-    //   validateCompanyName(formData.companyName) &&
-    //   validateAddress(formData.address) &&
-    //   validateVat(formData.username) &&
-    //   validateEmail(formData.email) &&
-    //   validatePhone(formData.phoneNo) &&
-    //   validateCm(formData.consultantManager) &&
-    //   validateConsultant(formData.consultant) &&
-    //   validateContractor(formData.contractor) &&
-    //   validateCountry(formData.country) &&
-    //   validateState(formData.state) &&
-    //   validateZipcode(formData.zipcode)
-    // ) {
-    try {
-      console.log("final form data: ", formData);
-      const res = await apiUpdateUserDetails(formData, route.params.id);
-      // console.log("response: ");
-      console.log(res);
-      if (res.data.message == "Updated Successfully") {
-        Toast.show("Details Updated Successfully", {
+    if (
+      validateName(formData.name) &&
+      validateUsername(formData.username) &&
+      validateOrg(formData.org) &&
+      validatePhone(formData.phone_number) &&
+      validateAddress(formData.address) &&
+      validateCountry(formData.country) &&
+      validateState(formData.state) &&
+      validateZipcode(formData.zip_code) &&
+      validateEmail(formData.email)
+    ) {
+      try {
+        console.log("final form data: ", formData);
+        const res = await apiUpdateUserDetails(formData, route.params.id);
+        // console.log("response: ");
+        console.log(res);
+        if (res.data.message == "Updated Successfully") {
+          Toast.show("Details Updated Successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+          navigation.goBack();
+        } else {
+          Toast.show("Details cannot be updated", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        }
+      } catch (error) {
+        Toast.show("Cannot Updated User Details", {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -201,42 +205,20 @@ const EditContractor = ({ navigation, route }) => {
           hideOnPress: true,
           delay: 0,
         });
-        navigation.goBack();
-      } else {
-        Toast.show("Details cannot be updated", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-        });
+        console.log(error);
       }
-    } catch (error) {
-      Toast.show("Cannot Updated User Details", {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-      console.log(error);
+      // setFormData(initialFormData);
+    } else {
+      validateUsername(formData.username);
+      validateName(formData.name);
+      validateOrg(formData.org);
+      validatePhone(formData.phone_number);
+      validateAddress(formData.address);
+      validateCountry(formData.country);
+      validateState(formData.state);
+      validateZipcode(formData.zip_code);
+      validateEmail(formData.email);
     }
-    // setFormData(initialFormData);
-    // } else {
-    //   validateCompanyName(formData.companyName);
-    //   validateAddress(formData.address);
-    //   validateVat(formData.username);
-    //   validateCm(formData.consultantManager);
-    //   validateConsultant(formData.consultant);
-    //   validateContractor(formData.contractor);
-    //   validateCountry(formData.country);
-    //   validateZipcode(formData.zipcode);
-    //   validateState(formData.state);
-    //   validateEmail(formData.email);
-    //   validatePhone(formData.phoneNo);
-    // }
   };
 
   return (
@@ -271,8 +253,8 @@ const EditContractor = ({ navigation, route }) => {
             }}
             placeholder="Username"
           />
-          {userNameError ? (
-            <Text style={styles.errorText}>{userNameError}</Text>
+          {usernameError ? (
+            <Text style={styles.errorText}>{usernameError}</Text>
           ) : null}
 
           <Text style={styles.fieldName}>Email:</Text>

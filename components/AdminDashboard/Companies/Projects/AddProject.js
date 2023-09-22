@@ -16,6 +16,7 @@ import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import {
   apiAddNewProject,
   apiGetProjectsDropdownData,
+  apiGetQuotationsByCompanyId,
 } from "../../../../apis/projects";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
@@ -34,7 +35,7 @@ const initialFormData = {
   lat: "",
   long: "",
   billing_type: "",
-  number: "",
+  contact_number: "",
 };
 
 const AddProject = ({ navigation }) => {
@@ -44,23 +45,26 @@ const AddProject = ({ navigation }) => {
   const [startDate, setStartDate] = useState();
   const [isStartDatePickerVisible, setStartDateVisibility] = useState(false);
   const [companyList, setCompanyList] = useState([]);
+  const [quotationList, setQuotationList] = useState([]);
   const [consultantList, setConsultantList] = useState([]);
   const [customersList, setCustomersList] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
 
   const [nameError, setNameError] = useState(null);
-  const [customerError, setCustomerError] = useState(null);
-  const [tagsError, setTagsError] = useState(null);
+  const [companyError, setCompanyError] = useState(null);
+  const [quotationError, setQuotationError] = useState(null);
   const [descriptionError, setDescriptionError] = useState(null);
+  const [phoneError, setPhoneError] = useState(null);
   const [startDateError, setStartDateError] = useState(null);
   const [deadlineError, setDeadlineError] = useState(null);
-  const [consultantError, setConsultantError] = useState(null);
+  const [hoursError, setHoursError] = useState(null);
   const [addressError, setAddressError] = useState(null);
+  const [billingError, setBillingError] = useState(null);
 
   useEffect(() => {
     const getAllData = async () => {
       const res = await apiGetProjectsDropdownData();
-      console.log("res: ", res);
+      console.log("res: ", res.data);
       const tempCompanies = res.data.companies.map((company) => {
         return { label: company.name, value: company.id };
       });
@@ -81,6 +85,22 @@ const AddProject = ({ navigation }) => {
     getAllData();
   }, []);
 
+  useEffect(() => {
+    const getQuotations = async () => {
+      const res = await apiGetQuotationsByCompanyId(formData.company);
+      console.log("quotes", res.data);
+
+      const tempQuotes = res.data.data.map((quote) => {
+        return { label: quote.name, value: quote.id };
+      });
+
+      setQuotationList([...tempQuotes]);
+    };
+
+    getQuotations();
+  }, [formData.company]);
+
+  //date functions
   const hideStartDatePicker = () => {
     setStartDateVisibility(false);
   };
@@ -88,38 +108,6 @@ const AddProject = ({ navigation }) => {
   const handleStartDateConfirm = (date) => {
     setStartDate(date);
     hideStartDatePicker();
-  };
-
-  const handleSubmit = async () => {
-    try {
-      console.log("add project obj:", formData);
-      const res = await apiAddNewProject({
-        ...formData,
-      });
-      if (res.status == 200) {
-        Toast.show("New Project Added", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-        });
-        navigation.goBack();
-      } else {
-        Toast.show("Cannot Add New Project", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-        });
-      }
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const hideEndDatePicker = () => {
@@ -138,6 +126,154 @@ const AddProject = ({ navigation }) => {
     hideEndDatePicker();
   };
 
+  //validation functions
+  const validateProjectName = (name) => {
+    if (name == "" || name == null) {
+      setNameError("Project name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCompanyName = (name) => {
+    if (name == "") {
+      setCompanyError("Company name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateQuotation = (quote) => {
+    if (quote == "" || quote == null) {
+      setQuotationError("Quotation is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateDescription = (description) => {
+    if (description == "" || description == null) {
+      setDescriptionError("Description is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validatePhone = (num) => {
+    if (num == "" || num == null) {
+      setPhoneError("Phone number is required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9]{10}$/g;
+
+    if (reg.test(num) === false) {
+      setPhoneError("Please Enter a valid phone number");
+      return false; //return false if in wrong format
+    } else {
+      setPhoneError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validateStartDate = (date) => {
+    if (date == "" || date == null) {
+      setStartDateError("Start date is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateEndDate = (date) => {
+    if (date == "" || date == null) {
+      setDeadlineError("Deadline is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateHours = (hours) => {
+    if (hours == "" || hours == null) {
+      setHoursError("Estimated hours is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateAddress = (address) => {
+    if (address == "" || address == null) {
+      setAddressError("Address is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateBilling = (billing) => {
+    if (billing == "" || billing == null) {
+      setBillingError("Billing type is required*");
+      return false;
+    }
+    return true;
+  };
+
+  //handle form submit
+  const handleSubmit = async () => {
+    if (
+      validateProjectName(formData.project_name) &&
+      validateCompanyName(formData.company) &&
+      validateQuotation(formData.quotation) &&
+      validateDescription(formData.description) &&
+      validatePhone(formData.contact_number) &&
+      validateStartDate(formData.start_date) &&
+      validateEndDate(formData.deadline) &&
+      validateHours(formData.estimated_hour) &&
+      validateAddress(formData.address) &&
+      validateBilling(formData.billing_type)
+    ) {
+      try {
+        console.log("add project obj:", formData);
+        const res = await apiAddNewProject({
+          ...formData,
+        });
+        if (res.status == 200) {
+          Toast.show("New Project Added", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+          navigation.goBack();
+        } else {
+          Toast.show("Cannot Add New Project", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        }
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+    }
+    validateProjectName(formData.project_name);
+    validateCompanyName(formData.company);
+    validateQuotation(formData.quotation);
+    validateDescription(formData.description);
+    validatePhone(formData.contact_number);
+    validateStartDate(formData.start_date);
+    validateEndDate(formData.deadline);
+    validateHours(formData.estimated_hour);
+    validateAddress(formData.address);
+    validateBilling(formData.billing_type);
+  };
+
   return (
     <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
       <ScrollView
@@ -149,10 +285,10 @@ const AddProject = ({ navigation }) => {
           <Text>Project Name:</Text>
           <TextInput
             style={styles.input}
-            name="name"
-            value={formData.name}
+            name="project_name"
+            value={formData.project_name}
             onChangeText={(text) => {
-              setFormData({ ...formData, name: text });
+              setFormData({ ...formData, project_name: text });
               setNameError(null);
             }}
             placeholder="Project Name"
@@ -167,13 +303,27 @@ const AddProject = ({ navigation }) => {
             setValue={setFormData}
             label="company"
             originalObj={formData}
-            setErrorState={setNameError}
+            setErrorState={setCompanyError}
           />
-          {/* <Text>Status:</Text>
-          <DropdownMenu /> */}
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+          {companyError ? (
+            <Text style={styles.errorText}>{companyError}</Text>
+          ) : null}
 
-          <Text>Customer:</Text>
+          <Text>Quotation:</Text>
+          <DropdownMenu
+            data={quotationList}
+            placeholder="Select Quotation"
+            value={formData.quotation}
+            setValue={setFormData}
+            label="quotation"
+            originalObj={formData}
+            setErrorState={setQuotationError}
+          />
+          {quotationError ? (
+            <Text style={styles.errorText}>{quotationError}</Text>
+          ) : null}
+
+          {/* <Text>Customer:</Text>
           <DropdownMenu
             data={customersList}
             placeholder="Select Customer"
@@ -186,6 +336,20 @@ const AddProject = ({ navigation }) => {
           {customerError ? (
             <Text style={styles.errorText}>{customerError}</Text>
           ) : null}
+
+          <Text>Assign Consultant:</Text>
+          <DropdownMenu
+            data={consultantList}
+            placeholder="Select Consultant"
+            value={formData.consultant}
+            setValue={setFormData}
+            label="consultant"
+            originalObj={formData}
+            setErrorState={setConsultantError}
+          />
+          {consultantError ? (
+            <Text style={styles.errorText}>{consultantError}</Text>
+          ) : null} */}
 
           {/* <Text>Tags:</Text>
           <MultiSelect
@@ -213,14 +377,14 @@ const AddProject = ({ navigation }) => {
           />
           {tagsError ? <Text style={styles.errorText}>{tagsError}</Text> : null} */}
 
-          <Text>Task Description:</Text>
+          <Text>Project Description:</Text>
           <TextInput
             style={styles.input}
             name="description"
             value={formData.description}
             onChangeText={(text) => {
               setFormData({ ...formData, description: text });
-              setDescriptionError;
+              setDescriptionError(null);
             }}
             placeholder="Task Description"
           />
@@ -228,23 +392,20 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{descriptionError}</Text>
           ) : null}
 
-          <DateTimePickerModal
-            isVisible={isStartDatePickerVisible}
-            mode="date"
-            onConfirm={handleStartDateConfirm}
-            onCancel={hideStartDatePicker}
-          />
-
           <Text>Phone Number:</Text>
           <TextInput
             style={styles.input}
-            name="number"
-            value={formData.number}
+            name="contact_number"
+            value={formData.contact_number}
             onChangeText={(text) => {
-              setFormData({ ...formData, number: text });
+              setFormData({ ...formData, contact_number: text });
+              setPhoneError(null);
             }}
             placeholder="Number"
           />
+          {phoneError ? (
+            <Text style={styles.errorText}>{phoneError}</Text>
+          ) : null}
 
           <Text>Start Date:</Text>
           <Pressable
@@ -279,6 +440,12 @@ const AddProject = ({ navigation }) => {
               </Text>
             )}
           </Pressable>
+          <DateTimePickerModal
+            isVisible={isStartDatePickerVisible}
+            mode="date"
+            onConfirm={handleStartDateConfirm}
+            onCancel={hideStartDatePicker}
+          />
           {startDateError ? (
             <Text style={styles.errorText}>{startDateError}</Text>
           ) : null}
@@ -331,24 +498,12 @@ const AddProject = ({ navigation }) => {
             value={formData.estimated_hour}
             onChangeText={(text) => {
               setFormData({ ...formData, estimated_hour: text });
-              setDescriptionError;
+              setHoursError(null);
             }}
             placeholder="Total Estimated Hours"
           />
-          {/* {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null} */}
-
-          <Text>Assign Consultant:</Text>
-          <DropdownMenu
-            data={consultantList}
-            placeholder="Select Consultant"
-            value={formData.consultant}
-            setValue={setFormData}
-            label="consultant"
-            originalObj={formData}
-            setErrorState={setConsultantError}
-          />
-          {consultantError ? (
-            <Text style={styles.errorText}>{consultantError}</Text>
+          {hoursError ? (
+            <Text style={styles.errorText}>{hoursError}</Text>
           ) : null}
 
           <Text>Address:</Text>
@@ -455,9 +610,11 @@ const AddProject = ({ navigation }) => {
             setValue={setFormData}
             label="billing_type"
             originalObj={formData}
-            setErrorState={setNameError}
+            setErrorState={setBillingError}
           />
-          {/* {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null} */}
+          {billingError ? (
+            <Text style={styles.errorText}>{billingError}</Text>
+          ) : null}
         </View>
 
         <View

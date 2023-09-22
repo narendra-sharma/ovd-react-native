@@ -33,8 +33,10 @@ const CompanyInfo = ({
   consultantManager,
   consultant,
   contractor,
+  customerData,
 }) => {
   // console.log(navigation);
+
   const handleDeleteCompany = async () => {
     const deleteCompany = async () => {
       try {
@@ -90,6 +92,10 @@ const CompanyInfo = ({
           <Text>{companyData?.phoneNo}</Text>
         </View>
         <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Customer: </Text>
+          {customerData?.name !== "" && <Text>{customerData?.name}</Text>}
+        </View>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Consultant Manager: </Text>
           <Text>{consultantManager}</Text>
         </View>
@@ -100,7 +106,7 @@ const CompanyInfo = ({
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Contractor: </Text>
           <Text>{contractor}</Text>
-        </View>
+        </View> */}
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Address: </Text>
           <Text> {companyData?.address} </Text>
@@ -139,6 +145,7 @@ const CompanyInfo = ({
 
 const CompanyDetail = ({ navigation, route }) => {
   const [companyData, setCompanyData] = useState({});
+  const [customerData, setCustomerData] = useState({});
   const [selectedTab, setSelectedTab] = useState(0);
   const [consultantManager, setConsultantManager] = useState("");
   const [consultant, setConsultant] = useState("");
@@ -181,6 +188,8 @@ const CompanyDetail = ({ navigation, route }) => {
     }
   };
 
+  console.log("customer: ", customerData);
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -188,12 +197,17 @@ const CompanyDetail = ({ navigation, route }) => {
       const getCompanyDetails = async () => {
         try {
           const res = await apiGetCompanyDetails(route.params.id);
-          // console.log(res.data);
           navigation.setOptions({
             title: res.data.data.name,
           });
           setCompanyData(res.data.data);
-          setUsers([...res.data.users]);
+          const customer = res.data.customers.filter(
+            (customer) => customer.id == companyData.customer_id
+          );
+          // console.log("customer res: ", res.data.customers);
+          setCustomerData(customer[0]);
+
+          // setUsers([...res.data.users]);
         } catch (error) {
           console.log(error);
         }
@@ -256,6 +270,7 @@ const CompanyDetail = ({ navigation, route }) => {
             consultantManager={consultantManager}
             consultant={consultant}
             contractor={contractor}
+            customerData={customerData}
           />
         );
       case 1:

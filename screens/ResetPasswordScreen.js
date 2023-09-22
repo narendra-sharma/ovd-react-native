@@ -87,7 +87,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
     ) {
       try {
         const res = await apiResetPassword({
-          email: route.params.email,
+          username: route.params.username,
           password: formData.newPassword,
           password_confirmation: formData.confirmPassword,
           otp: route.params.otp,
@@ -156,6 +156,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
         >
           <TextInput
             name="newPassword"
+            style={{ width: "90%" }}
             placeholder="New Password"
             value={formData.newPassword}
             onChangeText={(text) => handleChange(text, "newPassword")}
@@ -185,6 +186,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
         >
           <TextInput
             name="confirmPassword"
+            style={{ width: "90%" }}
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChangeText={(text) => handleChange(text, "confirmPassword")}

@@ -1,4 +1,5 @@
 import { request } from "./index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const apiGetAllQuotes = async () => {
   const token = await AsyncStorage.getItem("token");
@@ -15,6 +16,28 @@ export const apiGetQuoteDetails = async (id) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
     path: `auth/edit-quotes/${id}`,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiGetCreateQuoteDropdownData = async () => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: "auth/create-quotes",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiGetConsultantsForQuotes = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: `auth/get-consultant-data/${id}`,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },

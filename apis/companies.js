@@ -13,11 +13,23 @@ export const apiGetAllCompanies = async () => {
   return response;
 };
 
+export const apiGetCreateCompanyDropdownData = async () => {
+  const token = await AsyncStorage.getItem("token");
+  console.log(token);
+  const response = await request({
+    path: "auth/create-company",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
 export const apiCreateNewCompany = async (formData) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
     method: "post",
-    path: "auth/create-company",
+    path: "auth/add-company",
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,

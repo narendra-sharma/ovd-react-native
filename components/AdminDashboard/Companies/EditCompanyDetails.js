@@ -42,12 +42,14 @@ const EditCompanyDetails = ({ navigation, route }) => {
   const [vatError, setVatError] = useState(null);
   const [emailError, setEmailError] = useState(null);
   const [phoneError, setPhoneError] = useState(null);
+  const [customerError, setCustomerError] = useState(null);
   const [cmError, setCmError] = useState(null);
   const [consultantError, setConsultantError] = useState(null);
   const [contractorError, setContractorError] = useState(null);
   const [countryError, setCountryError] = useState(null);
   const [stateError, setStateError] = useState(null);
   const [zipcodeError, setZipcodeError] = useState(null);
+  const [customersList, setCustomersList] = useState([]);
 
   useEffect(() => {
     const tempCmObj = {
@@ -70,45 +72,49 @@ const EditCompanyDetails = ({ navigation, route }) => {
   useEffect(() => {
     const getCompanyDetails = async () => {
       const res = await apiGetCompanyDetails(route.params.id);
-      // console.log("res data:", res.data);
-      setUsers([...res.data.users]);
+      console.log("res data:", res.data);
       setCompanyData({ ...res.data.data });
-      console.log("data ", companyData);
+
+      const tempCustomers = res.data.customers.map((customer) => {
+        return { label: customer.name, value: customer.id };
+      });
+      setCustomersList([...tempCustomers]);
+      // console.log("company data ", companyData);
     };
     getCompanyDetails();
 
-    const getAllUsers = async () => {
-      const res = await apiGetAllUsers();
-      // console.log(res.data.data);
-      const contractors = res.data.data.filter((user) => user.user_type == 5);
-      const consultants = res.data.data.filter((user) => user.user_type == 4);
-      const consultantManager = res.data.data.filter(
-        (user) => user.user_type == 3
-      );
+    // const getAllUsers = async () => {
+    //   const res = await apiGetAllUsers();
+    //   // console.log(res.data.data);
+    //   const contractors = res.data.data.filter((user) => user.user_type == 5);
+    //   const consultants = res.data.data.filter((user) => user.user_type == 4);
+    //   const consultantManager = res.data.data.filter(
+    //     (user) => user.user_type == 3
+    //   );
 
-      const tempContractors = contractors.map((contractor) => {
-        return { label: contractor.name, value: contractor.id };
-      });
+    //   const tempContractors = contractors.map((contractor) => {
+    //     return { label: contractor.name, value: contractor.id };
+    //   });
 
-      const tempConsultants = consultants.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
-      });
+    //   const tempConsultants = consultants.map((consultant) => {
+    //     return { label: consultant.name, value: consultant.id };
+    //   });
 
-      const tempConsultantManager = consultantManager.map((manager) => {
-        return { label: manager.name, value: manager.id };
-      });
+    //   const tempConsultantManager = consultantManager.map((manager) => {
+    //     return { label: manager.name, value: manager.id };
+    //   });
 
-      setContractorsList([...tempContractors]);
-      setConsultantList([...tempConsultants]);
-      setConsultantManagerList([...tempConsultantManager]);
-    };
-    getAllUsers();
+    //   setContractorsList([...tempContractors]);
+    //   setConsultantList([...tempConsultants]);
+    //   setConsultantManagerList([...tempConsultantManager]);
+    // };
+    // getAllUsers();
   }, []);
 
   //validation functions
   const validateCompanyName = (name) => {
     if (name == "") {
-      setNameError("Required*");
+      setNameError("Company name is required*");
       return false;
     }
     return true;
@@ -116,7 +122,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
   const validateAddress = (address) => {
     if (address == "" || address == null) {
-      setAddressError("Required*");
+      setAddressError("Address is required*");
       return false;
     }
     return true;
@@ -124,7 +130,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
   const validateVat = (vat) => {
     if (vat == "") {
-      setVatError("Required*");
+      setVatError("VAT number is required*");
       return false;
     }
     // return true;
@@ -138,47 +144,47 @@ const EditCompanyDetails = ({ navigation, route }) => {
     }
   };
 
-  const validateEmail = (email) => {
-    if (email == "" || email == null) {
-      setEmailError("*Required");
-      return false;
-    }
+  // const validateEmail = (email) => {
+  //   if (email == "" || email == null) {
+  //     setEmailError("*Required");
+  //     return false;
+  //   }
 
-    // setEmailError(null);
-    // return true;
+  //   // setEmailError(null);
+  //   // return true;
 
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+  //   let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-    if (reg.test(email) === false) {
-      setEmailError("Please Enter a valid email address");
-      return false; //return false if in wrong format
-    } else {
-      setEmailError(null);
-      return true; //return true if in right format
-    }
-  };
+  //   if (reg.test(email) === false) {
+  //     setEmailError("Please Enter a valid email address");
+  //     return false; //return false if in wrong format
+  //   } else {
+  //     setEmailError(null);
+  //     return true; //return true if in right format
+  //   }
+  // };
 
-  const validatePhone = (num) => {
-    if (num == "" || num == null) {
-      setPhoneError("Required*");
-      return false;
-    }
-    // return true;
+  // const validatePhone = (num) => {
+  //   if (num == "" || num == null) {
+  //     setPhoneError("Required*");
+  //     return false;
+  //   }
+  //   // return true;
 
-    let reg = /^[0-9]{10}$/g;
+  //   let reg = /^[0-9]{10}$/g;
 
-    if (reg.test(num) === false) {
-      setPhoneError("Please Enter a valid phone number");
-      return false; //return false if in wrong format
-    } else {
-      setPhoneError(null);
-      return true; //return true if in right format
-    }
-  };
+  //   if (reg.test(num) === false) {
+  //     setPhoneError("Please Enter a valid phone number");
+  //     return false; //return false if in wrong format
+  //   } else {
+  //     setPhoneError(null);
+  //     return true; //return true if in right format
+  //   }
+  // };
 
   const validateCm = (cm) => {
     if (cm == "" || cm == null) {
-      setCmError("Required*");
+      setCmError("Consultant manager is required*");
       return false;
     }
     return true;
@@ -186,7 +192,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
   const validateConsultant = (consultant) => {
     if (consultant == "" || consultant == null) {
-      setConsultantError("Required*");
+      setConsultantError("Consultant is required*");
       return false;
     }
     return true;
@@ -194,7 +200,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
   const validateContractor = (contractor) => {
     if (contractor == "" || contractor == null) {
-      setContractorError("Required*");
+      setContractorError("Contractor is required*");
       return false;
     }
     return true;
@@ -202,7 +208,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
   const validateCountry = (country) => {
     if (country == "" || country == null) {
-      setCountryError("Required*");
+      setCountryError("Country is required*");
       return false;
     }
     return true;
@@ -210,7 +216,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
   const validateZipcode = (zipcode) => {
     if (zipcode == "") {
-      setZipcodeError("Required*");
+      setZipcodeError("Zip code is required*");
       return false;
     }
     // return true;
@@ -225,7 +231,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
   const validateState = (state) => {
     if (state == "" || state == null) {
-      setStateError("Required*");
+      setStateError("State is required*");
       return false;
     }
     return true;
@@ -236,8 +242,8 @@ const EditCompanyDetails = ({ navigation, route }) => {
       validateCompanyName(companyData.name) &&
       validateAddress(companyData.address) &&
       validateVat(companyData.vat_number) &&
-      validateEmail(companyData.email) &&
-      validatePhone(companyData.phoneNo) &&
+      // validateEmail(companyData.email) &&
+      // validatePhone(companyData.phoneNo) &&
       // validateCm(companyData.consultantManager) &&
       // validateConsultant(companyData.consultant) &&
       // validateContractor(companyData.contractor) &&
@@ -290,14 +296,14 @@ const EditCompanyDetails = ({ navigation, route }) => {
       validateCompanyName(companyData.name);
       validateAddress(companyData.address);
       validateVat(companyData.vat_number);
-      validateEmail(companyData.email);
+      // validateEmail(companyData.email);
       validateCm(companyData.consultantManager);
       validateConsultant(companyData.consultant);
       validateContractor(companyData.contractor);
       validateCountry(companyData.country);
       validateZipcode(companyData.zip_code);
       validateState(companyData.state);
-      validatePhone(companyData.phoneNo);
+      // validatePhone(companyData.phoneNo);
     }
   };
 
@@ -330,7 +336,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
             placeholder="VAT Number"
           />
           {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
-
+          {/* 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
@@ -359,10 +365,20 @@ const EditCompanyDetails = ({ navigation, route }) => {
           />
           {phoneError ? (
             <Text style={styles.errorText}>{phoneError}</Text>
-          ) : null}
+          ) : null} */}
 
           {/* Dropdowns */}
-          <Text style={styles.fieldName}>Consultant Manager:</Text>
+          <Text style={styles.fieldName}>Assign Customer:</Text>
+          <DropdownMenu
+            data={customersList}
+            placeholder="Select Customer"
+            value={companyData.customer_id}
+            setValue={setCompanyData}
+            label="customer_id"
+            originalObj={companyData}
+            setErrorState={setCustomerError}
+          />
+          {/* <Text style={styles.fieldName}>Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -380,7 +396,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
             setValue={setCompanyData}
             label="consultant_id"
             originalObj={companyData}
-          />
+          /> */}
 
           {/* <Text style={styles.fieldName}>Contractor:</Text>
           <DropdownMenu
