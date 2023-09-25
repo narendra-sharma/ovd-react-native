@@ -504,13 +504,13 @@ const AddQuote = ({ navigation }) => {
           }}
         >
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={styles.btnText}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={styles.submitButton}
           >
-            <Text>Cancel</Text>
+            <Text style={styles.btnText}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -591,14 +591,18 @@ const styles = StyleSheet.create({
   },
 
   submitButton: {
-    marginTop: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 25,
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
     width: "30%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
+  },
+
+  btnText: {
+    color: "#ffff"
   },
 
   submitText: {

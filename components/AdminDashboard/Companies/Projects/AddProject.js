@@ -275,7 +275,7 @@ const AddProject = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={{ flex: 1, alignItems: "center"}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -597,7 +597,7 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text>Billing Type:</Text>
+          <Text style={styles.fieldName}>Billing Type:</Text>
           <DropdownMenu
             data={[
               { label: "Net Banking", value: 1 },
@@ -617,21 +617,15 @@ const AddProject = ({ navigation }) => {
           ) : null}
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={styles.btnText}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={styles.btnTextCancel}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -753,6 +747,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    width: "100%",
+    padding: 10
   },
 
   fieldContainer: {
@@ -764,28 +760,44 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 300,
-    height: 35,
+    width: "100%",
+    fontSize: 16,
     marginTop: 2,
-    marginBottom: 10,
+    marginBottom: 15,
     padding: 5,
-    borderRadius: 8,
-    minWidth: 80,
+    borderRadius: 5,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   },
 
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1
+  },
+
   submitButton: {
-    marginTop: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "30%",
+    borderRadius: 34,
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
+  },
+
+  btnText: {
+    color: "#ffff"
   },
 
   submitText: {
@@ -798,9 +810,25 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
-    fontWeight: "bold",
+    marginTop: 10,
     display: "flex",
     flexDirection: "row",
+  },
+
+  btnTextCancel: {
+    color: "#696cff"
+  },
+
+  dropdown: {
+    height: 44,
+    fontSize: 16,
+    padding: 5,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    width: "100%",
+    marginBottom: 15,
   },
 
   errorText: {

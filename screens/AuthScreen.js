@@ -202,75 +202,73 @@ const AuthScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <View style={styles.containerMain}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", position: "relative" }}>
+        <View style={styles.containerMain}>
 
-      
-       
-        <Text style={styles.heading}>Login</Text>
+          <Text style={styles.heading}>Login</Text>
 
-      {/**********  INPUTS VIEW *********/}
-      <View style={{ width: "100%", display: "flex" }}>
-        <TextInput
-          style={styles.input}
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChangeText={(text) => handleChange(text, "username")}
-          type="username"
-        />
-        {usernameError ? (
-          <Text style={styles.errorText}>{usernameError}</Text>
-        ) : null}
-
-        <View
-          style={[
-            {
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            },
-            styles.input,
-          ]}
-        >
+        {/**********  INPUTS VIEW *********/}
+        <View style={{ width: "100%", display: "flex" }}>
           <TextInput
-            style={styles.passwordInput}
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChangeText={(text) => handleChange(text, "password")}
-            secureTextEntry={isPasswordVisible ? false : true}
+            style={styles.input}
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChangeText={(text) => handleChange(text, "username")}
+            type="username"
           />
-          {formData.password.length > 0 ? (
-            <Icon
-              onPress={() => setIsPasswordVisible((prev) => !prev)}
-              name={isPasswordVisible ? "eye-slash" : "eye"}
-              size={20}
-            />
+          {usernameError ? (
+            <Text style={styles.errorText}>{usernameError}</Text>
           ) : null}
-        </View>
 
-            {passwordError ? (
-              <Text style={styles.errorText}>{passwordError}</Text>
+          <View
+            style={[
+              {
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              },
+              styles.input,
+            ]}
+          >
+            <TextInput
+              style={styles.passwordInput}
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChangeText={(text) => handleChange(text, "password")}
+              secureTextEntry={isPasswordVisible ? false : true}
+            />
+            {formData.password.length > 0 ? (
+              <Icon
+                onPress={() => setIsPasswordVisible((prev) => !prev)}
+                name={isPasswordVisible ? "eye-slash" : "eye"}
+                size={20}
+              />
             ) : null}
           </View>
 
-        <Pressable
-          onPress={handleSubmit}
-          // onPress={() => navigation.navigate("Dashboard")}
-          style={styles.submitButton}
-        >
-          <Text style={styles.submitText}> Login </Text>
-        </Pressable>
-        <Pressable
-          style={styles.opacity}
-          // onPress={() => navigation.navigate("OTP")}
-          onPress={() => navigation.navigate("Forgot Password")}
-        >
-          <Text style={{textAlign:'center'}}>Forgot Password? Click here</Text>
-        </Pressable>
+              {passwordError ? (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              ) : null}
+            </View>
+
+          <Pressable
+            onPress={handleSubmit}
+            // onPress={() => navigation.navigate("Dashboard")}
+            style={styles.submitButton}
+          >
+            <Text style={styles.submitText}> Login </Text>
+          </Pressable>
+          <Pressable
+            style={styles.opacity}
+            // onPress={() => navigation.navigate("OTP")}
+            onPress={() => navigation.navigate("Forgot Password")}
+          >
+            <Text style={{textAlign:'center'}}>Forgot Password? Click here</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
   );
 };
 
@@ -308,7 +306,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 34,
     width: "100%",
     alignItems: "center",
   },

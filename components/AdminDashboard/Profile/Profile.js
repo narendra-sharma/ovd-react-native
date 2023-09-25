@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     width: "30%",
     alignItems: "center",
     alignContent: "space-around",
+    backgroundColor: "#696cff"
   },
 
   submitText: {
