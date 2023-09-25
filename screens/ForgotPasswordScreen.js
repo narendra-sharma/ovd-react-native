@@ -11,38 +11,40 @@ import { apiSendForgotPasswordCode } from "../apis/auth";
 import Toast from "react-native-root-toast";
 
 const ForgotPasswordScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(null);
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState(null);
 
   //handle change in input
   const handleChange = (text) => {
-    setEmail(text);
-    validateEmail(text);
+    setUsername(text);
+    validateUsername(text);
   };
 
-  //validate email
-  const validateEmail = (email) => {
-    if (email == "") {
-      setEmailError("Email is required");
-      return;
-    }
-
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-
-    if (!reg.test(email)) {
-      setEmailError("Please enter a valid email address");
+  //validate username
+  const validateUsername = (username) => {
+    if (username == "") {
+      setUsernameError("Username is required");
       return false;
-    } else {
-      setEmailError(null);
-      return true;
     }
+    setUsernameError(null);
+    return true;
+
+    // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+    // if (!reg.test(username)) {
+    //   setUsernameError("Please enter a valid username");
+    //   return false;
+    // } else {
+    //   setUsernameError(null);
+    //   return true;
+    // }
   };
 
   //handle form submit
   const handleSubmit = async () => {
     try {
-      if (validateEmail(email)) {
-        const res = await apiSendForgotPasswordCode({ email: email });
+      if (validateUsername(username)) {
+        const res = await apiSendForgotPasswordCode({ username: username });
         console.log(res.data);
         if (res.data.success == true) {
           Toast.show("Code Sent", {
@@ -53,10 +55,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
             hideOnPress: true,
             delay: 0,
           });
-          navigation.navigate("OTP", { email });
-          // navigation.navigate("OTP", { email });
+          navigation.navigate("OTP", { username });
+          // navigation.navigate("OTP", { username });
         } else {
-          Toast.show("Email does not exist", {
+          Toast.show("Username does not exist", {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
             shadow: true,
@@ -88,54 +90,59 @@ const ForgotPasswordScreen = ({ navigation }) => {
         justifyContent: "center",
       }}
     >
-      <Text style={styles.heading}>Enter your email address:</Text>
+      <Text style={styles.heading}>Enter your username:</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          name="email"
-          placeholder="Email"
-          value={email}
+          name="username"
+          placeholder="Username"
+          value={username}
           onChangeText={(text) => handleChange(text)}
         />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-      </View>
-      <Pressable
+        {usernameError ? (
+          <Text style={styles.errorText}>{usernameError}</Text>
+        ) : null}
+
+        <Pressable
         onPress={handleSubmit}
         // onPress={() => setResetTokenExists(true)}
-        style={styles.submitButton}
-      >
+        style={styles.submitButton}>
+        
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   heading: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: "bold",
   },
 
   inputContainer: {
-    width: "80%",
-    display: "flex",
+    width: "85%",
+    marginHorizontal: "auto",
   },
 
   input: {
     borderWidth: 1,
-    height: 35,
+    height: 44,
     marginBottom: 5,
     marginTop: 10,
-    padding: 5,
-    borderRadius: 8,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+    width: "100%",
   },
 
   submitButton: {
-    margin: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 10,
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "80%",
+    width: "100%",
     alignItems: "center",
   },
 

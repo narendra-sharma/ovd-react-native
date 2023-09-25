@@ -10,9 +10,15 @@ import {
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { apiCreateNewCompany, apiGetAllUsers } from "../../../apis/companies";
+import {
+  apiCreateNewCompany,
+  apiGetAllUsers,
+  apiGetCreateCompanyDropdownData,
+  apiGetCreateDropdownData,
+} from "../../../apis/companies";
 import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
+import { apiGetProjectsDropdownData } from "../../../apis/projects";
 
 const initialFormData = {
   companyName: "",
@@ -35,6 +41,7 @@ const AddCompany = ({ navigation }) => {
   const [emailError, setEmailError] = useState(null);
   const [phoneError, setPhoneError] = useState(null);
   const [vatError, setVatError] = useState(null);
+  const [customerError, setCustomerError] = useState(null);
   const [cmError, setCmError] = useState(null);
   const [consultantError, setConsultantError] = useState(null);
   const [contractorError, setContractorError] = useState(null);
@@ -45,42 +52,78 @@ const AddCompany = ({ navigation }) => {
   const [contractorsList, setContractorsList] = useState([]);
   const [consultantList, setConsultantList] = useState([]);
   const [consultantManagerList, setConsultantManagerList] = useState([]);
+  const [customersList, setCustomersList] = useState([]);
 
   const [responseError, setResponseError] = useState(null);
 
   useEffect(() => {
-    const getAllUsers = async () => {
-      const res = await apiGetAllUsers();
-      // console.log(res.data.data);
-      const contractors = res.data.data.filter((user) => user.user_type == 5);
-      const consultants = res.data.data.filter((user) => user.user_type == 4);
-      const consultantManager = res.data.data.filter(
-        (user) => user.user_type == 3
-      );
+    // const getAllUsers = async () => {
+    //   const res = await apiGetAllUsers();
+    //   // console.log(res.data.data);
+    //   const contractors = res.data.data.filter((user) => user.user_type == 5);
+    //   const consultants = res.data.data.filter((user) => user.user_type == 4);
+    //   const consultantManager = res.data.data.filter(
+    //     (user) => user.user_type == 3
+    //   );
 
-      const tempContractors = contractors.map((contractor) => {
-        return { label: contractor.name, value: contractor.id };
+    //   const tempContractors = contractors.map((contractor) => {
+    //     return { label: contractor.name, value: contractor.id };
+    //   });
+
+    //   const tempConsultants = consultants.map((consultant) => {
+    //     return { label: consultant.name, value: consultant.id };
+    //   });
+
+    //   const tempConsultantManager = consultantManager.map((manager) => {
+    //     return { label: manager.name, value: manager.id };
+    //   });
+
+    //   setContractorsList([...tempContractors]);
+    //   setConsultantList([...tempConsultants]);
+    //   setConsultantManagerList([...tempConsultantManager]);
+
+    //   const getAllData = async () => {
+    //   const res = await apiGetProjectsDropdownData();
+    //   console.log("res: ", res);
+    //   const tempCompanies = res.data.companies.map((company) => {
+    //     return { label: company.name, value: company.id };
+    //   });
+    //   setCompanyList([...tempCompanies]);
+
+    //   const tempConsultants = res.data.consultants.map((consultant) => {
+    //     return { label: consultant.name, value: consultant.id };
+    //   });
+    //   setConsultantList([...tempConsultants]);
+
+    //   const tempCustomers = res.data.customers.map((customer) => {
+    //     return { label: customer.name, value: customer.id };
+    //   });
+    //   setCustomersList([...tempCustomers]);
+    //   console.log(customersList);
+    // };
+
+    // getAllData();
+    // };
+    // getAllUsers();
+
+    const getAllData = async () => {
+      const res = await apiGetCreateCompanyDropdownData();
+      // console.log("res: ", res);
+
+      const tempCustomers = res.data.customers.map((customer) => {
+        return { label: customer.name, value: customer.id };
       });
-
-      const tempConsultants = consultants.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
-      });
-
-      const tempConsultantManager = consultantManager.map((manager) => {
-        return { label: manager.name, value: manager.id };
-      });
-
-      setContractorsList([...tempContractors]);
-      setConsultantList([...tempConsultants]);
-      setConsultantManagerList([...tempConsultantManager]);
+      setCustomersList([...tempCustomers]);
+      console.log(customersList);
     };
-    getAllUsers();
+
+    getAllData();
   }, []);
 
   //validation functions
   const validateCompanyName = (name) => {
     if (name == "") {
-      setNameError("Required*");
+      setNameError("Company name is required*");
       return false;
     }
     return true;
@@ -88,7 +131,7 @@ const AddCompany = ({ navigation }) => {
 
   const validateAddress = (address) => {
     if (address == "") {
-      setAddressError("Required*");
+      setAddressError("Address is required*");
       return false;
     }
     return true;
@@ -96,69 +139,77 @@ const AddCompany = ({ navigation }) => {
 
   const validateVat = (vat) => {
     if (vat == "") {
-      setVatError("Required*");
+      setVatError("VAT number is required*");
       return false;
     }
     return true;
   };
 
-  const validateEmail = (email) => {
-    if (email == "" || email == null) {
-      setEmailError("*Required");
-      return false;
-    }
+  // const validateEmail = (email) => {
+  //   if (email == "" || email == null) {
+  //     setEmailError("*Required");
+  //     return false;
+  //   }
 
-    // setEmailError(null);
-    // return true;
+  //   // setEmailError(null);
+  //   // return true;
 
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+  //   let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-    if (reg.test(email) === false) {
-      setEmailError("Please Enter a valid email address");
-      return false; //return false if in wrong format
-    } else {
-      setEmailError(null);
-      return true; //return true if in right format
-    }
-  };
+  //   if (reg.test(email) === false) {
+  //     setEmailError("Please Enter a valid email address");
+  //     return false; //return false if in wrong format
+  //   } else {
+  //     setEmailError(null);
+  //     return true; //return true if in right format
+  //   }
+  // };
 
-  const validatePhone = (num) => {
-    if (num == "" || num == null) {
-      setPhoneError("Required*");
-      return false;
-    }
-    // return true;
+  // const validatePhone = (num) => {
+  //   if (num == "" || num == null) {
+  //     setPhoneError("Required*");
+  //     return false;
+  //   }
+  //   // return true;
 
-    let reg = /^[0-9]{10}$/g;
+  //   let reg = /^[0-9]{10}$/g;
 
-    if (reg.test(num) === false) {
-      setPhoneError("Please Enter a valid phone number");
-      return false; //return false if in wrong format
-    } else {
-      setPhoneError(null);
-      return true; //return true if in right format
-    }
-  };
+  //   if (reg.test(num) === false) {
+  //     setPhoneError("Please Enter a valid phone number");
+  //     return false; //return false if in wrong format
+  //   } else {
+  //     setPhoneError(null);
+  //     return true; //return true if in right format
+  //   }
+  // };
 
-  const validateCm = (cm) => {
-    if (cm == "") {
-      setCmError("Required*");
-      return false;
-    }
-    return true;
-  };
+  // const validateCm = (cm) => {
+  //   if (cm == "") {
+  //     setCmError("Required*");
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-  const validateConsultant = (consultant) => {
-    if (consultant == "") {
-      setConsultantError("Required*");
-      return false;
-    }
-    return true;
-  };
+  // const validateConsultant = (consultant) => {
+  //   if (consultant == "") {
+  //     setConsultantError("Required*");
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-  const validateContractor = (contractor) => {
-    if (contractor == "") {
-      setContractorError("Required*");
+  // const validateContractor = (contractor) => {
+  //   if (contractor == "") {
+  //     setContractorError("Required*");
+  //     return false;
+  //   }
+  //   return true;
+  // };
+
+  const validateCustomer = (customer) => {
+    if (customer == "" || customer == null) {
+      setCustomerError("Customer is required*");
       return false;
     }
     return true;
@@ -166,7 +217,7 @@ const AddCompany = ({ navigation }) => {
 
   const validateCountry = (country) => {
     if (country == "" || country == null) {
-      setCountryError("Required*");
+      setCountryError("Country is required*");
       return false;
     }
     return true;
@@ -174,7 +225,7 @@ const AddCompany = ({ navigation }) => {
 
   const validateZipcode = (zipcode) => {
     if (zipcode == "") {
-      setZipcodeError("Required*");
+      setZipcodeError("Zipcode is required*");
       return false;
     }
     return true;
@@ -182,7 +233,7 @@ const AddCompany = ({ navigation }) => {
 
   const validateState = (state) => {
     if (state == "" || state == null) {
-      setStateError("Required*");
+      setStateError("State/UT is required*");
       return false;
     }
     return true;
@@ -194,11 +245,12 @@ const AddCompany = ({ navigation }) => {
       validateCompanyName(newCompanyData.companyName) &&
       validateAddress(newCompanyData.address) &&
       validateVat(newCompanyData.vatNumber) &&
-      validateEmail(newCompanyData.email) &&
-      validatePhone(newCompanyData.phoneNo) &&
-      validateCm(newCompanyData.consultantManager) &&
-      validateConsultant(newCompanyData.consultant) &&
+      // validateEmail(newCompanyData.email) &&
+      // validatePhone(newCompanyData.phoneNo) &&
+      // validateCm(newCompanyData.consultantManager) &&
+      // validateConsultant(newCompanyData.consultant) &&
       // validateContractor(newCompanyData.contractor) &&
+      validateCustomer(newCompanyData.customer_id) &&
       validateCountry(newCompanyData.country) &&
       validateState(newCompanyData.state) &&
       validateZipcode(newCompanyData.zipcode)
@@ -210,7 +262,7 @@ const AddCompany = ({ navigation }) => {
           address: newCompanyData.address,
           status: 1,
           vat_number: newCompanyData.vatNumber,
-          consultant_manager: newCompanyData.consultantManager,
+          // consultant_manager: newCompanyData.consultantManager,
         });
         console.log("response: ");
         console.log(res);
@@ -250,14 +302,15 @@ const AddCompany = ({ navigation }) => {
       validateCompanyName(newCompanyData.companyName);
       validateAddress(newCompanyData.address);
       validateVat(newCompanyData.vatNumber);
-      validateCm(newCompanyData.consultantManager);
-      validateConsultant(newCompanyData.consultant);
+      // validateCm(newCompanyData.consultantManager);
+      // validateConsultant(newCompanyData.consultant);
       // validateContractor(newCompanyData.contractor);
+      validateCustomer(newCompanyData.customer_id);
       validateCountry(newCompanyData.country);
       validateZipcode(newCompanyData.zipcode);
       validateState(newCompanyData.state);
-      validateEmail(newCompanyData.email);
-      validatePhone(newCompanyData.phoneNo);
+      // validateEmail(newCompanyData.email);
+      // validatePhone(newCompanyData.phoneNo);
     }
   };
 
@@ -295,7 +348,7 @@ const AddCompany = ({ navigation }) => {
           />
           {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
 
-          <Text style={styles.fieldName}>Email:</Text>
+          {/* <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
             name="email"
@@ -323,9 +376,9 @@ const AddCompany = ({ navigation }) => {
           />
           {phoneError ? (
             <Text style={styles.errorText}>{phoneError}</Text>
-          ) : null}
+          ) : null} */}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -349,7 +402,7 @@ const AddCompany = ({ navigation }) => {
           />
           {consultantError ? (
             <Text style={styles.errorText}>{consultantError}</Text>
-          ) : null}
+          ) : null} */}
 
           {/* <Text style={styles.fieldName}>Assign Contractor:</Text>
           <DropdownMenu
@@ -365,8 +418,24 @@ const AddCompany = ({ navigation }) => {
             <Text style={styles.errorText}>{contractorError}</Text>
           ) : null} */}
 
+          <Text style={styles.fieldName}>Assign Customer:</Text>
+          <DropdownMenu
+           style={[styles.dropdown]}
+            data={customersList}
+            placeholder="Select Customer"
+            value={newCompanyData.customer_id}
+            setValue={setNewCompanyData}
+            label="customer_id"
+            originalObj={newCompanyData}
+            setErrorState={setCustomerError}
+          />
+          {customerError ? (
+            <Text style={styles.errorText}>{customerError}</Text>
+          ) : null}
+
           <Text>Address:</Text>
           <GooglePlacesAutocomplete
+            style={styles.input}
             placeholder="Search"
             autoFocus={true}
             listViewDisplayed="auto"
@@ -661,17 +730,18 @@ const styles = StyleSheet.create({
 
   input: {
     width: "100%",
-    height: 35,
+    height: 44,
+    fontSize: 16,
     marginTop: 2,
-    // marginBottom: 10,
+    marginBottom: 10,
     padding: 5,
-    borderRadius: 8,
+    borderRadius: 5,
     minWidth: 80,
     paddingHorizontal: 8,
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
-  },
+  }, 
 
   submitButton: {
     marginTop: 10,
@@ -699,12 +769,18 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    height: 50,
+    height: 44,
+    fontSize: 16,
     borderColor: "gray",
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
-    marginBottom: 5,
+    marginTop: 2,
+    marginBottom: 20,
   },
+
+  addresSerach: {
+    marginBottom: 10,
+  }
 });

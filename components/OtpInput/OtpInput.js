@@ -60,7 +60,10 @@ const OtpInput = ({
         hideOnPress: true,
         delay: 0,
       });
-      const res = await apiVerifyOtp({ email: route.params.email, otp: code });
+      const res = await apiVerifyOtp({
+        username: route.params.username,
+        otp: code,
+      });
       if (res.data.status == true) {
         Toast.show("OTP Verified", {
           duration: Toast.durations.SHORT,
@@ -71,7 +74,7 @@ const OtpInput = ({
           delay: 0,
         });
         navigation.navigate("Reset Password", {
-          email: route.params.email,
+          username: route.params.username,
           otp: code,
         });
       } else {
@@ -84,7 +87,7 @@ const OtpInput = ({
           delay: 0,
         });
       }
-      // console.log(res);
+      console.log(res);
     } catch (error) {
       Toast.show("OTP validation failed", {
         duration: Toast.durations.SHORT,
@@ -154,7 +157,7 @@ const OtpInput = ({
           <Text style={styles.submitText}> Submit </Text>
         </TouchableOpacity>
 
-        <ResendOtp email={route?.params?.email} />
+        <ResendOtp username={route?.params?.username} />
       </View>
     </Pressable>
   );

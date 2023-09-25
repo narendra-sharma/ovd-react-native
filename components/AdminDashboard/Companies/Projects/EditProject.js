@@ -17,6 +17,7 @@ import {
   apiAddNewProject,
   apiGetPreFilledProjectDetails,
   apiGetProjectsDropdownData,
+  apiGetQuotationsByCompanyId,
   apiUpdateProjectDetails,
 } from "../../../../apis/projects";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -49,15 +50,18 @@ const EditProject = ({ navigation, route }) => {
   const [consultantList, setConsultantList] = useState([]);
   const [customersList, setCustomersList] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [quotationList, setQuotationList] = useState([]);
 
   const [nameError, setNameError] = useState(null);
-  const [customerError, setCustomerError] = useState(null);
-  const [tagsError, setTagsError] = useState(null);
+  const [companyError, setCompanyError] = useState(null);
+  const [quotationError, setQuotationError] = useState(null);
   const [descriptionError, setDescriptionError] = useState(null);
+  const [phoneError, setPhoneError] = useState(null);
   const [startDateError, setStartDateError] = useState(null);
   const [deadlineError, setDeadlineError] = useState(null);
-  const [consultantError, setConsultantError] = useState(null);
+  const [hoursError, setHoursError] = useState(null);
   const [addressError, setAddressError] = useState(null);
+  const [billingError, setBillingError] = useState(null);
 
   useEffect(() => {
     const getAllData = async () => {
@@ -68,20 +72,36 @@ const EditProject = ({ navigation, route }) => {
       });
       setCompanyList([...tempCompanies]);
 
-      const tempConsultants = res.data.consultant.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
-      });
-      setConsultantList([...tempConsultants]);
+      // const tempConsultants = res.data.consultant.map((consultant) => {
+      //   return { label: consultant.name, value: consultant.id };
+      // });
+      // setConsultantList([...tempConsultants]);
 
-      const tempCustomers = res.data.customers.map((customer) => {
-        return { label: customer.name, value: customer.id };
-      });
-      setCustomersList([...tempCustomers]);
+      // const tempCustomers = res.data.customers.map((customer) => {
+      //   return { label: customer.name, value: customer.id };
+      // });
+      // setCustomersList([...tempCustomers]);
     };
 
     getAllData();
   }, []);
 
+  useEffect(() => {
+    const getQuotations = async () => {
+      const res = await apiGetQuotationsByCompanyId(formData.company_id);
+      console.log("quotes", res.data);
+
+      const tempQuotes = res.data.data.map((quote) => {
+        return { label: quote.name, value: quote.id };
+      });
+
+      setQuotationList([...tempQuotes]);
+    };
+
+    getQuotations();
+  }, [formData.company_id]);
+
+  //date functions
   const hideStartDatePicker = () => {
     setStartDateVisibility(false);
   };
@@ -109,54 +129,171 @@ const EditProject = ({ navigation, route }) => {
     hideEndDatePicker();
   };
 
+  //validation functions
+  const validateProjectName = (name) => {
+    if (name == "" || name == null) {
+      setNameError("Project name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCompanyName = (name) => {
+    if (name == "") {
+      setCompanyError("Company name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateQuotation = (quote) => {
+    if (quote == "" || quote == null) {
+      setQuotationError("Quotation is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateDescription = (description) => {
+    if (description == "" || description == null) {
+      setDescriptionError("Description is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validatePhone = (num) => {
+    if (num == "" || num == null) {
+      setPhoneError("Phone number is required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9]{10}$/g;
+
+    if (reg.test(num) === false) {
+      setPhoneError("Please Enter a valid phone number");
+      return false; //return false if in wrong format
+    } else {
+      setPhoneError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validateStartDate = (date) => {
+    if (date == "" || date == null) {
+      setStartDateError("Start date is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateEndDate = (date) => {
+    if (date == "" || date == null) {
+      setDeadlineError("Deadline is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateHours = (hours) => {
+    if (hours == "" || hours == null) {
+      setHoursError("Estimated hours is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateAddress = (address) => {
+    if (address == "" || address == null) {
+      setAddressError("Address is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateBilling = (billing) => {
+    if (billing == "" || billing == null) {
+      setBillingError("Billing type is required*");
+      return false;
+    }
+    return true;
+  };
+
+  //handle submit
   const handleSubmit = async () => {
-    try {
-      // console.log("edit project obj:", {
-      //   ...formData,
-      //   company: formData.company_id,
-      //   customer: formData.customer_id,
-      //   name: formData.project_name,
-      //   consultant: formData.consultant_id,
-      //   estimated_hour: formData.estimated_hours,
-      //   deadline: formData.end_date,
-      //   number: formData.contact_number,
-      // });
-      const res = await apiUpdateProjectDetails(
-        {
-          ...formData,
-          company: formData.company_id,
-          customer: formData.customer_id,
-          name: formData.project_name,
-          consultant: formData.consultant_id,
-          estimated_hour: formData.estimated_hours,
-          deadline: formData.end_date,
-          number: formData.contact_number,
-        },
-        route.params.id
-      );
-      console.log("res: ", res);
-      if (res.status == 200) {
-        Toast.show("Project Updated", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-        });
-        navigation.goBack();
-      } else {
-        Toast.show("Project Update Failed", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-        });
+    if (
+      validateProjectName(formData.project_name) &&
+      validateCompanyName(formData.company) &&
+      validateQuotation(formData.quotes_id) &&
+      validateDescription(formData.description) &&
+      validatePhone(formData.contact_number) &&
+      validateStartDate(formData.start_date) &&
+      validateEndDate(formData.end_date) &&
+      validateHours(formData.estimated_hours) &&
+      validateAddress(formData.address) &&
+      validateBilling(formData.billing_type)
+    ) {
+      try {
+        // console.log("edit project obj:", {
+        //   ...formData,
+        //   company: formData.company_id,
+        //   customer: formData.customer_id,
+        //   name: formData.project_name,
+        //   consultant: formData.consultant_id,
+        //   estimated_hour: formData.estimated_hours,
+        //   deadline: formData.end_date,
+        //   number: formData.contact_number,
+        // });
+        const res = await apiUpdateProjectDetails(
+          {
+            ...formData,
+            company: formData.company_id,
+            // customer: formData.customer_id,
+            name: formData.project_name,
+            // consultant: formData.consultant_id,
+            estimated_hour: formData.estimated_hours,
+            deadline: formData.end_date,
+            number: formData.contact_number,
+            quotation: formData.quotes_id,
+          },
+          route.params.id
+        );
+        console.log("res: ", res);
+        if (res.status == 200) {
+          Toast.show("Project Updated", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+          navigation.goBack();
+        } else {
+          Toast.show("Project Update Failed", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      validateProjectName(formData.project_name);
+      validateCompanyName(formData.company);
+      validateQuotation(formData.quotes_id);
+      validateDescription(formData.description);
+      validatePhone(formData.contact_number);
+      validateStartDate(formData.start_date);
+      validateEndDate(formData.end_date);
+      validateHours(formData.estimated_hours);
+      validateAddress(formData.address);
+      validateBilling(formData.billing_type);
     }
   };
 
@@ -190,11 +327,27 @@ const EditProject = ({ navigation, route }) => {
             setValue={setFormData}
             label="company_id"
             originalObj={formData}
-            setErrorState={setNameError}
+            setErrorState={setCompanyError}
           />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+          {companyError ? (
+            <Text style={styles.errorText}>{companyError}</Text>
+          ) : null}
 
-          <Text>Customer:</Text>
+          <Text>Quotation:</Text>
+          <DropdownMenu
+            data={quotationList}
+            placeholder="Select Quotation"
+            value={formData.quotes_id}
+            setValue={setFormData}
+            label="quotes_id"
+            originalObj={formData}
+            setErrorState={setQuotationError}
+          />
+          {quotationError ? (
+            <Text style={styles.errorText}>{quotationError}</Text>
+          ) : null}
+
+          {/*<Text>Customer:</Text>
           <DropdownMenu
             data={customersList}
             placeholder="Select Customer"
@@ -208,7 +361,7 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{customerError}</Text>
           ) : null}
 
-          {/* <Text>Tags:</Text>
+           <Text>Tags:</Text>
           <MultiSelect
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
@@ -241,20 +394,13 @@ const EditProject = ({ navigation, route }) => {
             value={formData.description}
             onChangeText={(text) => {
               setFormData({ ...formData, description: text });
-              setDescriptionError;
+              setDescriptionError(null);
             }}
             placeholder="Task Description"
           />
           {descriptionError ? (
             <Text style={styles.errorText}>{descriptionError}</Text>
           ) : null}
-
-          <DateTimePickerModal
-            isVisible={isStartDatePickerVisible}
-            mode="date"
-            onConfirm={handleStartDateConfirm}
-            onCancel={hideStartDatePicker}
-          />
 
           <Text>Phone Number:</Text>
           <TextInput
@@ -263,10 +409,20 @@ const EditProject = ({ navigation, route }) => {
             value={formData.contact_number}
             onChangeText={(text) => {
               setFormData({ ...formData, contact_number: text });
+              setPhoneError(null);
             }}
             placeholder="Number"
           />
+          {phoneError ? (
+            <Text style={styles.errorText}>{phoneError}</Text>
+          ) : null}
 
+          <DateTimePickerModal
+            isVisible={isStartDatePickerVisible}
+            mode="date"
+            onConfirm={handleStartDateConfirm}
+            onCancel={hideStartDatePicker}
+          />
           <Text>Start Date:</Text>
           <Pressable
             onPress={() => {
@@ -340,7 +496,7 @@ const EditProject = ({ navigation, route }) => {
           <Text>Total Estimated Hours:</Text>
           <TextInput
             style={styles.input}
-            name="estimated_hour"
+            name="estimated_hours"
             value={formData.estimated_hours}
             onChangeText={(text) => {
               setFormData({ ...formData, estimated_hours: text });
@@ -348,9 +504,11 @@ const EditProject = ({ navigation, route }) => {
             }}
             placeholder="Total Estimated Hours"
           />
-          {/* {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null} */}
+          {hoursError ? (
+            <Text style={styles.errorText}>{hoursError}</Text>
+          ) : null}
 
-          <Text>Assign Consultant:</Text>
+          {/* <Text>Assign Consultant:</Text>
           <DropdownMenu
             data={consultantList}
             placeholder="Select Consultant"
@@ -362,7 +520,7 @@ const EditProject = ({ navigation, route }) => {
           />
           {consultantError ? (
             <Text style={styles.errorText}>{consultantError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text>Address:</Text>
           <GooglePlacesAutocomplete
@@ -468,9 +626,11 @@ const EditProject = ({ navigation, route }) => {
             setValue={setFormData}
             label="billing_type"
             originalObj={formData}
-            setErrorState={setNameError}
+            setErrorState={setBillingError}
           />
-          {/* {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null} */}
+          {billingError ? (
+            <Text style={styles.errorText}>{billingError}</Text>
+          ) : null}
         </View>
 
         <View

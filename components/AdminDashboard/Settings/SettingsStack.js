@@ -14,7 +14,7 @@ import ViewCommissions from "../Commissions/ViewCommissions";
 import EditProject from "./Projects/EditProject";
 import QuoteDetail from "./Quotes/QuoteDetail";
 import ProjectDetail from "./Projects/ProjectDetail";
-import TaskDetail from "./Projects/Tasks/TaskDetail";
+// import TaskDetail from "./Projects/Tasks/TaskDetail";
 import EditTask from "./Projects/Tasks/EditTask";
 import AddCompany from "./AddCompany";
 

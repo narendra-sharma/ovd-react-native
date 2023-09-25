@@ -29,7 +29,7 @@ const AllConsultants = ({ navigation }) => {
     useCallback(() => {
       let isActive = true;
 
-      const getConsultantManagers = async () => {
+      const getAllConsultants = async () => {
         const res = await apiGetUsersFromUsers();
         console.log(res.data);
         // console.log(res.data.data);
@@ -37,7 +37,7 @@ const AllConsultants = ({ navigation }) => {
         setConsultantList([...res.data.consultants]);
       };
 
-      getConsultantManagers();
+      getAllConsultants();
 
       return () => {
         isActive = false;

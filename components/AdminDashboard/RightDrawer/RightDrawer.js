@@ -31,6 +31,8 @@ import ConsultantManagerStack from "../Companies/Users/ConsultantManagers/Consul
 import ConsultantStack from "../Companies/Users/Consultants/ConsultantStack";
 import ContractorStack from "../Companies/Users/Contractors/ContractorStack";
 import CustomerStack from "../Companies/Users/Customers/CustomerStack";
+import EditQuote from "../Companies/Quotes/EditQuote";
+import TasksStackScreen from "../Companies/Tasks/TasksStackScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -125,13 +127,16 @@ const RightDrawer = ({ navigation }) => {
       initialRouteName="Home"
       drawerContent={(props) => {
         return (
-          <SafeAreaView
+          <ScrollView
             style={{
               display: "flex",
-              justifyContent: "space-between",
               height: "100%",
             }}
+            contentContainerStyle={{
+              justifyContent: "space-between",
+            }}
           >
+            {/* <ScrollView> */}
             <StatusBar style="auto" />
             <View>
               {/* User Details Section */}
@@ -348,6 +353,27 @@ const RightDrawer = ({ navigation }) => {
                   <Text>All Projects</Text>
                 </Pressable>
 
+                {/* Custom Tasks */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("Tasks");
+                    setActiveScreenName("Tasks");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "Tasks" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="view-sidebar"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>All Tasks</Text>
+                </Pressable>
+
                 {/* Custom Profile */}
                 {/* <Pressable
                   onPress={() => {
@@ -415,7 +441,8 @@ const RightDrawer = ({ navigation }) => {
                 <Text>Logout</Text>
               </Pressable>
             </View>
-          </SafeAreaView>
+            {/* </ScrollView> */}
+          </ScrollView>
         );
       }}
     >
@@ -516,12 +543,31 @@ const RightDrawer = ({ navigation }) => {
         })}
       />
 
+      {/* <Drawer.Screen
+        name="Edit Quote"
+        component={EditQuote}
+        options={({ navigation }) => ({
+          title: "Edit Quote",
+          // headerShown: false,
+        })}
+      /> */}
+
       {/* Project Screens */}
       <Drawer.Screen
         name="Projects"
         component={ViewProjects}
         options={({ navigation }) => ({
           title: "My Projects",
+          headerShown: false,
+        })}
+      />
+
+      {/* Task Screens */}
+      <Drawer.Screen
+        name="Tasks"
+        component={TasksStackScreen}
+        options={({ navigation }) => ({
+          title: "My Tasks",
           headerShown: false,
         })}
       />

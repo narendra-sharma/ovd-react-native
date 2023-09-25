@@ -35,6 +35,15 @@ const EditProfile = ({ navigation }) => {
   const [userData, setUserData] = useState(initialUserData);
   const [isFocus, setIsFocus] = useState(false);
 
+  const [nameError, setNameError] = useState(null);
+  const [usernameError, setUsernameError] = useState(null);
+  const [orgError, setOrgError] = useState(null);
+  const [phoneError, setPhoneError] = useState(null);
+  const [addressError, setAddressError] = useState(null);
+  const [countryError, setCountryError] = useState(null);
+  const [stateError, setStateError] = useState(null);
+  const [zipcodeError, setZipcodeError] = useState(null);
+
   useEffect(() => {
     const getProfileData = async () => {
       try {
@@ -56,25 +65,131 @@ const EditProfile = ({ navigation }) => {
     getProfileData();
   }, []);
 
+  //validation functions
+  const validateName = (name) => {
+    if (name == "") {
+      setNameError("Name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateUsername = (username) => {
+    if (username == "") {
+      setUsernameError("Username is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateOrg = (org) => {
+    if (org == "") {
+      setOrgError("Organization is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validatePhone = (num) => {
+    if (num == "" || num == null) {
+      setPhoneError("Phone number is required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9]{10}$/g;
+
+    if (reg.test(num) === false) {
+      setPhoneError("Please Enter a valid phone number");
+      return false; //return false if in wrong format
+    } else {
+      setPhoneError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validateAddress = (address) => {
+    if (address == "") {
+      setAddressError("Address is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCountry = (country) => {
+    if (country == "" || country == null) {
+      setCountryError("Country is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateZipcode = (zipcode) => {
+    if (zipcode == "" || zipcode == null) {
+      setZipcodeError("Zip code is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateState = (state) => {
+    if (state == "" || state == null) {
+      setStateError("State is required*");
+      return false;
+    }
+    return true;
+  };
+
+  //handle form submit
   const handleSubmit = async () => {
-    try {
-      const res = await apiUpdateProfile({
-        ...userData,
-        name: userData.name,
-        phonenumber: userData.phone_number,
-        address: userData.address,
-        org: userData.org,
-        state: userData.state,
-        country: userData.country,
-        country_code: userData.country_code,
-        latitude: userData.lat,
-        longitude: userData.long,
-        zipcode: userData.zip_code,
-      });
-      // console.log(userData);
-      //   console.log(res);
-      if (res.status == 200) {
-        Toast.show("Profile updated successfully", {
+    if (
+      validateName(userData.name) &&
+      validateUsername(userData.username) &&
+      validateOrg(userData.org) &&
+      validatePhone(userData.phone_number) &&
+      validateAddress(userData.address) &&
+      validateCountry(userData.country) &&
+      validateState(userData.state) &&
+      validateZipcode(userData.zip_code)
+    ) {
+      try {
+        const res = await apiUpdateProfile({
+          ...userData,
+          name: userData.name,
+          phonenumber: userData.phone_number,
+          address: userData.address,
+          org: userData.org,
+          state: userData.state,
+          country: userData.country,
+          country_code: userData.country_code,
+          latitude: userData.lat,
+          longitude: userData.long,
+          zipcode: userData.zip_code,
+        });
+        // console.log(userData);
+        //   console.log(res);
+        if (res.status == 200) {
+          Toast.show("Profile updated successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+          const resp = await apiGetProfileDetails();
+          console.log("we got from api: ", res.data);
+          setUserData(resp.data.users);
+          await AsyncStorage.setItem(
+            "profile",
+            JSON.stringify(resp.data.users)
+          );
+
+          navigation.navigate("My Profile");
+        }
+        //   console.log(res.data);
+      } catch (error) {
+        Toast.show("Cannot update profile", {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -82,24 +197,17 @@ const EditProfile = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        const resp = await apiGetProfileDetails();
-        console.log("we got from api: ", res.data);
-        setUserData(resp.data.users);
-        await AsyncStorage.setItem("profile", JSON.stringify(resp.data.users));
-
-        navigation.navigate("My Profile");
+        console.log(error);
       }
-      //   console.log(res.data);
-    } catch (error) {
-      Toast.show("Cannot update profile", {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-      console.log(error);
+    } else {
+      validateUsername(userData.username);
+      validateName(userData.name);
+      validateOrg(userData.org);
+      validatePhone(userData.phone_number);
+      validateAddress(userData.address);
+      validateCountry(userData.country);
+      validateState(userData.state);
+      validateZipcode(userData.zip_code);
     }
   };
 
@@ -145,35 +253,51 @@ const EditProfile = ({ navigation }) => {
             style={styles.input}
             name="name"
             value={userData.name}
-            onChangeText={(text) => setUserData({ ...userData, name: text })}
+            onChangeText={(text) => {
+              setUserData({ ...userData, name: text });
+              setNameError(null);
+            }}
             placeholder="Name"
           />
+          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
           <Text>Username:</Text>
           <TextInput
             style={styles.input}
             name="name"
             value={userData.username}
-            onChangeText={(text) =>
-              setUserData({ ...userData, username: text })
-            }
+            onChangeText={(text) => {
+              setUserData({ ...userData, username: text });
+              setUsernameError(null);
+            }}
             placeholder="Username"
           />
+          {usernameError ? (
+            <Text style={styles.errorText}>{usernameError}</Text>
+          ) : null}
           <Text>Organization:</Text>
           <TextInput
             style={styles.input}
             name="organization"
             value={userData.org}
-            onChangeText={(text) => setUserData({ ...userData, org: text })}
+            onChangeText={(text) => {
+              setUserData({ ...userData, org: text });
+              setOrgError(null);
+            }}
           />
+          {orgError ? <Text style={styles.errorText}>{orgError}</Text> : null}
           <Text>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="phonenumber"
             value={userData.phone_number}
-            onChangeText={(text) =>
-              setUserData({ ...userData, phone_number: text })
-            }
+            onChangeText={(text) => {
+              setUserData({ ...userData, phone_number: text });
+              setPhoneError(null);
+            }}
           />
+          {phoneError ? (
+            <Text style={styles.errorText}>{phoneError}</Text>
+          ) : null}
           <Text>Address:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
@@ -184,6 +308,10 @@ const EditProfile = ({ navigation }) => {
             textInputProps={{
               value: userData.address,
               onChangeText: (text) => {
+                setAddressError(null);
+                setCountryError(null);
+                setStateError(null);
+                setZipcodeError(null);
                 setUserData({ ...userData, address: text });
               },
             }}
@@ -274,6 +402,10 @@ const EditProfile = ({ navigation }) => {
             debounce={200}
             styles={placesStyle}
           />
+          {addressError ? (
+            <Text style={styles.errorText}>{addressError}</Text>
+          ) : null}
+
           <Text>Country: </Text>
           <Dropdown
             style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
@@ -295,6 +427,7 @@ const EditProfile = ({ navigation }) => {
             searchPlaceholder="Search..."
             value={userData.country_code}
             onChange={(item) => {
+              setCountryError(null);
               setUserData({
                 ...userData,
                 country_code: item.value,
@@ -303,14 +436,10 @@ const EditProfile = ({ navigation }) => {
               });
             }}
           />
-          {/* <TextInput
-              style={styles.input}
-              name="country"
-              value={userData.country}
-              onChangeText={(text) =>
-                setUserData({ ...userData, country: text })
-              }
-            /> */}
+          {countryError ? (
+            <Text style={styles.errorText}>{countryError}</Text>
+          ) : null}
+
           <Text>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
@@ -332,24 +461,27 @@ const EditProfile = ({ navigation }) => {
             value={userData.state}
             onChange={(item) => {
               setUserData({ ...userData, state: item.label });
+              setStateError(null);
             }}
           />
-          {/* <TextInput
-              style={styles.input}
-              name="state"
-              value={userData.state}
-              onChangeText={(text) => setUserData({ ...userData, state: text })}
-            /> */}
+          {stateError ? (
+            <Text style={styles.errorText}>{stateError}</Text>
+          ) : null}
 
           <Text>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zip_code"
             value={userData.zip_code}
-            onChangeText={(text) =>
-              setUserData({ ...userData, zip_code: text })
-            }
+            placeholder="Zip Code"
+            onChangeText={(text) => {
+              setUserData({ ...userData, zip_code: text });
+              setZipcodeError(null);
+            }}
           />
+          {zipcodeError ? (
+            <Text style={styles.errorText}>{zipcodeError}</Text>
+          ) : null}
         </View>
         <View
           style={{
