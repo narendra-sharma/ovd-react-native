@@ -243,7 +243,7 @@ const AddConsultant = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={{ flex: 1, alignItems: "center"}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -263,7 +263,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          <Text>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -278,7 +278,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{usernameError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Email:</Text>
+          <Text>Email:</Text>
           <TextInput
             style={styles.input}
             name="email"
@@ -293,7 +293,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{emailError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Phone Number:</Text>
+          <Text>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="phone_number"
@@ -308,7 +308,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          <Text>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -427,7 +427,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text>Country: </Text>
+          <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -461,7 +461,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{countryError}</Text>
           ) : null}
 
-          <Text>State/UT: </Text>
+          <Text style={styles.fieldName}>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -489,7 +489,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{stateError}</Text>
           ) : null}
 
-          <Text>Zip Code: </Text>
+          <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zip_code"
@@ -505,21 +505,15 @@ const AddConsultant = ({ navigation }) => {
           ) : null}
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={{color: "#ffff"}}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={{color: "#696cff"}}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -609,13 +603,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    width: "100%",
+    padding: 10
   },
 
   fieldContainer: {
     display: "flex",
     flexDirection: "row",
     marginBottom: 5,
-    // padding: 2,
   },
 
   fieldName: {
@@ -626,24 +621,36 @@ const styles = StyleSheet.create({
 
   input: {
     width: "100%",
-    height: 35,
+    fontSize: 16,
     marginTop: 2,
-    // marginBottom: 10,
+    marginBottom: 15,
     padding: 5,
-    borderRadius: 8,
-    minWidth: 80,
+    borderRadius: 5,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   },
 
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1
+  },
+
   submitButton: {
-    marginTop: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "30%",
+    borderRadius: 34,
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",

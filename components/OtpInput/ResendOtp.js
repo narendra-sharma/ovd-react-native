@@ -70,7 +70,7 @@ const ResendOtp = ({ email }) => {
         <Text>Resend Code in: {time} seconds</Text>
       ) : (
         <>
-          <Text>Did not receive OTP? </Text>
+          <Text style={{fontSize: 16, marginRight: 8}}>Did not receive OTP? </Text>
           <Pressable onPress={handleResendOtp} style={styles.submitButton}>
             <Text style={styles.submitText}>Resend Code</Text>
           </Pressable>
@@ -87,10 +87,9 @@ const styles = StyleSheet.create({
     // marginTop: 20,
     // backgroundColor: "#B76E79",
     // padding: 8,
-    borderRadius: 8,
     // width: "64%",
     alignItems: "center",
-    borderWidth: 0.5,
+    borderBottomWidth: 1,
     borderColor: "#B76E79",
     paddingHorizontal: 4,
   },
@@ -99,5 +98,6 @@ const styles = StyleSheet.create({
     color: "#B76E79",
     display: "flex",
     flexDirection: "row",
+    fontSize: 16,
   },
 });

@@ -315,7 +315,7 @@ const AddCompany = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -528,7 +528,7 @@ const AddCompany = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text>Country: </Text>
+          <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -606,24 +606,18 @@ const AddCompany = ({ navigation }) => {
           ) : null}
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+        <View style={styles.bothButtons}>
           <Pressable
             onPress={handleNewCompanySubmit}
             style={styles.submitButton}
           >
-            <Text>Submit</Text>
+            <Text style={styles.btnText}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={styles.btnTextCancel}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -676,7 +670,7 @@ const placesStyle = StyleSheet.create({
   },
   textInput: {
     backgroundColor: "transparent",
-    height: 45,
+    height: 44,
     color: "#5d5d5d",
     fontSize: 16,
     borderWidth: 0.5,
@@ -704,9 +698,6 @@ const placesStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    padding: 22,
-  },
 
   formContainer: {
     display: "flex",
@@ -730,28 +721,42 @@ const styles = StyleSheet.create({
 
   input: {
     width: "100%",
-    height: 44,
     fontSize: 16,
     marginTop: 2,
     marginBottom: 10,
     padding: 5,
     borderRadius: 5,
-    minWidth: 80,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   }, 
 
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column"
+  },
+
   submitButton: {
-    marginTop: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "30%",
+    width: "100%",
+    borderRadius: 5,
     alignItems: "center",
-    justifyContent: "space-between",
-    alignContent: "space-around",
+    borderRadius: 34
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1
+  },
+
+  btnTextCancel: {
+    color: "#696cff"
   },
 
   submitText: {
@@ -771,16 +776,17 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 44,
     fontSize: 16,
+    padding: 5,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
-    marginTop: 2,
     marginBottom: 20,
   },
 
-  addresSerach: {
-    marginBottom: 10,
-  }
+  btnText: {
+    color: "#ffff"
+  },
+
 });

@@ -104,7 +104,7 @@ const OtpInput = ({
   return (
     <Pressable style={styles.otpInputContainer} onPress={Keyboard.dismiss}>
       <View style={styles.otpInputContainer}>
-        <Text>Enter the 4-digit code:</Text>
+        <Text style={{fontSize: 16}}>Enter the 4-digit code:</Text>
         <Pressable
           onPress={handleOnPress}
           style={styles.splitOTPBoxesContainer}
@@ -183,29 +183,37 @@ const styles = StyleSheet.create({
   },
 
   splitOTPBoxesContainer: {
-    width: "80%",
+    width: "60%",
     flexDirection: "row",
     justifyContent: "space-evenly",
+    marginBottom: 10,
+    marginTop: 12
   },
 
   splitBoxes: {
     marginTop: 10,
-    borderColor: "#000",
+    borderColor: "#ddd",
     borderWidth: 1,
-    bordeRadius: "5px",
     padding: "12px",
-    width: 35,
-    height: 40,
+    width: 40,
+    height: 45,
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: 7,
+    backgroundColor: "#ffff"
   },
 
   splitBoxesFocused: {
     marginTop: 10,
-    borderColor: "pink",
+    borderColor: "#d3b4ed",
     borderWidth: 1,
-    bordeRadius: "5px",
     padding: "12px",
-    width: 35,
-    height: 40,
+    width: 40,
+    height: 45,
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: 7,
+    backgroundColor: "#ffff"
   },
 
   splitBoxText: {
@@ -215,11 +223,12 @@ const styles = StyleSheet.create({
 
   submitButton: {
     marginTop: 20,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
     width: "64%",
     alignItems: "center",
+    marginBottom: 15
   },
 
   submitText: {
