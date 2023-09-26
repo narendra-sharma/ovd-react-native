@@ -433,7 +433,7 @@ const AddCompany = ({ navigation }) => {
             <Text style={styles.errorText}>{customerError}</Text>
           ) : null}
 
-          <Text>Address:</Text>
+          <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
             style={styles.input}
             placeholder="Search"
@@ -562,7 +562,7 @@ const AddCompany = ({ navigation }) => {
             <Text style={styles.errorText}>{countryError}</Text>
           ) : null}
 
-          <Text>State/UT: </Text>
+          <Text style={styles.fieldName}>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -590,7 +590,7 @@ const AddCompany = ({ navigation }) => {
             <Text style={styles.errorText}>{stateError}</Text>
           ) : null}
 
-          <Text>Zip Code: </Text>
+          <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zipcode"
@@ -723,7 +723,6 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     marginTop: 2,
-    marginBottom: 10,
     padding: 5,
     borderRadius: 5,
     paddingHorizontal: 8,
@@ -736,7 +735,8 @@ const styles = StyleSheet.create({
   bothButtons: {
     display: "flex",
     width: "100%",
-    flexDirection: "column"
+    flexDirection: "column",
+    marginTop: 10
   },
 
   submitButton: {
@@ -782,7 +782,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
-    marginBottom: 20,
   },
 
   btnText: {

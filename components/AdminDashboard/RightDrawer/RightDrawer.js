@@ -147,14 +147,15 @@ const RightDrawer = ({ navigation }) => {
                 }}
               >
                 <View style={styles.innerContainer}>
-                  <Icon
+                  <Icon style={{color: "#ffff", fontSize: 40}}
                     // style={styles.drawerIcon}
                     name="user-circle-o"
                     size={35}
                   />
                   <View>
-                    <Text style={styles.textStyle}>{userData?.name}</Text>
-                    <Text style={{ fontSize: 12, marginLeft: 5 }}>
+                    <Text style={{ fontSize: 14
+                    , marginLeft: 8, color: "#ffff" }}>{userData?.name}</Text>
+                    <Text style={{ fontSize: 15, marginLeft: 8, color: "#ffff" }}>
                       {userData?.email}
                     </Text>
                   </View>
@@ -427,20 +428,20 @@ const RightDrawer = ({ navigation }) => {
               /> */}
               </ScrollView>
             </View>
-
             <View
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 50,
-              }}
-            >
-              <Pressable style={styles.logoutButton} onPress={handleLogout}>
-                <Icon name="sign-out" size={28} />
-                <Text>Logout</Text>
-              </Pressable>
-            </View>
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingHorizontal: 10
+                  }}
+                  >
+                  <Pressable style={styles.logoutButton} onPress={handleLogout}>
+                    <Icon style={{color: "#ffff"}} name="sign-out" size={28} />
+                    <Text style={{color: "#ffff"}}>Logout</Text>
+                  </Pressable>
+              </View>
+           
             {/* </ScrollView> */}
           </ScrollView>
         );
@@ -602,7 +603,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     height: 140,
     width: "100%",
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     marginBottom: 5,
     display: "flex",
     alignItems: "center",
@@ -616,7 +617,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     marginTop: 40,
-    maxWidth: "90%",
+    maxWidth: "100%",
   },
 
   subMenuButton: {
@@ -653,7 +654,7 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    marginLeft: 5,
+    marginLeft: 8,
   },
 
   settingsButton: {
@@ -671,10 +672,10 @@ const styles = StyleSheet.create({
   },
 
   logoutButton: {
-    height: 50,
-    backgroundColor: "#B76E79",
-    borderRadius: 8,
-    width: "60%",
+    height: 40,
+    backgroundColor: "#484848",
+    borderRadius: 5,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
     margin: "auto",

@@ -263,7 +263,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text>Username: </Text>
+          <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -278,7 +278,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{usernameError}</Text>
           ) : null}
 
-          <Text>Email:</Text>
+          <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
             name="email"
@@ -293,7 +293,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{emailError}</Text>
           ) : null}
 
-          <Text>Phone Number:</Text>
+          <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="phone_number"
@@ -308,7 +308,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text>Assign Consultant Manager:</Text>
+          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -333,7 +333,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {orgError ? <Text style={styles.errorText}>{orgError}</Text> : null}
 
-          <Text>Address:</Text>
+          <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
             autoFocus={true}
@@ -623,7 +623,6 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     marginTop: 2,
-    marginBottom: 15,
     padding: 5,
     borderRadius: 5,
     paddingHorizontal: 8,
@@ -637,6 +636,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
+    paddingHorizontal: 10
   },
 
   cancelBtn: {
@@ -671,10 +671,13 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    height: 50,
+    height: 44,
+    fontSize: 16,
+    marginTop: 2,
+    padding: 5,
     borderColor: "gray",
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
     marginBottom: 5,

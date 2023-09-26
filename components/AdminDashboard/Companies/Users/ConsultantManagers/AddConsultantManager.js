@@ -429,7 +429,7 @@ const AddConsultantManager = ({ navigation }) => {
             <Text style={styles.errorText}>{countryError}</Text>
           ) : null}
 
-          <Text>State/UT: </Text>
+          <Text style={styles.fieldName}>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -457,7 +457,7 @@ const AddConsultantManager = ({ navigation }) => {
             <Text style={styles.errorText}>{stateError}</Text>
           ) : null}
 
-          <Text>Zip Code: </Text>
+          <Text style={styles.fieldName} >Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zip_code"
@@ -590,7 +590,6 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     marginTop: 2,
-    marginBottom: 10,
     padding: 5,
     borderRadius: 5,
     paddingHorizontal: 8,
@@ -604,6 +603,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
+    marginTop: 10
   },
 
   submitButton: {
@@ -639,13 +639,13 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 44,
     fontSize: 16,
+    marginTop: 2,
     padding: 5,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
-    marginBottom: 20,
   },
 
 });
