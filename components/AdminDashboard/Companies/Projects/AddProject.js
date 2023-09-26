@@ -282,7 +282,7 @@ const AddProject = ({ navigation }) => {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text>Project Name:</Text>
+          <Text style={styles.fieldName}>Project Name:</Text>
           <TextInput
             style={styles.input}
             name="project_name"
@@ -295,7 +295,7 @@ const AddProject = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text>Company:</Text>
+          <Text style={styles.fieldName}>Company:</Text>
           <DropdownMenu
             data={companyList}
             placeholder="Select Company"
@@ -309,7 +309,7 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{companyError}</Text>
           ) : null}
 
-          <Text>Quotation:</Text>
+          <Text style={styles.fieldName}>Quotation:</Text>
           <DropdownMenu
             data={quotationList}
             placeholder="Select Quotation"
@@ -377,7 +377,7 @@ const AddProject = ({ navigation }) => {
           />
           {tagsError ? <Text style={styles.errorText}>{tagsError}</Text> : null} */}
 
-          <Text>Project Description:</Text>
+          <Text style={styles.fieldName}>Project Description:</Text>
           <TextInput
             style={styles.input}
             name="description"
@@ -392,7 +392,7 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{descriptionError}</Text>
           ) : null}
 
-          <Text>Phone Number:</Text>
+          <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="contact_number"
@@ -407,7 +407,7 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text>Start Date:</Text>
+          <Text style={styles.fieldName}>Start Date:</Text>
           <Pressable
             onPress={() => {
               setStartDateVisibility(true);
@@ -456,7 +456,7 @@ const AddProject = ({ navigation }) => {
             onConfirm={handleEndDateConfirm}
             onCancel={hideEndDatePicker}
           />
-          <Text>Deadline:</Text>
+          <Text style={styles.fieldName}>Deadline:</Text>
           <Pressable
             onPress={() => {
               setEndDateVisibility(true);
@@ -491,7 +491,7 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{deadlineError}</Text>
           ) : null}
 
-          <Text>Total Estimated Hours:</Text>
+          <Text style={styles.fieldName}>Total Estimated Hours:</Text>
           <TextInput
             style={styles.input}
             name="estimated_hour"
@@ -506,7 +506,7 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{hoursError}</Text>
           ) : null}
 
-          <Text>Address:</Text>
+          <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
             autoFocus={true}
@@ -619,13 +619,13 @@ const AddProject = ({ navigation }) => {
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={styles.btnText}>Submit</Text>
+            <Text style={{color: "#ffff"}}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={styles.btnTextCancel}>Cancel</Text>
+            <Text style={{color: "#696cff"}}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -763,7 +763,6 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     marginTop: 2,
-    marginBottom: 15,
     padding: 5,
     borderRadius: 5,
     paddingHorizontal: 8,
@@ -777,6 +776,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
+    paddingHorizontal: 10
   },
 
   cancelBtn: {
@@ -786,7 +786,7 @@ const styles = StyleSheet.create({
   },
 
   submitButton: {
-    marginTop: 15,
+    marginTop: 10,
     backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 34,
@@ -796,9 +796,6 @@ const styles = StyleSheet.create({
     alignContent: "space-around",
   },
 
-  btnText: {
-    color: "#ffff"
-  },
 
   submitText: {
     color: "white",
@@ -815,20 +812,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  btnTextCancel: {
-    color: "#696cff"
-  },
-
   dropdown: {
     height: 44,
     fontSize: 16,
+    marginTop: 2,
     padding: 5,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
-    marginBottom: 15,
   },
 
   errorText: {

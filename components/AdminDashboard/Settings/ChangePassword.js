@@ -166,20 +166,21 @@ const ChangePassword = ({ navigation }) => {
       }}
     >
       {/**********  INPUT PASSWORDS VIEW *********/}
-      <View style={{ width: "80%", display: "flex" }}>
-        <Text>Enter Current Password: </Text>
+      <View style={{ width: "100%", display: "flex", paddingHorizontal: 15 }}>
+        <Text style={styles.fieldName} >Enter Current Password:</Text>
         <View
           style={[
             {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
+              alignItems: "center"
             },
             styles.input,
           ]}
         >
           <TextInput
-            style={{ width: "90%" }}
+            style={{ width: "100%" }}
             ref={passRef}
             autoCorrect={false}
             name="oldPassword"
@@ -200,7 +201,7 @@ const ChangePassword = ({ navigation }) => {
           <Text style={styles.errorText}>{oldPasswordError}</Text>
         ) : null}
 
-        <Text>Enter New Password: </Text>
+        <Text style={styles.fieldName} >Enter New Password: </Text>
         <View
           style={[
             {
@@ -213,7 +214,7 @@ const ChangePassword = ({ navigation }) => {
         >
           <TextInput
             name="newPassword"
-            style={{ width: "90%" }}
+            style={{ width: "100%" }}
             placeholder="New Password"
             value={formData.newPassword}
             onChangeText={(text) => handleChange(text, "newPassword")}
@@ -231,7 +232,7 @@ const ChangePassword = ({ navigation }) => {
           <Text style={styles.errorText}>{newPasswordError}</Text>
         ) : null}
 
-        <Text>Confirm New Password: </Text>
+        <Text style={styles.fieldName} >Confirm New Password: </Text>
         <View
           style={[
             {
@@ -244,7 +245,7 @@ const ChangePassword = ({ navigation }) => {
         >
           <TextInput
             name="confirmPassword"
-            style={{ width: "90%" }}
+            style={{ width: "100%" }}
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChangeText={(text) => handleChange(text, "confirmPassword")}
@@ -261,11 +262,11 @@ const ChangePassword = ({ navigation }) => {
         {confirmPasswordError ? (
           <Text style={styles.errorText}>{confirmPasswordError}</Text>
         ) : null}
-      </View>
 
-      <Pressable onPress={handleSubmit} style={styles.submitButton}>
-        <Text style={styles.submitText}>Submit</Text>
-      </Pressable>
+            <Pressable onPress={handleSubmit} style={styles.submitButton}>
+              <Text style={styles.submitText}>Submit</Text>
+            </Pressable>
+      </View>
     </View>
   );
 };
@@ -284,21 +285,33 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderWidth: 1,
-    height: 35,
-    marginBottom: 5,
-    marginTop: 10,
+    width: "100%",
+    fontSize: 16,
+    marginTop: 2,
     padding: 5,
-    borderRadius: 8,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    height: 44,
+    minWidth: "100%",
+    borderColor: "gray",
+    borderWidth: 0.5,
   },
 
   submitButton: {
-    margin: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "80%",
+    borderRadius: 34,
+    width: "100%",
     alignItems: "center",
+    justifyContent: "space-between",
+    alignContent: "space-around",
+  },
+
+  fieldName: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
   },
 
   submitText: {
