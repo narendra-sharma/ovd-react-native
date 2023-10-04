@@ -83,6 +83,10 @@ const ConsultantManagerDetails = ({ navigation, route }) => {
         <Text> {userData.org} </Text>
       </View>
       <View style={styles.fieldContainer}>
+        <Text style={styles.fieldName}>Commission: </Text>
+        <Text> {userData.commission}% </Text>
+      </View>
+      <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Address </Text>
         <Text> {userData.address} </Text>
       </View>

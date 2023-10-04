@@ -50,6 +50,7 @@ const EditConsultantManager = ({ navigation, route }) => {
   const [countryError, setCountryError] = useState(null);
   const [stateError, setStateError] = useState(null);
   const [zipcodeError, setZipcodeError] = useState(null);
+  const [commissionError, setCommissionError] = useState(null);
 
   const [responseError, setResponseError] = useState(null);
 
@@ -83,6 +84,14 @@ const EditConsultantManager = ({ navigation, route }) => {
   const validateOrg = (org) => {
     if (org == "") {
       setOrgError("Organization is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCommission = (commission) => {
+    if (commission == "" || commission == null) {
+      setCommissionError("Commision is required*");
       return false;
     }
     return true;
@@ -164,6 +173,7 @@ const EditConsultantManager = ({ navigation, route }) => {
       validateName(formData.name) &&
       validateUsername(formData.username) &&
       validateOrg(formData.org) &&
+      validateCommission(formData.commission) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
       validateCountry(formData.country) &&
@@ -218,6 +228,7 @@ const EditConsultantManager = ({ navigation, route }) => {
       validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
+      validateCommission(formData.commission);
     }
   };
 
@@ -299,6 +310,35 @@ const EditConsultantManager = ({ navigation, route }) => {
             }}
           />
           {orgError ? <Text style={styles.errorText}>{orgError}</Text> : null}
+
+          <Text style={styles.fieldName}>Commision: </Text>
+          <Dropdown
+            style={[styles.dropdown]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={[
+              { label: "5%", value: 5 },
+              { label: "10%", value: 10 },
+              { label: "15%", value: 15 },
+            ]}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Commission"
+            value={Number(formData.commission)}
+            onChange={(item) => {
+              setFormData({
+                ...formData,
+                commission: item.value,
+              });
+              setCommissionError(null);
+            }}
+          />
+          {commissionError ? (
+            <Text style={styles.errorText}>{commissionError}</Text>
+          ) : null}
 
           <Text>Address:</Text>
           <GooglePlacesAutocomplete

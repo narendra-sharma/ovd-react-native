@@ -7,11 +7,16 @@ import {
   Pressable,
   TouchableNativeFeedback,
   Alert,
+  Linking,
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { MockQuotes } from "./MockQuotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { apiDeleteQuote, apiGetAllQuotes } from "../../../../apis/quotes";
+import {
+  apiDeleteQuote,
+  apiDownloadQuote,
+  apiGetAllQuotes,
+} from "../../../../apis/quotes";
 import { useFocusEffect } from "@react-navigation/native";
 
 const randomHexColor = () => {
@@ -23,6 +28,7 @@ const QuotesList = ({ navigation, companyId }) => {
   const [rippleColor, setRippleColor] = useState(randomHexColor());
   const [rippleOverflow, setRippleOverflow] = useState(true);
   const [deleteFlag, setDeteleFlag] = useState(false);
+  const [tempState, setTempState] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -102,6 +108,23 @@ const QuotesList = ({ navigation, companyId }) => {
     ]);
   };
 
+  const handleDownloadQuotation = async (id) => {
+    try {
+      const res = await apiDownloadQuote(id);
+      console.log("pdf", res.config.url);
+      // console.log(res.data);
+      // // setTempState(res.data);
+      // const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+
+      // // Create a URL for the blob
+      // const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      Linking.openURL(res.config.url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -111,15 +134,16 @@ const QuotesList = ({ navigation, companyId }) => {
           <>
             <Pressable style={styles.listItem}>
               <Pressable
-                style={{ width: "76%" }}
+                style={{ width: "70%" }}
                 onPress={() => {
                   navigation.navigate("Quote Details", item);
                 }}
               >
-                <Text style={styles.item}>{item.description}</Text>
+                <Text style={styles.item}>{item.name}</Text>
               </Pressable>
 
               <View style={styles.iconsContainer}>
+                {/* Edit the quotation */}
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
@@ -145,6 +169,29 @@ const QuotesList = ({ navigation, companyId }) => {
                   </View>
                 </TouchableNativeFeedback>
 
+                {/* Download the quotation pdf */}
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
+                    handleDownloadQuotation(item.id);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon
+                        name="download"
+                        size={18}
+                        // color="blue"
+                      />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+
+                {/* Delete the quotation */}
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
@@ -167,6 +214,7 @@ const QuotesList = ({ navigation, companyId }) => {
           </>
         )}
       />
+      {/* <Text>{JSON.stringify(tempState)}</Text> */}
     </View>
   );
 };
@@ -216,7 +264,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "pink",
     padding: 2,
     marginHorizontal: 8,
-    width: "20%",
+    width: "25%",
     justifyContent: "space-between",
   },
 

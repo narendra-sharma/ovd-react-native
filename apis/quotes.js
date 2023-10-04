@@ -1,10 +1,11 @@
 import { request } from "./index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const apiGetAllQuotes = async () => {
+export const apiGetAllQuotes = async (formData) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
     path: "auth/view-all-quotes",
+    body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },
@@ -78,6 +79,18 @@ export const apiDeleteQuote = async (id) => {
     path: `auth/delete-quotes/${id}`,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiDownloadQuote = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: `auth/quotes-pdf/${id}`,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+      responseType: "blob",
     },
   });
   return response;

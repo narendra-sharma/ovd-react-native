@@ -46,6 +46,7 @@ const AddConsultantManager = ({ navigation }) => {
   const [countryError, setCountryError] = useState(null);
   const [stateError, setStateError] = useState(null);
   const [zipcodeError, setZipcodeError] = useState(null);
+  const [commissionError, setCommissionError] = useState(null);
 
   const [responseError, setResponseError] = useState(null);
 
@@ -79,6 +80,14 @@ const AddConsultantManager = ({ navigation }) => {
   const validateOrg = (org) => {
     if (org == "") {
       setOrgError("Organization is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCommission = (commission) => {
+    if (commission == "" || commission == null) {
+      setCommissionError("Commision is required*");
       return false;
     }
     return true;
@@ -160,6 +169,7 @@ const AddConsultantManager = ({ navigation }) => {
       validateName(formData.name) &&
       validateUsername(formData.username) &&
       validateOrg(formData.org) &&
+      validateCommission(formData.commission) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
       validateCountry(formData.country) &&
@@ -213,6 +223,7 @@ const AddConsultantManager = ({ navigation }) => {
       validateUsername(formData.username);
       validateName(formData.name);
       validateOrg(formData.org);
+      validateCommission(formData.commission);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
       validateCountry(formData.country);
@@ -300,6 +311,35 @@ const AddConsultantManager = ({ navigation }) => {
             }}
           />
           {orgError ? <Text style={styles.errorText}>{orgError}</Text> : null}
+
+          <Text style={styles.fieldName}>Commision: </Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={[
+              { label: "5%", value: 5 },
+              { label: "10%", value: 10 },
+              { label: "15%", value: 15 },
+            ]}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Commission"
+            value={formData.commission}
+            onChange={(item) => {
+              setFormData({
+                ...formData,
+                commission: item.value,
+              });
+              setCommissionError(null);
+            }}
+          />
+          {commissionError ? (
+            <Text style={styles.errorText}>{commissionError}</Text>
+          ) : null}
 
           <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
@@ -457,7 +497,7 @@ const AddConsultantManager = ({ navigation }) => {
             <Text style={styles.errorText}>{stateError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName} >Zip Code: </Text>
+          <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zip_code"
@@ -475,13 +515,13 @@ const AddConsultantManager = ({ navigation }) => {
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -603,7 +643,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    marginTop: 10
+    marginTop: 10,
   },
 
   submitButton: {
@@ -613,13 +653,13 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     alignItems: "center",
-    borderRadius: 34
+    borderRadius: 34,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitText: {
@@ -647,5 +687,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     width: "100%",
   },
-
 });

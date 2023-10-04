@@ -12,7 +12,7 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { Dropdown } from "react-native-element-dropdown";
+import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import * as DocumentPicker from "expo-document-picker";
 import { apiAddNewTask, apiGetTasksDropdownData } from "../../../../apis/tasks";
 import Toast from "react-native-root-toast";
@@ -22,10 +22,12 @@ const AddTask = ({ navigation }) => {
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [projectsList, setProjectsList] = useState([]);
   const [contractorsList, setContractorsList] = useState([]);
+  const [tagsList, setTagsList] = useState([]);
   const [endDate, setEndDate] = useState();
   const [isEndDatePickerVisible, setEndDateVisibility] = useState(false);
   const [startDate, setStartDate] = useState();
   const [isStartDatePickerVisible, setStartDateVisibility] = useState(false);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const [nameError, setNameError] = useState(null);
   const [projectError, setProjectError] = useState(null);
@@ -35,6 +37,7 @@ const AddTask = ({ navigation }) => {
   const [costError, setCostError] = useState(null);
   const [startDateError, setStartDateError] = useState(null);
   const [deadlineError, setDeadlineError] = useState(null);
+  const [tagsError, setTagsError] = useState(null);
 
   useEffect(() => {
     const getAllData = async () => {
@@ -50,7 +53,10 @@ const AddTask = ({ navigation }) => {
       });
       setContractorsList([...tempContractors]);
 
-      // console.log(customersList);
+      const tempTags = res?.data?.tags?.map((tag) => {
+        return { label: tag.name, value: tag.id };
+      });
+      setTagsList([...tempTags]);
     };
 
     getAllData();
@@ -188,13 +194,16 @@ const AddTask = ({ navigation }) => {
         form_data.append("description", taskData.description);
         form_data.append("start_date", taskData.start_date);
         form_data.append("end_date", taskData.end_date);
-        form_data.append("status", 1);
         form_data.append("document", {
           uri: taskData.document,
           type: taskData.fileType,
           name: taskData.fileName,
         });
-        // console.log("add task obj:", form_data);
+        for (var i = 0; i < selectedTags.length; i++) {
+          form_data.append("tags[]", selectedTags[i]);
+        }
+        console.log("add task obj:", form_data);
+        form_data.append("status", 1);
 
         const res = await apiAddNewTask(form_data);
         if (res.status == 200) {
@@ -217,7 +226,7 @@ const AddTask = ({ navigation }) => {
             delay: 0,
           });
         }
-        console.log(res);
+        console.log(res.data);
       } catch (error) {
         console.log(error);
       }
@@ -234,14 +243,14 @@ const AddTask = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text >Task Name:</Text>
+          <Text>Task Name:</Text>
           <TextInput
             style={styles.input}
             name="name"
@@ -278,6 +287,27 @@ const AddTask = ({ navigation }) => {
             <Text style={styles.errorText}>{projectError}</Text>
           ) : null}
 
+          <Text style={styles.fieldName}>Tags:</Text>
+          <MultiSelect
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            search
+            data={tagsList}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Tags"
+            searchPlaceholder="Search..."
+            value={selectedTags}
+            onChange={(item) => {
+              setSelectedTags(item);
+            }}
+            selectedStyle={styles.selectedStyle}
+          />
+          {tagsError ? <Text style={styles.errorText}>{tagsError}</Text> : null}
+
           <Text style={styles.fieldName}>Contractor:</Text>
           <DropdownMenu
             data={contractorsList}
@@ -307,25 +337,26 @@ const AddTask = ({ navigation }) => {
             <Text style={styles.errorText}>{descriptionError}</Text>
           ) : null}
 
-            <View style={styles.uploadFileSec}>
-              <Text style={[styles.file, styles.fieldName]}>Upload File</Text>
-              <View style={styles.button}>
-                <TouchableOpacity>
-                  <Button
-                    title="upload your file"
-                    color="black"
-                    onPress={() => {
-                      UploadFile();
-                      setDocumentError(null);
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
+          <View style={styles.uploadFileSec}>
+            <Text style={[styles.file, styles.fieldName]}>Upload File</Text>
+            <View style={styles.button}>
+              <TouchableOpacity>
+                <Button
+                  title="upload your file"
+                  color="black"
+                  onPress={() => {
+                    UploadFile();
+                    setDocumentError(null);
+                  }}
+                />
+              </TouchableOpacity>
             </View>
+          </View>
           {isFilePicked && (
             <View>
-              <Text>Selected File 
-              {taskData.fileName}
+              <Text>
+                Selected File
+                {taskData.fileName}
               </Text>
             </View>
           )}
@@ -432,14 +463,14 @@ const AddTask = ({ navigation }) => {
         </View>
 
         <View style={styles.bothButtons}>
-          <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+          <Pressable onPress={() => handleSubmit()} style={styles.submitButton}>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -481,6 +512,10 @@ const DropdownMenu = ({
 };
 
 const styles = StyleSheet.create({
+  selectedStyle: {
+    borderRadius: 12,
+  },
+
   dropdown: {
     height: 44,
     fontSize: 16,
@@ -524,7 +559,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -552,17 +587,17 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   uploadFileSec: {
-    marginBottom: 10
+    marginBottom: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitButton: {

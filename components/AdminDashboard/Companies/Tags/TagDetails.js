@@ -1,37 +1,32 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
-import { apiGetPreFilledTaskDetails } from "../../../../apis/tasks";
+import { apiDeleteTag, apiGetPreFilledTagDetails } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
 
-const TaskDetail = ({ navigation, route }) => {
-  const [taskData, setTaskData] = useState({});
-
-  // useEffect(() => {
-  //   setTaskData({ ...route.params });
-  //   navigation.setOptions({
-  //     title: `Task - ${route.params.taskName}`,
-  //   });
-  // }, []);
+const TagDetails = ({ navigation, route }) => {
+  const [tagData, setTagData] = useState({});
 
   useEffect(() => {
-    const getAllData = async () => {
-      const res = await apiGetPreFilledTaskDetails(route.params.id);
-      // console.log("res: ", res.data);
-      setTaskData({ ...res.data.task });
-      console.log(res.data);
+    const getTagDetails = async () => {
+      try {
+        const res = await apiGetPreFilledTagDetails(route.params.id);
+        console.log(res.data);
+        setTagData({ ...res.data.tag });
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    getAllData();
+    getTagDetails();
   }, []);
 
-  //handle task delete
   const handleDelete = async (name, id) => {
-    const deleteTask = async () => {
+    const deleteTag = async () => {
       try {
-        const res = await apiDeleteTask(id);
+        const res = await apiDeleteTag(id);
         console.log(res.data);
         if (res.data.message == "Deleted successfully") {
-          Toast.show("Task Deleted Successfully", {
+          Toast.show("Tag Deleted Successfully", {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
             shadow: true,
@@ -51,68 +46,50 @@ const TaskDetail = ({ navigation, route }) => {
         onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
-      { text: "OK", onPress: () => deleteTask() },
+      { text: "OK", onPress: () => deleteTag() },
     ]);
   };
 
   return (
     <View style={styles.centeredView}>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Task Name: </Text>
-        <Text> {taskData.name} </Text>
+        <Text style={styles.fieldName}>Name: </Text>
+        <Text> {tagData.name} </Text>
       </View>
 
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Status: </Text>
-        <Text>{taskData.status}</Text>
+        <Text style={styles.fieldName}>Tag Description: </Text>
+        <Text>{tagData.description}</Text>
       </View>
 
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Tags: </Text>
-        <Text>{taskData.tag}</Text>
-      </View>
-
-      {/*<View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Task Description: </Text>
-      </View>
-      <Text>{taskData.description}</Text>
-
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Task Cost: </Text>
-        <Text>{taskData.cost}</Text>
+        <Text style={styles.fieldName}>Tag Cost: </Text>
+        <Text>{tagData.total_cost}</Text>
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Start Date: </Text>
-        <Text>{taskData.startDate}</Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Date of Completion: </Text>
-        <Text>{taskData.completionDate}</Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Contractor: </Text>
-        <Text>{taskData.contractor}</Text>
+        <Text style={styles.fieldName}>Deadline: </Text>
+        <Text>{tagData.deadline}</Text>
       </View>
 
       <View style={styles.buttonsContainer}>
         <Pressable
           style={[styles.button, styles.buttonClose]}
-          onPress={() => navigation.navigate("Edit Task")}
+          onPress={() => navigation.navigate("Edit Tag", tagData)}
         >
-          <Text style={styles.textStyle}>Edit Task Details</Text>
+          <Text style={styles.textStyle}>Edit Tag Details</Text>
         </Pressable>
         <Pressable
           style={styles.button}
-          // onPress={handleDeleteCompany}
+          onPress={() => handleDelete(tagData.name, tagData.id)}
         >
-          <Text style={styles.textStyle}>Delete Task</Text>
+          <Text style={styles.textStyle}>Delete Tag</Text>
         </Pressable>
-      </View> */}
+      </View>
     </View>
   );
 };
 
-export default TaskDetail;
+export default TagDetails;
 
 const styles = StyleSheet.create({
   fieldContainer: {
