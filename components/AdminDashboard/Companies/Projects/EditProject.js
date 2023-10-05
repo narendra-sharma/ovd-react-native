@@ -298,7 +298,7 @@ const EditProject = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={{ flex: 1, alignItems: "center"}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         estimated_hours
@@ -306,7 +306,7 @@ const EditProject = ({ navigation, route }) => {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text>Project Name:</Text>
+          <Text style={styles.fieldName}>Project Name:</Text>
           <TextInput
             style={styles.input}
             name="project_name"
@@ -319,7 +319,7 @@ const EditProject = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text>Company:</Text>
+          <Text style={styles.fieldName}>Company:</Text>
           <DropdownMenu
             data={companyList}
             placeholder="Select Company"
@@ -333,7 +333,7 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{companyError}</Text>
           ) : null}
 
-          <Text>Quotation:</Text>
+          <Text style={styles.fieldName}>Quotation:</Text>
           <DropdownMenu
             data={quotationList}
             placeholder="Select Quotation"
@@ -387,7 +387,7 @@ const EditProject = ({ navigation, route }) => {
           />
           {tagsError ? <Text style={styles.errorText}>{tagsError}</Text> : null} */}
 
-          <Text>Task Description:</Text>
+          <Text style={styles.fieldName}>Task Description:</Text>
           <TextInput
             style={styles.input}
             name="description"
@@ -402,7 +402,7 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{descriptionError}</Text>
           ) : null}
 
-          <Text>Phone Number:</Text>
+          <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
             name="contact_number"
@@ -423,7 +423,7 @@ const EditProject = ({ navigation, route }) => {
             onConfirm={handleStartDateConfirm}
             onCancel={hideStartDatePicker}
           />
-          <Text>Start Date:</Text>
+          <Text style={styles.fieldName}>Start Date:</Text>
           <Pressable
             onPress={() => {
               setStartDateVisibility(true);
@@ -462,7 +462,7 @@ const EditProject = ({ navigation, route }) => {
             onConfirm={handleEndDateConfirm}
             onCancel={hideEndDatePicker}
           />
-          <Text>Deadline:</Text>
+          <Text style={styles.fieldName}>Deadline:</Text>
           <Pressable
             onPress={() => {
               setEndDateVisibility(true);
@@ -493,7 +493,7 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{deadlineError}</Text>
           ) : null}
 
-          <Text>Total Estimated Hours:</Text>
+          <Text style={styles.fieldName}>Total Estimated Hours:</Text>
           <TextInput
             style={styles.input}
             name="estimated_hours"
@@ -522,7 +522,7 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{consultantError}</Text>
           ) : null} */}
 
-          <Text>Address:</Text>
+          <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
             autoFocus={true}
@@ -613,7 +613,7 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text>Billing Type:</Text>
+          <Text style={styles.fieldName}>Billing Type:</Text>
           <DropdownMenu
             data={[
               { label: "Net Banking", value: 1 },
@@ -633,21 +633,15 @@ const EditProject = ({ navigation, route }) => {
           ) : null}
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={{color: "#ffff"}}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={{color: "#696cff"}}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -769,6 +763,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    width: "100%",
+    padding: 10
   },
 
   fieldContainer: {
@@ -780,33 +776,40 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 300,
-    height: 35,
+    width: "100%",
+    fontSize: 16,
     marginTop: 2,
-    marginBottom: 10,
     padding: 5,
-    borderRadius: 8,
-    minWidth: 80,
+    borderRadius: 5,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   },
 
   submitButton: {
     marginTop: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "30%",
+    borderRadius: 34,
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
-  submitText: {
-    color: "white",
-    justifyContent: "center",
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    paddingHorizontal: 10
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1
   },
 
   opacity: {
@@ -814,7 +817,7 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
-    fontWeight: "bold",
+    marginTop: 10,
     display: "flex",
     flexDirection: "row",
   },

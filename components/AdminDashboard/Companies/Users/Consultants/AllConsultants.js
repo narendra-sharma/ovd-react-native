@@ -167,6 +167,7 @@ const AllConsultants = ({ navigation }) => {
                       <Icon
                         name="pen"
                         size={18}
+                        color={"#444"}
                         // color="blue"
                       />
                     </Text>
@@ -186,7 +187,7 @@ const AllConsultants = ({ navigation }) => {
                 >
                   <View style={styles.touchable}>
                     <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="red" />
+                      <Icon name="trash-alt" size={18} color="#444" />
                     </Text>
                   </View>
                 </TouchableNativeFeedback>
@@ -205,7 +206,7 @@ const AllConsultants = ({ navigation }) => {
                 >
                   <View style={styles.touchable}>
                     <Text style={styles.text}>
-                      <Icon name="user-edit" size={18} />
+                      <Icon name="user-edit" size={18} color="#444"/>
                     </Text>
                   </View>
                 </TouchableNativeFeedback>

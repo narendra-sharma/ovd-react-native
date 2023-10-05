@@ -163,7 +163,7 @@ const QuotesList = ({ navigation, companyId }) => {
                       <Icon
                         name="pen"
                         size={18}
-                        // color="blue"
+                        color="#444"
                       />
                     </Text>
                   </View>
@@ -185,7 +185,7 @@ const QuotesList = ({ navigation, companyId }) => {
                       <Icon
                         name="download"
                         size={18}
-                        // color="blue"
+                        color="#444"
                       />
                     </Text>
                   </View>
@@ -205,7 +205,7 @@ const QuotesList = ({ navigation, companyId }) => {
                 >
                   <View style={styles.touchable}>
                     <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="red" />
+                      <Icon name="trash-alt" size={18} color="#444" />
                     </Text>
                   </View>
                 </TouchableNativeFeedback>

@@ -463,8 +463,7 @@ const AddContractor = ({ navigation }) => {
           ) : null}
         </View>
 
-        <View style={styles.bothButtons}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
             <Text style={{color: "#ffff"}}>Submit</Text>
           </Pressable>

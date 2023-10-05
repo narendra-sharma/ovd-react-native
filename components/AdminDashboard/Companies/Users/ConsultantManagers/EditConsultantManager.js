@@ -340,7 +340,7 @@ const EditConsultantManager = ({ navigation, route }) => {
             <Text style={styles.errorText}>{commissionError}</Text>
           ) : null}
 
-          <Text>Address:</Text>
+          <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
             autoFocus={true}
@@ -434,7 +434,7 @@ const EditConsultantManager = ({ navigation, route }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text>Country: </Text>
+          <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -468,7 +468,7 @@ const EditConsultantManager = ({ navigation, route }) => {
             <Text style={styles.errorText}>{countryError}</Text>
           ) : null}
 
-          <Text>State/UT: </Text>
+          <Text style={styles.fieldName}>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -496,7 +496,7 @@ const EditConsultantManager = ({ navigation, route }) => {
             <Text style={styles.errorText}>{stateError}</Text>
           ) : null}
 
-          <Text>Zip Code: </Text>
+          <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
             style={styles.input}
             name="zip_code"
@@ -512,21 +512,15 @@ const EditConsultantManager = ({ navigation, route }) => {
           ) : null}
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -633,27 +627,39 @@ const styles = StyleSheet.create({
 
   input: {
     width: "100%",
-    height: 35,
+    fontSize: 16,
     marginTop: 2,
-    // marginBottom: 10,
     padding: 5,
-    borderRadius: 8,
-    minWidth: 80,
+    borderRadius: 5,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   },
 
-  submitButton: {
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
     marginTop: 10,
-    backgroundColor: "#B76E79",
+  },
+
+
+  submitButton: {
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "30%",
+    width: "100%",
+    borderRadius: 5,
     alignItems: "center",
-    justifyContent: "space-between",
-    alignContent: "space-around",
+    borderRadius: 34,
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1,
   },
 
   submitText: {
