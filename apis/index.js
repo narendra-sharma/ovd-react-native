@@ -7,6 +7,7 @@ export function request({
   body = null,
   params = null,
   headers = null,
+  responseType = null,
 }) {
   console.log(body);
   return axios({
@@ -15,5 +16,6 @@ export function request({
     data: body,
     params: params,
     headers: headers,
+    responseType: responseType,
   });
 }

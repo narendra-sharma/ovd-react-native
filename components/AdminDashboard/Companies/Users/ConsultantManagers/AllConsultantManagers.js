@@ -129,6 +129,7 @@ const AllConsultantManagers = ({ navigation }) => {
                       <Icon
                         name="pen"
                         size={18}
+                        color="#444"
                         // color="blue"
                       />
                     </Text>
@@ -148,7 +149,7 @@ const AllConsultantManagers = ({ navigation }) => {
                 >
                   <View style={styles.touchable}>
                     <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="red" />
+                      <Icon name="trash-alt" size={18} color="#444" />
                     </Text>
                   </View>
                 </TouchableNativeFeedback>

@@ -7,12 +7,19 @@ import {
   View,
   Alert,
   TouchableNativeFeedback,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
-import { apiDeleteUser, apiGetUsersFromUsers } from "../../../../../apis/users";
+import {
+  apiChangeConsultantRole,
+  apiDeleteUser,
+  apiGetUsersFromUsers,
+} from "../../../../../apis/users";
 import Toast from "react-native-root-toast";
+import { Dropdown } from "react-native-element-dropdown";
 
 const randomHexColor = () => {
   return "#b7d0d1";
@@ -24,6 +31,10 @@ const AllConsultants = ({ navigation }) => {
   const [rippleColor, setRippleColor] = useState(randomHexColor());
   const [rippleRadius, setRippleRadius] = useState(10);
   const [rippleOverflow, setRippleOverflow] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  const [commissionError, setCommissionError] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -44,6 +55,15 @@ const AllConsultants = ({ navigation }) => {
       };
     }, [deleteFlag])
   );
+
+  //validation function
+  const validateCommission = (commission) => {
+    if (commission == "" || commission == null) {
+      setCommissionError("Commision is required*");
+      return false;
+    }
+    return true;
+  };
 
   //function to delete the user
   const handleDelete = async (user, userId) => {
@@ -77,6 +97,26 @@ const AllConsultants = ({ navigation }) => {
     ]);
   };
 
+  //change consultant's role
+  const handleClicked = (name, id) => {
+    setModalVisible(true);
+    setFormData({
+      name: name,
+      id: id,
+    });
+  };
+
+  const changeConsultantRole = async () => {
+    try {
+      const res = await apiChangeConsultantRole(formData, formData.id);
+      console.log(res.data);
+      setDeteleFlag((prev) => !prev);
+      setModalVisible(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable
@@ -99,7 +139,7 @@ const AllConsultants = ({ navigation }) => {
           <>
             <Pressable style={styles.listItem}>
               <Pressable
-                style={{ width: "76%" }}
+                style={{ width: "72%" }}
                 onPress={() => {
                   navigation.navigate("Consultant Details", { id: item.id });
                   // navigation.setOptions({ title: "Updated!" });
@@ -127,6 +167,7 @@ const AllConsultants = ({ navigation }) => {
                       <Icon
                         name="pen"
                         size={18}
+                        color={"#444"}
                         // color="blue"
                       />
                     </Text>
@@ -146,7 +187,26 @@ const AllConsultants = ({ navigation }) => {
                 >
                   <View style={styles.touchable}>
                     <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="red" />
+                      <Icon name="trash-alt" size={18} color="#444" />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
+                    // setRippleOverflow(!rippleOverflow);
+                    // console.log("clicked!");
+                    handleClicked(item.name, item.id);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon name="user-edit" size={18} color="#444"/>
                     </Text>
                   </View>
                 </TouchableNativeFeedback>
@@ -155,7 +215,92 @@ const AllConsultants = ({ navigation }) => {
           </>
         )}
       />
-      {/* <Signature /> */}
+
+      {/* Change consultant's role modal */}
+      <Modal
+        animationType="slide"
+        // transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text
+              style={{
+                textAlign: "center",
+                padding: 6,
+                textDecorationLine: "underline",
+              }}
+            >
+              Update {formData.name} to Consultant Manager
+            </Text>
+
+            <Text style={styles.fieldName}>Commision: </Text>
+            <Dropdown
+              style={[styles.dropdown]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={[
+                { label: "5%", value: 5 },
+                { label: "10%", value: 10 },
+                { label: "15%", value: 15 },
+              ]}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Commission"
+              value={formData.commission}
+              onChange={(item) => {
+                setFormData({
+                  ...formData,
+                  commission: item.value,
+                });
+                setCommissionError(null);
+              }}
+            />
+            {commissionError ? (
+              <Text style={styles.errorText}>{commissionError}</Text>
+            ) : null}
+
+            <TouchableOpacity
+              style={styles.customButton}
+              onPress={() => {
+                changeConsultantRole();
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#fff",
+                  fontWeight: "bold",
+                }}
+              >
+                Submit
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.customButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#fff",
+                  fontWeight: "bold",
+                }}
+              >
+                Close
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -209,7 +354,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "pink",
     padding: 2,
     marginHorizontal: 8,
-    width: "20%",
+    width: "24%",
     justifyContent: "space-between",
   },
 
@@ -233,5 +378,48 @@ const styles = StyleSheet.create({
 
   addText: {
     color: "#fff",
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    minWidth: "60%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  dropdown: {
+    height: 44,
+    fontSize: 16,
+    marginTop: 2,
+    padding: 5,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    width: 240,
+  },
+
+  customButton: {
+    width: 238,
+    marginTop: 10,
+    backgroundColor: "#1FAAE2",
+    padding: 10,
+    borderRadius: 4,
   },
 });

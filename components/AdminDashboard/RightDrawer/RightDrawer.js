@@ -33,6 +33,7 @@ import ContractorStack from "../Companies/Users/Contractors/ContractorStack";
 import CustomerStack from "../Companies/Users/Customers/CustomerStack";
 import EditQuote from "../Companies/Quotes/EditQuote";
 import TasksStackScreen from "../Companies/Tasks/TasksStackScreen";
+import TagsStackScreen from "../Companies/Tags/TagsStackScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -147,15 +148,21 @@ const RightDrawer = ({ navigation }) => {
                 }}
               >
                 <View style={styles.innerContainer}>
-                  <Icon style={{color: "#ffff", fontSize: 40}}
+                  <Icon
+                    style={{ color: "#ffff", fontSize: 40 }}
                     // style={styles.drawerIcon}
                     name="user-circle-o"
                     size={35}
                   />
                   <View>
-                    <Text style={{ fontSize: 14
-                    , marginLeft: 8, color: "#ffff" }}>{userData?.name}</Text>
-                    <Text style={{ fontSize: 15, marginLeft: 8, color: "#ffff" }}>
+                    <Text
+                      style={{ fontSize: 14, marginLeft: 8, color: "#ffff" }}
+                    >
+                      {userData?.name}
+                    </Text>
+                    <Text
+                      style={{ fontSize: 15, marginLeft: 8, color: "#ffff" }}
+                    >
                       {userData?.email}
                     </Text>
                   </View>
@@ -375,6 +382,27 @@ const RightDrawer = ({ navigation }) => {
                   <Text>All Tasks</Text>
                 </Pressable>
 
+                {/* Custom Tags */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("All Tags");
+                    setActiveScreenName("All Tags");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "All Tags" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="view-sidebar"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>All Tags</Text>
+                </Pressable>
+
                 {/* Custom Profile */}
                 {/* <Pressable
                   onPress={() => {
@@ -429,19 +457,19 @@ const RightDrawer = ({ navigation }) => {
               </ScrollView>
             </View>
             <View
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingHorizontal: 10
-                  }}
-                  >
-                  <Pressable style={styles.logoutButton} onPress={handleLogout}>
-                    <Icon style={{color: "#ffff"}} name="sign-out" size={28} />
-                    <Text style={{color: "#ffff"}}>Logout</Text>
-                  </Pressable>
-              </View>
-           
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 10,
+              }}
+            >
+              <Pressable style={styles.logoutButton} onPress={handleLogout}>
+                <Icon style={{ color: "#ffff" }} name="sign-out" size={28} />
+                <Text style={{ color: "#ffff" }}>Logout</Text>
+              </Pressable>
+            </View>
+
             {/* </ScrollView> */}
           </ScrollView>
         );
@@ -569,6 +597,16 @@ const RightDrawer = ({ navigation }) => {
         component={TasksStackScreen}
         options={({ navigation }) => ({
           title: "My Tasks",
+          headerShown: false,
+        })}
+      />
+
+      {/* Tags Screens */}
+      <Drawer.Screen
+        name="All Tags"
+        component={TagsStackScreen}
+        options={({ navigation }) => ({
+          title: "My Tags",
           headerShown: false,
         })}
       />

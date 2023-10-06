@@ -63,6 +63,18 @@ export const apiUpdateTaskDetails = async (formData, id) => {
   return response;
 };
 
+export const apiDeleteTask = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    method: "delete",
+    path: `auth/delete-task/${id}`,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
 // export const apiGetQuotationsByCompanyId = async (id) => {
 //   const token = await AsyncStorage.getItem("token");
 //   const response = await request({

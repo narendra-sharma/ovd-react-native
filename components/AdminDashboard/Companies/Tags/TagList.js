@@ -9,23 +9,23 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
-import { apiDeleteTask, apiGetAllTasks } from "../../../../apis/tasks";
+import { apiDeleteTag, apiGetAllTags } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
 
-const TasksList = ({ navigation }) => {
-  const [taskList, setTasksList] = useState([]);
+const TagsList = ({ navigation }) => {
+  const [tagsList, setTagsList] = useState([]);
   const [deleteFlag, setDeleteFlag] = useState(false);
 
-  // console.log(taskList);
+  // console.log(tagsList);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const getAllTasks = async () => {
-        const res = await apiGetAllTasks();
-        console.log("tasks", res.data.tasks);
+        const res = await apiGetAllTags();
+        console.log("tags", res.data);
 
-        setTasksList(res.data.tasks);
+        setTagsList(res.data.tags);
       };
 
       getAllTasks();
@@ -36,14 +36,13 @@ const TasksList = ({ navigation }) => {
     }, [deleteFlag])
   );
 
-  //handle task delete
   const handleDelete = async (name, id) => {
-    const deleteTask = async () => {
+    const deleteTag = async () => {
       try {
-        const res = await apiDeleteTask(id);
+        const res = await apiDeleteTag(id);
         console.log(res.data);
         if (res.data.message == "Deleted successfully") {
-          Toast.show("Task Deleted Successfully", {
+          Toast.show("Tag Deleted Successfully", {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
             shadow: true,
@@ -63,50 +62,20 @@ const TasksList = ({ navigation }) => {
         onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
-      { text: "OK", onPress: () => deleteTask() },
+      { text: "OK", onPress: () => deleteTag() },
     ]);
   };
-
-  //ok, so we gotta sort the task according to the status
-  function sortTasks(a, b) {
-    if (a.status == b.status) {
-      return a.date - b.date;
-    } else if (a.status == "to do" && b.status !== "to do") {
-      return -1;
-    } else if (b.status == "to do" && a.status !== "to do") {
-      return 1;
-    } else if (a.status == "in progress" && b.status !== "in progress") {
-      return -1;
-    } else if (b.status == "in progress" && a.status !== "in progress") {
-      return 1;
-    }
-  }
 
   return (
     <View style={styles.container}>
       <FlatList
-        // data={taskList.sort(sortTasks)}
-        data={taskList}
+        // data={tagsList.sort(sortTasks)}
+        data={tagsList}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {
-              navigation.navigate("Task Details", item);
-              // navigation.setOptions({ title: "Updated!" });
+              navigation.navigate("Tag Details", item);
             }}
-            // style={
-            //   (item.status == "completed" && [
-            //     styles.listItem,
-            //     { backgroundColor: "lightgreen" },
-            //   ]) ||
-            //   (item.status == "in progress" && [
-            //     styles.listItem,
-            //     { backgroundColor: "lightblue" },
-            //   ]) ||
-            //   (item.status == "to do" && [
-            //     styles.listItem,
-            //     { backgroundColor: "orange" },
-            //   ])
-            // }
             style={styles.listItem}
           >
             <View
@@ -117,18 +86,18 @@ const TasksList = ({ navigation }) => {
               }}
             >
               <Icon
-                style={{ marginRight: 8 }}
-                name="clipboard-list"
-                size={30}
+                style={{ marginRight: 8, transform: "rotateZ(90deg)" }}
+                name="tag"
+                size={22}
               />
               <View>
                 <Text style={styles.item}>Name: {item.name}</Text>
-                <Text style={styles.subText}>Status: {item.status}</Text>
+                {/* <Text style={styles.subText}>Status: {item.status}</Text> */}
               </View>
             </View>
             <View style={styles.iconsContainer}>
               <Icon
-                onPress={() => navigation.navigate("Edit Task", item)}
+                onPress={() => navigation.navigate("Edit Tag", item)}
                 name="pen"
                 size={22}
                 // color="blue"
@@ -147,7 +116,7 @@ const TasksList = ({ navigation }) => {
   );
 };
 
-export default TasksList;
+export default TagsList;
 
 const styles = StyleSheet.create({
   container: {

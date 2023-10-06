@@ -254,7 +254,7 @@ const AddQuote = ({ navigation }) => {
         console.log(formData);
         const res = await apiAddQuote({
           ...formData,
-          consultant_manager: formData.consultantManager,
+          consultant_manager: formData.consultant_manager,
           consultant: formData.consultant,
           status: 1,
         });
@@ -309,7 +309,7 @@ const AddQuote = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -496,15 +496,15 @@ const AddQuote = ({ navigation }) => {
           ) : null}
         </View>
 
-        <View style={styles.bothButtons} >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -552,7 +552,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -596,15 +596,14 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
-
 
   submitText: {
     color: "white",

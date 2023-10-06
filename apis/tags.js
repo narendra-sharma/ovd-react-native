@@ -1,12 +1,23 @@
+import { useEffect } from "react";
 import { request } from "./index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const apiCreateNewUser = async (formData) => {
+export const apiGetAllTags = async () => {
   const token = await AsyncStorage.getItem("token");
-  console.log(JSON.parse(token));
   const response = await request({
+    path: "auth/view-all-tags",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiAddNewTag = async (formData) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: "auth/add-tag",
     method: "post",
-    path: "auth/create-user",
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
@@ -15,12 +26,22 @@ export const apiCreateNewUser = async (formData) => {
   return response;
 };
 
-export const apiUpdateUserDetails = async (formData, id) => {
-  console.log("id", id);
+export const apiGetPreFilledTagDetails = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: `auth/edit-tag/${id}`,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiUpdateTagDetails = async (formData, id) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
     method: "post",
-    path: `auth/update-user/${id}`,
+    path: `auth/update-tag/${id}`,
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
@@ -29,33 +50,11 @@ export const apiUpdateUserDetails = async (formData, id) => {
   return response;
 };
 
-export const apiGetUsersFromUsers = async () => {
-  const token = await AsyncStorage.getItem("token");
-  const response = await request({
-    path: "auth/get-users",
-    headers: {
-      Authorization: `Bearer ${JSON.parse(token)}`,
-    },
-  });
-  return response;
-};
-
-export const apiGetUserDetails = async (id) => {
-  const token = await AsyncStorage.getItem("token");
-  const response = await request({
-    path: `auth/edit-user/${id}`,
-    headers: {
-      Authorization: `Bearer ${JSON.parse(token)}`,
-    },
-  });
-  return response;
-};
-
-export const apiDeleteUser = async (id) => {
+export const apiDeleteTag = async (id) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
     method: "delete",
-    path: `auth/delete-user/${id}`,
+    path: `auth/delete-tag/${id}`,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },
@@ -63,16 +62,24 @@ export const apiDeleteUser = async (id) => {
   return response;
 };
 
-export const apiChangeConsultantRole = async (formData, id) => {
-  // console.log("id", id);
-  const token = await AsyncStorage.getItem("token");
-  const response = await request({
-    method: "post",
-    path: `auth/change-consultant-role/${id}`,
-    body: formData,
-    headers: {
-      Authorization: `Bearer ${JSON.parse(token)}`,
-    },
-  });
-  return response;
-};
+// export const apiGetTasksDropdownData = async () => {
+//   const token = await AsyncStorage.getItem("token");
+//   const response = await request({
+//     path: "auth/create-task",
+//     headers: {
+//       Authorization: `Bearer ${JSON.parse(token)}`,
+//     },
+//   });
+//   return response;
+// };
+
+// export const apiGetQuotationsByCompanyId = async (id) => {
+//   const token = await AsyncStorage.getItem("token");
+//   const response = await request({
+//     path: `auth/get-quotation/${id}`,
+//     headers: {
+//       Authorization: `Bearer ${JSON.parse(token)}`,
+//     },
+//   });
+//   return response;
+// };

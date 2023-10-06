@@ -12,7 +12,7 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { Dropdown } from "react-native-element-dropdown";
+import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import * as DocumentPicker from "expo-document-picker";
 import {
   apiAddNewTask,
@@ -27,6 +27,7 @@ const EditTask = ({ navigation, route }) => {
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [projectsList, setProjectsList] = useState([]);
   const [contractorsList, setContractorsList] = useState([]);
+  const [tagsList, setTagsList] = useState([]);
   const [endDate, setEndDate] = useState();
   const [isEndDatePickerVisible, setEndDateVisibility] = useState(false);
   const [startDate, setStartDate] = useState();
@@ -56,6 +57,11 @@ const EditTask = ({ navigation, route }) => {
         return { label: contractor.name, value: contractor.id };
       });
       setContractorsList([...tempContractors]);
+
+      const tempTags = res?.data?.tags?.map((tag) => {
+        return { label: tag.name, value: tag.id };
+      });
+      setTagsList([...tempTags]);
 
       // console.log(customersList);
     };
@@ -203,7 +209,10 @@ const EditTask = ({ navigation, route }) => {
         form_data.append("description", taskData.description);
         form_data.append("start_date", taskData.start_date);
         form_data.append("end_date", taskData.end_date);
-        form_data.append("status", 1);
+        for (var i = 0; i < taskData.tags.length; i++) {
+          form_data.append("tags[]", taskData.tags[i]);
+        }
+        form_data.append("status", taskData.status);
 
         if (isFilePicked) {
           form_data.append("document", {
@@ -295,6 +304,41 @@ const EditTask = ({ navigation, route }) => {
           {projectError ? (
             <Text style={styles.errorText}>{projectError}</Text>
           ) : null}
+
+          <Text>Status:</Text>
+          <DropdownMenu
+            data={[
+              { label: "New", value: 1 },
+              { label: "In Progress", value: 2 },
+              { label: "Completed", value: 3 },
+            ]}
+            placeholder="Select Project"
+            value={taskData.status}
+            setValue={setTaskData}
+            label="status"
+            originalObj={taskData}
+            setErrorState={setProjectError}
+          />
+
+          <Text>Tags:</Text>
+          <MultiSelect
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            search
+            data={tagsList}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Tags"
+            searchPlaceholder="Search..."
+            value={taskData.tags}
+            onChange={(item) => {
+              setTaskData({ ...taskData, tags: item });
+            }}
+            selectedStyle={styles.selectedStyle}
+          />
 
           <Text>Contractor:</Text>
           <DropdownMenu
@@ -491,6 +535,9 @@ const DropdownMenu = ({
 };
 
 const styles = StyleSheet.create({
+  selectedStyle: {
+    borderRadius: 12,
+  },
   dropdown: {
     height: 50,
     borderColor: "gray",
