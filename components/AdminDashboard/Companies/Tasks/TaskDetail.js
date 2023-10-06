@@ -56,20 +56,25 @@ const TaskDetail = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.centeredView}>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Task Name: </Text>
-        <Text> {taskData.name} </Text>
-      </View>
+    <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{width: "90%", marginHorizontal: "auto"}}>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Task Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {taskData.name} </Text>
+        </View>
 
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Status: </Text>
-        <Text>{taskData.status}</Text>
-      </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Status</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{taskData.status}</Text>
+        </View>
 
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Tags: </Text>
-        <Text>{taskData.tag}</Text>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Tags</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{taskData.tag}</Text>
+        </View>
       </View>
 
       {/*<View style={styles.fieldContainer}>
@@ -123,9 +128,18 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
+    width: "40%",
     fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
+    fontSize: 16,
+    textAlign: "left"
+  },
+
+  fielContent: {
+    width: "55%",
+  },
+
+  span: {
+    width: "10%"
   },
 
   container: {
@@ -136,17 +150,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  centeredView: {
-    flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    marginTop: 10,
-    // margin: 10,
-    padding: 15,
-  },
-
   buttonsContainer: {
     display: "flex",
+    width: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -156,7 +162,7 @@ const styles = StyleSheet.create({
 
   button: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
     width: "50%",
@@ -166,7 +172,7 @@ const styles = StyleSheet.create({
   },
 
   buttonClose: {
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
   },
 
   textStyle: {
@@ -177,7 +183,7 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
     width: "50%",

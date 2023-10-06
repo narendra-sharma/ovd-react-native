@@ -15,24 +15,29 @@ const CommissionDetail = ({ navigation, route }) => {
     <View style={styles.centeredView}>
       <View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Company Name: </Text>
-          <Text style={styles.item}>{commissionData.companyName}</Text>
+          <Text style={styles.fieldName}>Company Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={[styles.item, styles.fielContent]}>{commissionData.companyName}</Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Project Name: </Text>
-          <Text>{commissionData.projectName} </Text>
+          <Text style={styles.fieldName}>Project Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{commissionData.projectName} </Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Total Commission: </Text>
-          <Text>{commissionData.totalCommission} </Text>
+          <Text style={styles.fieldName}>Total Commission</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{commissionData.totalCommission} </Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Amount Paid: </Text>
-          <Text>{commissionData.amountPaid} </Text>
+          <Text style={styles.fieldName}>Amount Paid</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{commissionData.amountPaid} </Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Amount Pending: </Text>
-          <Text>{commissionData.amountPending} </Text>
+          <Text style={styles.fieldName}>Amount Pending</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{commissionData.amountPending} </Text>
         </View>
       </View>
 
@@ -80,13 +85,23 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
+    width: "40%",
     fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
+    fontSize: 16,
+    textAlign: "left"
+  },
+
+  fielContent: {
+    width: "55%",
+  },
+
+  span: {
+    width: "10%"
   },
 
   buttonsContainer: {
     display: "flex",
+    width: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -96,17 +111,17 @@ const styles = StyleSheet.create({
 
   button: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
   buttonClose: {
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
   },
 
   textStyle: {

@@ -62,68 +62,80 @@ const ProjectDetail = ({ navigation, route }) => {
   }, [company, customer, consultant]);
 
   return (
-    <View style={styles.centeredView}>
-      <Text style={styles.item}>{projectData.companyName}</Text>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
+      <View style={{width: "90%", marginHorizontal: "auto"}}>
+        <Text style={styles.item}>{projectData.companyName}</Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Name</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.project_name} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Consultant</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.consultant} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Customer</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {consultant} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Company</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {company} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Phone Number</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.contact_number} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Project Location</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.address} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Start Date</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.start_date} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Deadline</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.end_date} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Description</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.description} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Total Estimated Hours</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.estimated_hours} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Billing Type</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {projectData.billing_type} </Text>
+          </View>
 
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Name: </Text>
-        <Text> {projectData.project_name} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Consultant: </Text>
-        <Text> {projectData.consultant} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Customer: </Text>
-        <Text> {consultant} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Company: </Text>
-        <Text> {company} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Phone Number: </Text>
-        <Text> {projectData.contact_number} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Project Location: </Text>
-        <Text> {projectData.address} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Start Date: </Text>
-        <Text> {projectData.start_date} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Deadline: </Text>
-        <Text> {projectData.end_date} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Description: </Text>
-        <Text> {projectData.description} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Total Estimated Hours: </Text>
-        <Text> {projectData.estimated_hours} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Billing Type: </Text>
-        <Text> {projectData.billing_type} </Text>
-      </View>
-
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Tasks: </Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Tasks</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> </Text>
+          </View>
       </View>
 
       {/* <TasksList tasks={route.params.tasks} navigation={navigation} /> */}
 
       <View
-        style={[
-          styles.fieldContainer,
-          // { backgroundColor: "pink", padding: 2, marginTop: -10 },
-        ]}
+        style={[styles.fieldContainer]}
       >
-        <Text style={styles.fieldName}>Total cost of all tasks:</Text>
-        <Text>{totalCost}</Text>
+        <Text style={styles.fieldName}>Total cost of all tasks</Text>
+        <Text style={styles.span}>:</Text>
+        <Text style={styles.fielContent}>{totalCost}</Text>
       </View>
 
       <View style={styles.buttonsContainer}>
@@ -155,6 +167,7 @@ export default ProjectDetail;
 
 const styles = StyleSheet.create({
   fieldContainer: {
+    width: "90%",
     display: "flex",
     flexDirection: "row",
     margin: 5,
@@ -162,9 +175,18 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
+    width: "40%",
     fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
+    fontSize: 16,
+    textAlign: "left"
+  },
+
+  fielContent: {
+    width: "55%",
+  },
+
+  span: {
+    width: "10%"
   },
 
   container: {
@@ -186,6 +208,7 @@ const styles = StyleSheet.create({
 
   buttonsContainer: {
     display: "flex",
+    width: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -195,17 +218,17 @@ const styles = StyleSheet.create({
 
   button: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
   buttonClose: {
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
   },
 
   textStyle: {
@@ -216,7 +239,7 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
     width: "50%",

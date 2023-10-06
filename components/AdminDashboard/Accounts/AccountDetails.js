@@ -58,8 +58,7 @@ const AccountDetails = ({ navigation, route }) => {
   useEffect(() => {}, [userData]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
-      <>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
         <View style={{width: "85%", marginHorizontal: "auto"}}>
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Name</Text>
@@ -113,7 +112,6 @@ const AccountDetails = ({ navigation, route }) => {
         >
           <Text style={styles.submitText}>Edit</Text>
         </Pressable>
-      </>
     </View>
   );
 };
@@ -190,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#B76E79",
     padding: 12,
     borderRadius: 8,
-    width: "30%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",

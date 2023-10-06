@@ -51,24 +51,30 @@ const TagDetails = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.centeredView}>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Name: </Text>
-        <Text> {tagData.name} </Text>
-      </View>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
+      <View style={{width: "90%", marginHorizontal: "auto"}}>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {tagData.name} </Text>
+        </View>
 
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Tag Description: </Text>
-        <Text>{tagData.description}</Text>
-      </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Tag Description</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{tagData.description}</Text>
+        </View>
 
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Tag Cost: </Text>
-        <Text>{tagData.total_cost}</Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Deadline: </Text>
-        <Text>{tagData.deadline}</Text>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Tag Cost</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{tagData.total_cost}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Deadline</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{tagData.deadline}</Text>
+        </View>
       </View>
 
       <View style={styles.buttonsContainer}>
@@ -100,9 +106,18 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
+    width: "40%",
     fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
+    fontSize: 16,
+    textAlign: "left"
+  },
+
+  fielContent: {
+    width: "55%",
+  },
+
+  span: {
+    width: "10%"
   },
 
   container: {
@@ -113,17 +128,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  centeredView: {
-    flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    marginTop: 10,
-    // margin: 10,
-    padding: 15,
-  },
-
   buttonsContainer: {
     display: "flex",
+    width: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -133,17 +140,17 @@ const styles = StyleSheet.create({
 
   button: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
   buttonClose: {
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
   },
 
   textStyle: {
@@ -154,7 +161,7 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
     width: "50%",

@@ -184,6 +184,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    width: "100%",
+    padding: 10,
   },
 
   fieldContainer: {

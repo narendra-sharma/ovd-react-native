@@ -55,42 +55,53 @@ const ContractorDetails = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.centeredView}>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Name: </Text>
-        <Text> {userData.name} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Username: </Text>
-        <Text> {userData.username} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Email: </Text>
-        <Text> {userData.email} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Phone Number: </Text>
-        <Text> {userData.phone_number} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Organisation: </Text>
-        <Text> {userData.org} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Address </Text>
-        <Text> {userData.address} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Country: </Text>
-        <Text> {userData.country} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>State / UT: </Text>
-        <Text> {userData.state} </Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Zip Code: </Text>
-        <Text> {userData.zip_code} </Text>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
+      <View style={{width: "90%", marginHorizontal: "auto"}}>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.name} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Username</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.username} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Email</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.email} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Phone Number</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.phone_number} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Organisation</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.org} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Address</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.address} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Country</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.country} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>State / UT</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.state} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Zip Code</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {userData.zip_code} </Text>
+        </View>
       </View>
 
       <View style={styles.buttonsContainer}>
@@ -133,10 +144,20 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
+    width: "40%",
     fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
+    fontSize: 16,
+    textAlign: "left"
   },
+
+  fielContent: {
+    width: "55%",
+  },
+
+  span: {
+    width: "10%"
+  },
+
 
   container: {
     flex: 1,
@@ -146,37 +167,28 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  centeredView: {
-    flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    marginTop: 10,
-    // margin: 10,
-    padding: 15,
-  },
-
   buttonsContainer: {
     display: "flex",
+    width: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    // backgroundColor: "pink",
   },
 
   button: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
   buttonClose: {
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
   },
 
   textStyle: {
@@ -187,10 +199,10 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
