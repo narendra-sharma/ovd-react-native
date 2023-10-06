@@ -72,28 +72,33 @@ const CompanyInfo = ({
   };
 
   return (
-    <View style={styles.companyContainer}>
-      <View style={styles.innerCompanyContainer}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
+      <View style={{width: "90%", marginHorizontal: "auto"}}>
         {/* <Text style={styles.heading}>{companyData?.name}</Text> */}
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Name: </Text>
-          <Text>{companyData?.name}</Text>
+          <Text style={styles.fieldName}>Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{companyData?.name}</Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>VAT Number: </Text>
-          <Text>{companyData?.vat_number}</Text>
+          <Text style={styles.fieldName}>VAT Number</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{companyData?.vat_number}</Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Email: </Text>
-          <Text>{companyData?.email}</Text>
+          <Text style={styles.fieldName}>Email</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{companyData?.email}</Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Phone Number: </Text>
-          <Text>{companyData?.phoneNo}</Text>
+          <Text style={styles.fieldName}>Phone Number</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{companyData?.phoneNo}</Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Customer: </Text>
-          {customerData?.name !== "" && <Text>{customerData?.name}</Text>}
+          <Text style={styles.fieldName}>Customer</Text>
+          <Text style={styles.span}>:</Text>
+          {customerData?.name !== "" && <Text style={styles.fielContent}>{customerData?.name}</Text>}
         </View>
         {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Consultant Manager: </Text>
@@ -108,20 +113,24 @@ const CompanyInfo = ({
           <Text>{contractor}</Text>
         </View> */}
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Address: </Text>
-          <Text> {companyData?.address} </Text>
+          <Text style={styles.fieldName}>Address</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {companyData?.address} </Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>State/UT: </Text>
-          <Text> {companyData?.state} </Text>
+          <Text style={styles.fieldName}>State/UT</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {companyData?.state} </Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Country: </Text>
-          <Text> {companyData?.country} </Text>
+          <Text style={styles.fieldName}>Country</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {companyData?.country} </Text>
         </View>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Zip Code: </Text>
-          <Text> {companyData?.zip_code} </Text>
+          <Text style={styles.fieldName}>Zip Code</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {companyData?.zip_code} </Text>
         </View>
       </View>
 
@@ -342,6 +351,7 @@ const styles = StyleSheet.create({
   },
 
   buttonsContainer: {
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -368,6 +378,21 @@ const styles = StyleSheet.create({
     transition: "0.2s",
     // backgroundColor: "yellow",
     borderBottomColor: "#B76E79",
+  },
+
+  fieldName: {
+    width: "40%",
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: "left"
+  },
+
+  fielContent: {
+    width: "55%",
+  },
+
+  span: {
+    width: "10%"
   },
 
   scrollBox: {
@@ -403,17 +428,17 @@ const styles = StyleSheet.create({
 
   button: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
   buttonClose: {
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
   },
 
   textStyle: {
@@ -446,10 +471,10 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
@@ -465,12 +490,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     // padding: 2,
-  },
-
-  fieldName: {
-    fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
   },
 
   wrapField: {

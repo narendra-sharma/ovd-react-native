@@ -261,14 +261,14 @@ const EditTask = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={{ flex: 1, alignItems: "center"}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text>Task Name:</Text>
+          <Text style={styles.fieldName}>Task Name:</Text>
           <TextInput
             style={styles.input}
             name="name"
@@ -291,7 +291,7 @@ const EditTask = ({ navigation, route }) => {
             }
             placeholder="Status"
           /> */}
-          <Text>Project:</Text>
+          <Text style={styles.fieldName}>Project:</Text>
           <DropdownMenu
             data={projectsList}
             placeholder="Select Project"
@@ -305,7 +305,7 @@ const EditTask = ({ navigation, route }) => {
             <Text style={styles.errorText}>{projectError}</Text>
           ) : null}
 
-          <Text>Status:</Text>
+          <Text style={styles.fieldName}>Status:</Text>
           <DropdownMenu
             data={[
               { label: "New", value: 1 },
@@ -320,7 +320,7 @@ const EditTask = ({ navigation, route }) => {
             setErrorState={setProjectError}
           />
 
-          <Text>Tags:</Text>
+          <Text style={styles.fieldName}>Tags:</Text>
           <MultiSelect
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
@@ -340,7 +340,7 @@ const EditTask = ({ navigation, route }) => {
             selectedStyle={styles.selectedStyle}
           />
 
-          <Text>Contractor:</Text>
+          <Text style={styles.fieldName}>Contractor:</Text>
           <DropdownMenu
             data={contractorsList}
             placeholder="Select Contractor"
@@ -354,7 +354,7 @@ const EditTask = ({ navigation, route }) => {
             <Text style={styles.errorText}>{contractorError}</Text>
           ) : null}
 
-          <Text>Task Description:</Text>
+          <Text style={styles.fieldName}>Task Description:</Text>
           <TextInput
             style={styles.input}
             name="description"
@@ -369,7 +369,7 @@ const EditTask = ({ navigation, route }) => {
             <Text style={styles.errorText}>{descriptionError}</Text>
           ) : null}
 
-          <Text style={styles.file}>Upload File</Text>
+          <Text style={[styles.file, styles.fieldName]}>Upload File</Text>
           <View style={styles.button}>
             <TouchableOpacity>
               <Button
@@ -385,7 +385,7 @@ const EditTask = ({ navigation, route }) => {
             </View>
           )}
 
-          <Text>Task Cost:</Text>
+          <Text style={styles.fieldName}>Task Cost:</Text>
           <TextInput
             style={styles.input}
             name="cost"
@@ -398,7 +398,7 @@ const EditTask = ({ navigation, route }) => {
           />
           {costError ? <Text style={styles.errorText}>{costError}</Text> : null}
 
-          <Text>Start Date:</Text>
+          <Text style={styles.fieldName}>Start Date:</Text>
           <DateTimePickerModal
             isVisible={isStartDatePickerVisible}
             mode="date"
@@ -443,7 +443,7 @@ const EditTask = ({ navigation, route }) => {
             onConfirm={handleEndDateConfirm}
             onCancel={hideEndDatePicker}
           />
-          <Text>End Date:</Text>
+          <Text style={styles.fieldName}>End Date:</Text>
           <Pressable
             onPress={() => {
               setEndDateVisibility(true);
@@ -479,21 +479,15 @@ const EditTask = ({ navigation, route }) => {
           ) : null}
         </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -539,13 +533,15 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   dropdown: {
-    height: 50,
+    height: 44,
+    fontSize: 16,
+    marginTop: 2,
+    padding: 5,
     borderColor: "gray",
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
-    marginBottom: 5,
   },
   icon: {
     marginRight: 5,
@@ -579,6 +575,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    padding: 10,
   },
 
   fieldContainer: {
@@ -590,25 +587,41 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 300,
-    height: 35,
+    width: "100%",
+    fontSize: 16,
     marginTop: 2,
-    marginBottom: 10,
     padding: 5,
-    borderRadius: 8,
-    minWidth: 80,
+    borderRadius: 5,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   },
 
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    paddingHorizontal: 10,
+  },
+
+  uploadFileSec: {
+    marginBottom: 10,
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1,
+  },
+
   submitButton: {
-    marginTop: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "30%",
+    borderRadius: 34,
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
@@ -624,7 +637,7 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
-    fontWeight: "bold",
+    marginTop: 10,
     display: "flex",
     flexDirection: "row",
   },

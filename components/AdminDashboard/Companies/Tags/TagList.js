@@ -88,7 +88,8 @@ const TagsList = ({ navigation }) => {
               <Icon
                 style={{ marginRight: 8, transform: "rotateZ(90deg)" }}
                 name="tag"
-                size={22}
+                size={18}
+                color="#444"
               />
               <View>
                 <Text style={styles.item}>Name: {item.name}</Text>
@@ -99,14 +100,14 @@ const TagsList = ({ navigation }) => {
               <Icon
                 onPress={() => navigation.navigate("Edit Tag", item)}
                 name="pen"
-                size={22}
-                // color="blue"
+                size={18}
+                color="#444"
               />
               <Icon
                 onPress={() => handleDelete(item.name, item.id)}
                 name="trash-alt"
-                size={22}
-                color="red"
+                size={18}
+                color="#444"
               />
             </View>
           </Pressable>

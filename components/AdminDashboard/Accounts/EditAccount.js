@@ -80,7 +80,7 @@ const EditAccount = () => {
   };
 
   return (
-    <View style={styles.centeredView}>
+    <View style={{ flex: 1, alignItems: "center"}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -298,21 +298,15 @@ const EditAccount = () => {
             }
           />
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -374,28 +368,40 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 300,
-    height: 35,
+    width: "100%",
+    fontSize: 16,
     marginTop: 2,
-    marginBottom: 10,
     padding: 5,
-    borderRadius: 8,
-    minWidth: 80,
+    borderRadius: 5,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   },
 
   submitButton: {
-    marginTop: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "30%",
+    borderRadius: 34,
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
+  },
+
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    paddingHorizontal: 10,
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1,
   },
 
   submitText: {

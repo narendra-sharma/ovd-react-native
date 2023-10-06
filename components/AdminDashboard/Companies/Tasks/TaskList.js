@@ -131,13 +131,13 @@ const TasksList = ({ navigation }) => {
                 onPress={() => navigation.navigate("Edit Task", item)}
                 name="pen"
                 size={22}
-                // color="blue"
+                color="#444"
               />
               <Icon
                 onPress={() => handleDelete(item.name, item.id)}
                 name="trash-alt"
                 size={22}
-                color="red"
+                color="#444"
               />
             </View>
           </Pressable>

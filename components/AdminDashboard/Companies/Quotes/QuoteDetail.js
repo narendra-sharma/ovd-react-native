@@ -81,56 +81,68 @@ const QuoteDetail = ({ navigation, route }) => {
   // }, []);
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between",}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
         keyboardShouldPersistTaps="always"
       >
+      <View style={{width: "90%", marginHorizontal: "auto"}}>
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Company: </Text>
-          <Text>{quoteData?.company?.name} </Text>
+          <Text style={styles.fieldName}>Company</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData?.company?.name} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Customer: </Text>
-          <Text>{quoteData.customer_id} </Text>
+          <Text style={styles.fieldName}>Customer</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.customer_id} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Project: </Text>
-          <Text>{quoteData.project_id} </Text>
+          <Text style={styles.fieldName}>Project</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.project_id} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Quantity: </Text>
-          <Text>{quoteData.quantity} </Text>
+          <Text style={styles.fieldName}>Quantity</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.quantity} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Cost: </Text>
-          <Text>{quoteData.cost} </Text>
+          <Text style={styles.fieldName}>Cost</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.cost} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Tax: </Text>
-          <Text>{quoteData.tax} </Text>
+          <Text style={styles.fieldName}>Tax</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.tax} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Discount: </Text>
-          <Text>{quoteData.discount} </Text>
+          <Text style={styles.fieldName}>Discount</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.discount} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Total Cost: </Text>
-          <Text>{quoteData.total_cost} </Text>
+          <Text style={styles.fieldName}>Total Cost</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.total_cost} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Description: </Text>
-          <Text>{quoteData.description} </Text>
+          <Text style={styles.fieldName}>Description</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{quoteData.description} </Text>
         </View>
+      
+      </View>
         {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Items: </Text>
         </View>
@@ -166,7 +178,8 @@ const QuoteDetail = ({ navigation, route }) => {
           )}
         /> */}
 
-        <View style={styles.buttonsContainer}>
+      </ScrollView>
+      <View style={styles.buttonsContainer}>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() =>
@@ -182,7 +195,6 @@ const QuoteDetail = ({ navigation, route }) => {
             <Text style={styles.textStyle}>Delete Quote</Text>
           </Pressable>
         </View>
-      </ScrollView>
     </View>
   );
 };
@@ -194,15 +206,6 @@ const styles = StyleSheet.create({
     padding: 22,
   },
 
-  centeredView: {
-    flex: 1,
-    justifyContent: "space-between",
-    // alignItems: "center",
-    marginTop: 10,
-    // margin: 10,
-    padding: 15,
-  },
-
   fieldContainer: {
     display: "flex",
     flexDirection: "row",
@@ -211,13 +214,23 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
+    width: "40%",
     fontWeight: "bold",
-    display: "flex",
-    flexDirection: "row",
+    fontSize: 16,
+    textAlign: "left"
+  },
+
+  fielContent: {
+    width: "55%",
+  },
+
+  span: {
+    width: "10%"
   },
 
   buttonsContainer: {
     display: "flex",
+    width: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -227,17 +240,17 @@ const styles = StyleSheet.create({
 
   button: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 8,
-    width: "50%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
   buttonClose: {
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
   },
 
   textStyle: {

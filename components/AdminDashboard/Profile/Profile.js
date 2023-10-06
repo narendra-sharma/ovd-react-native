@@ -62,7 +62,7 @@ const Profile = ({ navigation }) => {
   useEffect(() => {}, [userData]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
       <>
         <View style={{ width: "85%", marginHorizontal: "auto" }}>
           {/* <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
@@ -213,10 +213,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#B76E79",
     padding: 12,
     borderRadius: 8,
-    width: "30%",
+    width: "80%",
     alignItems: "center",
     alignContent: "space-around",
-    backgroundColor: "#696cff"
+    backgroundColor: "#696cff",
+    marginBottom: 12
   },
 
   submitText: {
