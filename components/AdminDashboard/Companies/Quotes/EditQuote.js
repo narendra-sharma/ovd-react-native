@@ -13,6 +13,7 @@ import Toast from "react-native-root-toast";
 import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiGetAllCompanies } from "../../../../apis/companies";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import {
   apiAddQuote,
   apiGetQuoteDetails,
@@ -36,8 +37,137 @@ const initialFormData = {
   status: 1,
 };
 
+const itemsForm = {
+  itemName: "",
+  itemDescription: "",
+  quantity: "",
+  itemCostPerQuantity: "",
+  itemTax: "",
+  itemTotalCost: "",
+};
+
+/////////////******** ITEMS FORM **********/////////////////
+const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
+  const handleRemoveItem = () => {
+    let tempList = itemsList.filter((item, index) => index != idx);
+    console.log("temp list", tempList);
+    setItemsList([...tempList]);
+  };
+
+  //handle change input text
+  const handleChange = (text, label) => {
+    let tempList = [...itemsList];
+
+    tempList[idx][label] = text;
+
+    if (label == "quantity" || label == "cost" || label == "tax") {
+      tempList[idx].total_cost = (
+        tempList[idx].quantity * tempList[idx].cost +
+        (tempList[idx].quantity * tempList[idx].cost * tempList[idx].tax) / 100
+      ).toFixed(2);
+    }
+
+    setItemsList([...tempList]);
+    // console.log("items list", itemsList);
+  };
+
+  return (
+    <View style={styles.itemFormContainer}>
+      <Text style={[styles.fieldName, { textAlign: "center", fontSize: 16 }]}>
+        Item {idx + 1}
+      </Text>
+      <Text style={styles.fieldName}>Item Name:</Text>
+      <TextInput
+        style={styles.input}
+        name="item_name"
+        value={item?.item_name}
+        onChangeText={(text) => handleChange(text, "item_name")}
+        placeholder="Item Name"
+      />
+
+      <Text style={styles.fieldName}>Item Description:</Text>
+      <TextInput
+        style={styles.input}
+        name="description"
+        value={item?.description}
+        onChangeText={(text) => handleChange(text, "description")}
+        placeholder="Description"
+      />
+
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ marginRight: "2%" }}>
+          <Text style={styles.fieldName}>Item Quantity:</Text>
+          <TextInput
+            style={[styles.input, { minWidth: "49%" }]}
+            name="quantity"
+            value={item?.quantity}
+            onChangeText={(text) => handleChange(text, "quantity")}
+            placeholder="Quantity"
+          />
+        </View>
+
+        <View>
+          <Text style={styles.fieldName}>Cost Per Quantity:</Text>
+          <TextInput
+            style={[styles.input, { minWidth: "49%" }]}
+            name="cost"
+            value={item?.cost}
+            onChangeText={(text) => handleChange(text, "cost")}
+            placeholder="Cost Per Quantity"
+          />
+        </View>
+      </View>
+
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ marginRight: "2%" }}>
+          <Text style={styles.fieldName}>Tax:</Text>
+          <TextInput
+            style={[styles.input, { minWidth: "49%" }]}
+            name="tax"
+            value={item?.tax}
+            onChangeText={(text) => handleChange(text, "tax")}
+            placeholder="Tax %"
+          />
+        </View>
+
+        <View>
+          <Text style={styles.fieldName}>Total Cost:</Text>
+          <Text
+            style={[
+              styles.input,
+              { minWidth: "49%", backgroundColor: "#e5e5e5", color: "gray" },
+            ]}
+          >
+            {item?.total_cost}
+          </Text>
+        </View>
+      </View>
+
+      <Pressable
+        style={[styles.addButton, { width: "50%", alignSelf: "center" }]}
+        onPress={handleRemoveItem}
+      >
+        <Text style={styles.addText}>
+          <Icon name="minus-circle" /> Remove Item
+        </Text>
+      </Pressable>
+    </View>
+  );
+};
+
 const EditQuote = ({ navigation, route }) => {
-  const [formData, setFormData] = useState(initialFormData);
   const [nameError, setNameError] = useState(null);
   const [customerError, setCustomerError] = useState(null);
   const [projectError, setProjectError] = useState(null);
@@ -51,6 +181,8 @@ const EditQuote = ({ navigation, route }) => {
   const [descriptionError, setDescriptionError] = useState(null);
   const [titleError, setTitleError] = useState(null);
 
+  const [itemsList, setItemsList] = useState([]);
+  const [formData, setFormData] = useState(initialFormData);
   const [companyList, setCompanyList] = useState([]);
   const [customerList, setCustomerList] = useState([]);
   const [projectList, setProjectList] = useState([]);
@@ -74,6 +206,8 @@ const EditQuote = ({ navigation, route }) => {
         return { label: cm.name, value: cm.id };
       });
       setConsultantManagerList([...tempCms]);
+
+      setItemsList([...res?.data?.quotes?.quotes_items]);
     };
     getAllData();
   }, []);
@@ -239,14 +373,31 @@ const EditQuote = ({ navigation, route }) => {
       // validateCustomer(formData.customer) &&
       // validateProject(formData.project) &&
       // validateQuantity(formData.quantity) &&
-      validateCost(formData.cost) &&
-      validateTax(formData.tax) &&
-      validateDiscount(formData.discount) &&
+      // validateCost(formData.cost) &&
+      // validateTax(formData.tax) &&
+      // validateDiscount(formData.discount) &&
       validateTotalAmount(formData.total_cost) &&
       validateDescription(formData.description) &&
       validateTitle(formData.name) &&
       validateCm(formData.cons_manager_id)
     ) {
+      //refine data according to api
+      let item_name = [];
+      let item_description = [];
+      let quantity = [];
+      let cost = [];
+      let tax = [];
+      let total_cost = [];
+
+      itemsList.map((item) => {
+        item_name.push(item.item_name);
+        item_description.push(item.description);
+        quantity.push(item.quantity);
+        cost.push(item.cost);
+        tax.push(item.tax);
+        total_cost.push(item.total_cost);
+      });
+
       try {
         console.log(formData);
         const res = await apiUpdateQuoteDetails(
@@ -256,12 +407,18 @@ const EditQuote = ({ navigation, route }) => {
             consultant_manager: formData.cons_manager_id,
             consultant: formData.consultant_id,
             total_amount: formData.total_cost,
+            item_name: item_name,
+            item_description: item_description,
+            quantity: quantity,
+            cost: cost,
+            tax: tax,
+            total_cost: total_cost,
           },
           route.params.id
         );
         console.log("response: ");
-        console.log(res.data);
-        if (res.status == 200) {
+        console.log(res?.data);
+        if (res?.data?.quotes == "Data updated successfully") {
           Toast.show("Quote Updated", {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
@@ -273,14 +430,6 @@ const EditQuote = ({ navigation, route }) => {
           navigation.goBack();
         } else {
           Toast.show("Cannot Update Quote", {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-          });
-          Toast.show("Cannot UPdate Quote", {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
             shadow: true,
@@ -306,9 +455,9 @@ const EditQuote = ({ navigation, route }) => {
       // validateCustomer(formData.customer);
       // validateProject(formData.project);
       // validateQuantity(formData.quantity);
-      validateCost(formData.cost);
-      validateTax(formData.tax);
-      validateDiscount(formData.discount);
+      // validateCost(formData.cost);
+      // validateTax(formData.tax);
+      // validateDiscount(formData.discount);
       validateTotalAmount(formData.total_cost);
       validateDescription(formData.description);
       validateTitle(formData.name);
@@ -415,9 +564,8 @@ const EditQuote = ({ navigation, route }) => {
           />
           {projectError ? (
             <Text style={styles.errorText}>{projectError}</Text>
-          ) : null} */}
-
-          {/* <Text style={styles.fieldName}>Quantity:</Text>
+          ) : null} 
+           <Text style={styles.fieldName}>Quantity:</Text>
           <TextInput
             style={styles.input}
             name="quantity"
@@ -430,9 +578,8 @@ const EditQuote = ({ navigation, route }) => {
           />
           {quantityError ? (
             <Text style={styles.errorText}>{quantityError}</Text>
-          ) : null} */}
-
-          <Text style={styles.fieldName}>Cost:</Text>
+          ) : null} 
+           <Text style={styles.fieldName}>Cost:</Text>
           <TextInput
             style={styles.input}
             name="cost"
@@ -471,22 +618,7 @@ const EditQuote = ({ navigation, route }) => {
           />
           {discountError ? (
             <Text style={styles.errorText}>{discountError}</Text>
-          ) : null}
-
-          <Text style={styles.fieldName}>Total Amount:</Text>
-          <TextInput
-            style={styles.input}
-            name="total_cost"
-            value={formData.total_cost}
-            onChangeText={(text) => {
-              setFormData({ ...formData, total_cost: text });
-              setTotalAmountError(null);
-            }}
-            placeholder="Total Amount"
-          />
-          {totalAmountError ? (
-            <Text style={styles.errorText}>{totalAmountError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Description:</Text>
           <TextInput
@@ -501,6 +633,47 @@ const EditQuote = ({ navigation, route }) => {
           />
           {descriptionError ? (
             <Text style={styles.errorText}>{descriptionError}</Text>
+          ) : null}
+
+          {itemsList.length > 0 &&
+            itemsList.map((item, idx) => {
+              return (
+                <ItemForm
+                  item={item}
+                  itemsList={itemsList}
+                  setItemsList={setItemsList}
+                  idx={idx}
+                />
+              );
+            })}
+
+          <Pressable
+            style={[
+              styles.addButton,
+              { width: "95%", alignSelf: "center", marginVertical: 10 },
+            ]}
+            onPress={() => {
+              setItemsList([...itemsList, { ...itemsForm }]);
+            }}
+          >
+            <Text style={styles.addText}>
+              <Icon name="plus-circle" /> Add Item
+            </Text>
+          </Pressable>
+
+          <Text style={styles.fieldName}>Total Amount:</Text>
+          <TextInput
+            style={styles.input}
+            name="total_cost"
+            value={formData.total_cost}
+            onChangeText={(text) => {
+              setFormData({ ...formData, total_cost: text });
+              setTotalAmountError(null);
+            }}
+            placeholder="Total Amount"
+          />
+          {totalAmountError ? (
+            <Text style={styles.errorText}>{totalAmountError}</Text>
           ) : null}
         </View>
 
@@ -564,7 +737,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -584,9 +757,9 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     marginTop: 2,
-    padding: 5,
+    padding: 8,
     borderRadius: 5,
-    paddingHorizontal: 8,
+    // paddingHorizontal: 8,
     height: 44,
     minWidth: "100%",
     borderColor: "gray",
@@ -617,7 +790,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-
   opacity: {
     margin: 20,
   },
@@ -635,5 +807,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     width: "100%",
     marginBottom: 5,
+  },
+
+  itemFormContainer: {
+    width: "95%",
+    backgroundColor: "#fff",
+    padding: 12,
+    margin: 8,
+    borderRadius: 8,
+  },
+
+  addButton: {
+    backgroundColor: "#696cff",
+    padding: 12,
+    borderRadius: 8,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    alignContent: "space-around",
+    marginTop: 20,
+    marginHorizontal: "auto",
+  },
+
+  addText: {
+    color: "#fff",
   },
 });

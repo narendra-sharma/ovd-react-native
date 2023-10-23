@@ -27,14 +27,14 @@ const initialFormData = {
   // tags: [],
   description: "",
   start_date: "",
-  deadline: "",
+  // deadline: "",
   estimated_hour: "",
   consultant: "",
   status: 1,
   address: "",
   lat: "",
   long: "",
-  billing_type: "",
+  // billing_type: "",
   contact_number: "",
 };
 
@@ -42,7 +42,7 @@ const AddProject = ({ navigation }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [endDate, setEndDate] = useState();
   const [isEndDatePickerVisible, setEndDateVisibility] = useState(false);
-  const [startDate, setStartDate] = useState();
+  const [startDate, setStartDate] = useState(new Date());
   const [isStartDatePickerVisible, setStartDateVisibility] = useState(false);
   const [companyList, setCompanyList] = useState([]);
   const [quotationList, setQuotationList] = useState([]);
@@ -225,16 +225,17 @@ const AddProject = ({ navigation }) => {
       validateQuotation(formData.quotation) &&
       validateDescription(formData.description) &&
       validatePhone(formData.contact_number) &&
-      validateStartDate(formData.start_date) &&
-      validateEndDate(formData.deadline) &&
+      // validateStartDate(formData.start_date) &&
+      // validateEndDate(formData.deadline) &&
       validateHours(formData.estimated_hour) &&
-      validateAddress(formData.address) &&
-      validateBilling(formData.billing_type)
+      validateAddress(formData.address)
+      // && validateBilling(formData.billing_type)
     ) {
       try {
         console.log("add project obj:", formData);
         const res = await apiAddNewProject({
           ...formData,
+          start_date: moment(startDate).format("MM/DD/YYYY"),
         });
         if (res.status == 200) {
           Toast.show("New Project Added", {
@@ -267,15 +268,15 @@ const AddProject = ({ navigation }) => {
     validateQuotation(formData.quotation);
     validateDescription(formData.description);
     validatePhone(formData.contact_number);
-    validateStartDate(formData.start_date);
-    validateEndDate(formData.deadline);
+    // validateStartDate(formData.start_date);
+    // validateEndDate(formData.deadline);
     validateHours(formData.estimated_hour);
     validateAddress(formData.address);
-    validateBilling(formData.billing_type);
+    // validateBilling(formData.billing_type);
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -409,14 +410,14 @@ const AddProject = ({ navigation }) => {
 
           <Text style={styles.fieldName}>Start Date:</Text>
           <Pressable
-            onPress={() => {
-              setStartDateVisibility(true);
-              setFormData({
-                ...formData,
-                start_date: moment(startDate).format("MM/DD/YYYY"),
-              });
-              setStartDateError(null);
-            }}
+            // onPress={() => {
+            //   setStartDateVisibility(true);
+            //   setFormData({
+            //     ...formData,
+            //     start_date: moment(startDate).format("MM/DD/YYYY"),
+            //   });
+            //   setStartDateError(null);
+            // }}
             style={[
               styles.input,
               {
@@ -424,6 +425,7 @@ const AddProject = ({ navigation }) => {
                 flexDirection: "row",
                 alignItems: "center",
                 color: "#d9d9d9",
+                backgroundColor: "#e5e5e5",
               },
             ]}
             name="startDate"
@@ -440,7 +442,7 @@ const AddProject = ({ navigation }) => {
               </Text>
             )}
           </Pressable>
-          <DateTimePickerModal
+          {/* <DateTimePickerModal
             isVisible={isStartDatePickerVisible}
             mode="date"
             onConfirm={handleStartDateConfirm}
@@ -448,9 +450,9 @@ const AddProject = ({ navigation }) => {
           />
           {startDateError ? (
             <Text style={styles.errorText}>{startDateError}</Text>
-          ) : null}
+          ) : null} */}
 
-          <DateTimePickerModal
+          {/* <DateTimePickerModal
             isVisible={isEndDatePickerVisible}
             mode="date"
             onConfirm={handleEndDateConfirm}
@@ -489,7 +491,7 @@ const AddProject = ({ navigation }) => {
           </Pressable>
           {deadlineError ? (
             <Text style={styles.errorText}>{deadlineError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Total Estimated Hours:</Text>
           <TextInput
@@ -597,7 +599,7 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Billing Type:</Text>
+          {/* <Text style={styles.fieldName}>Billing Type:</Text>
           <DropdownMenu
             data={[
               { label: "Net Banking", value: 1 },
@@ -614,18 +616,18 @@ const AddProject = ({ navigation }) => {
           />
           {billingError ? (
             <Text style={styles.errorText}>{billingError}</Text>
-          ) : null}
+          ) : null} */}
         </View>
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -748,7 +750,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -776,13 +778,13 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitButton: {
@@ -795,7 +797,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignContent: "space-around",
   },
-
 
   submitText: {
     color: "white",

@@ -83,3 +83,16 @@ export const apiDeleteProject = async (id) => {
   });
   return response;
 };
+
+export const apiChangeProjectStatus = async (formData, id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    method: "post",
+    path: `auth/project-status-changed/${id}`,
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};

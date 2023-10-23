@@ -9,31 +9,36 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import CommissionsList from "./CommissionsList";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import ViewCommissions from "./ViewCommissions";
+import CommissionDetail from "./CommissionDetail";
 
-const ViewCommissions = ({ navigation }) => {
+const Stack = createNativeStackNavigator();
+
+const CommissionsStackScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      {/* <Pressable
-        style={[styles.button, styles.addButton]}
-        onPress={() => {
-          setAddCompanyModalVisible(true);
-          navigation.se;
-        }}
-      >
-        <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New
-        </Text>
-      </Pressable> */}
-
-      <CommissionsList navigation={navigation} />
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Commissions"
+        component={ViewCommissions}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <MaterialIcons
+              onPress={() => navigation.toggleDrawer()}
+              name="menu"
+              size={25}
+              style={{ marginRight: 30 }}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen name="Commission Details" component={CommissionDetail} />
+    </Stack.Navigator>
   );
 };
 
-export default ViewCommissions;
+export default CommissionsStackScreen;
 
 const styles = StyleSheet.create({
   container: {

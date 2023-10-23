@@ -206,7 +206,7 @@ const AllConsultants = ({ navigation }) => {
                 >
                   <View style={styles.touchable}>
                     <Text style={styles.text}>
-                      <Icon name="user-edit" size={18} color="#444"/>
+                      <Icon name="user-edit" size={18} color="#444" />
                     </Text>
                   </View>
                 </TouchableNativeFeedback>
@@ -219,7 +219,7 @@ const AllConsultants = ({ navigation }) => {
       {/* Change consultant's role modal */}
       <Modal
         animationType="slide"
-        // transparent={true}
+        transparent={false}
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
