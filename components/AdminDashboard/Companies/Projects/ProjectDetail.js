@@ -3,12 +3,14 @@ import { Text, View, StyleSheet, Pressable, FlatList } from "react-native";
 // import TasksList from "./Tasks/TaskList";
 import { apiGetPreFilledProjectDetails } from "../../../../apis/projects";
 import { useFocusEffect } from "@react-navigation/native";
+import moment from "moment";
 
 const ProjectDetail = ({ navigation, route }) => {
-  const [projectData, setProjectData] = useState({ consultant: "" });
-  const [consultant, setConsultant] = useState("");
-  const [customer, setCustomer] = useState("");
-  const [company, setCompany] = useState("");
+  const [projectData, setProjectData] = useState({});
+  const [consultantsList, setConsultantsList] = useState([]);
+  const [customersList, setCustomersList] = useState([]);
+  const [companiesList, setCompaniesList] = useState([]);
+  const [quotationsList, setQuotationsList] = useState([]);
   const [users, setUsers] = useState([]);
 
   const [totalCost, setTotalCost] = useState(0);
@@ -20,28 +22,13 @@ const ProjectDetail = ({ navigation, route }) => {
       const getAllData = async () => {
         try {
           const res = await apiGetPreFilledProjectDetails(route.params.id);
-          setProjectData({ ...res.data.project });
-
-          const tempConsultant = res.data.consultant.filter(
-            (consultant) => consultant.id == projectData.consultant_id
-          );
-          setConsultant(
-            res.data.consultant[
-              res.data.consultant.findIndex(
-                (consultant) => consultant.id == projectData.consultant_id
-              )
-            ].name
-          );
-
-          const tempCustomer = res.data.customers.filter(
-            (customer) => customer.id == projectData.customer_id
-          );
-          setCustomer(tempCustomer[0].name);
-
-          const tempCompany = res.data.companies.filter(
-            (company) => company.id == projectData.company_id
-          );
-          setCompany(tempCompany[0].name);
+          setProjectData({
+            ...res?.data?.project,
+            totalCost: res?.data?.totalCost,
+            deadline: res?.data?.deadline,
+          });
+          setCompaniesList([...res?.data?.companies]);
+          setQuotationsList([...res?.data?.quotation]);
         } catch (error) {
           console.log(error);
         }
@@ -52,91 +39,126 @@ const ProjectDetail = ({ navigation, route }) => {
     }, [])
   );
 
-  useEffect(() => {
-    setProjectData({
-      ...projectData,
-      company: company,
-      customer: customer,
-      consultant: consultant,
-    });
-  }, [company, customer, consultant]);
+  // useEffect(() => {
+  //   setProjectData({
+  //     ...projectData,
+  //     company: company,
+  //     customer: customer,
+  //     consultant: consultant,
+  //   });
+  // }, [company, customer, consultant]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
-      <View style={{width: "90%", marginHorizontal: "auto"}}>
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
+    >
+      <View style={{ width: "90%", marginHorizontal: "auto" }}>
         <Text style={styles.item}>{projectData.companyName}</Text>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Name</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.project_name} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Consultant</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.consultant} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Customer</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {consultant} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Company</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {company} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Phone Number</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.contact_number} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Project Location</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.address} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Start Date</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.start_date} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Deadline</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.end_date} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Description</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.description} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Total Estimated Hours</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.estimated_hours} </Text>
-          </View>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Billing Type</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> {projectData.billing_type} </Text>
-          </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{projectData?.project_name} </Text>
+        </View>
+        {/* <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Consultant</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}> {projectData.consultant} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Customer</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}> {consultant} </Text>
+        </View> */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Company</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {
+              companiesList[
+                companiesList?.findIndex(
+                  (company) => company?.id == projectData?.company_id
+                )
+              ]?.name
+            }
+          </Text>
+        </View>
 
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Tasks</Text>
-            <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}> </Text>
-          </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Phone Number</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{projectData?.contact_number}</Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Project Location</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{projectData?.address}</Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Start Date</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{projectData?.start_date}</Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Deadline</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {projectData?.deadline?.end_date
+              ? moment(projectData?.deadline?.end_date).format("YYYY-MM-DD")
+              : "-"}
+          </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Description</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{projectData?.description} </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Total Estimated Hours</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {projectData?.estimated_hours}
+          </Text>
+        </View>
+
+        <View style={[styles.fieldContainer]}>
+          <Text style={styles.fieldName}>Quotation Amount</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {
+              quotationsList[
+                quotationsList?.findIndex(
+                  (quote) => quote?.id == projectData?.quotes_id
+                )
+              ]?.cost
+            }
+          </Text>
+        </View>
+
+        <View style={[styles.fieldContainer]}>
+          <Text style={styles.fieldName}>Project Cost</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{projectData?.totalCost}</Text>
+        </View>
+
+        {/* <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Billing Type</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}> {projectData.billing_type} </Text>
+        </View> 
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Tasks</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}> </Text>
+        </View>*/}
       </View>
 
       {/* <TasksList tasks={route.params.tasks} navigation={navigation} /> */}
-
-      <View
-        style={[styles.fieldContainer]}
-      >
-        <Text style={styles.fieldName}>Total cost of all tasks</Text>
-        <Text style={styles.span}>:</Text>
-        <Text style={styles.fielContent}>{totalCost}</Text>
-      </View>
 
       <View style={styles.buttonsContainer}>
         <Pressable
@@ -178,15 +200,15 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
-  fielContent: {
+  fieldContent: {
     width: "55%",
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   container: {

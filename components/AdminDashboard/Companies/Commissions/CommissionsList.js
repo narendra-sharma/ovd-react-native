@@ -1,11 +1,29 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { mockCommissions } from "./MockCommissions";
+import { apiGetAllCommissions } from "../../../../apis/commisions";
 
 const CommissionsList = ({ navigation }) => {
-  const [commissionsList, setCommissionsList] = useState(mockCommissions);
-  useEffect(() => {}, [commissionsList]);
+  const [commissionsList, setCommissionsList] = useState([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      (async () => {
+        try {
+          const res = await apiGetAllCommissions();
+          console.log("commissions: ", res.data.data);
+          setCommissionsList([...res.data.data]);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+
+      return () => (isActive = false);
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -21,7 +39,7 @@ const CommissionsList = ({ navigation }) => {
               }}
               style={styles.listItem}
             >
-              <Text style={styles.item}>{item.projectName}</Text>
+              <Text style={styles.item}>{item.project_name}</Text>
               <View style={styles.iconsContainer}>
                 <Icon
                   onPress={() => navigation.navigate("Edit Commission", item)}

@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { apiGetPreFilledTaskDetails } from "../../../../apis/tasks";
 import Toast from "react-native-root-toast";
+import moment from "moment";
 
 const TaskDetail = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});
+  const [projectsList, setProjectsList] = useState([]);
+  const [contractorList, setContractorList] = useState([]);
+  // const [companyList, setCompanyList] = useState([]);
 
   // useEffect(() => {
   //   setTaskData({ ...route.params });
@@ -15,10 +19,13 @@ const TaskDetail = ({ navigation, route }) => {
 
   useEffect(() => {
     const getAllData = async () => {
-      const res = await apiGetPreFilledTaskDetails(route.params.id);
+      const res = await apiGetPreFilledTaskDetails(route?.params?.id);
       // console.log("res: ", res.data);
-      setTaskData({ ...res.data.task });
-      console.log(res.data);
+      setTaskData({ ...res?.data?.task });
+      setProjectsList([...res?.data?.projects]);
+      setContractorList([...res?.data?.contractors]);
+      // setCompanyList([...res?.data?.contractors]);
+      // console.log(res.data);
     };
 
     getAllData();
@@ -57,43 +64,92 @@ const TaskDetail = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
-      <View style={{width: "90%", marginHorizontal: "auto"}}>
+      <View style={{ width: "90%", marginHorizontal: "auto" }}>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Task Name</Text>
           <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}> {taskData.name} </Text>
+          <Text style={styles.fieldContent}> {taskData.name} </Text>
         </View>
 
         <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Project Name</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {
+              projectsList[
+                projectsList?.findIndex(
+                  (project) => project?.id == taskData?.project_id
+                )
+              ]?.project_name
+            }
+          </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Contractor</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {
+              contractorList[
+                contractorList?.findIndex(
+                  (contractor) => contractor?.id == taskData?.contractor_id
+                )
+              ]?.username
+            }
+          </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Start Date: </Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {moment(taskData.start_date).format("YYYY-MM-DD")}
+          </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>End Date: </Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {moment(taskData.end_date).format("YYYY-MM-DD")}
+          </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Days Before Deadline: </Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>
+            {(moment(taskData.end_date).toDate().getTime() -
+              moment(taskData.start_date).toDate().getTime()) /
+              (1000 * 60 * 60 * 24)}
+          </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Description: </Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{taskData.description}</Text>
+        </View>
+      </View>
+      {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Status</Text>
           <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}>{taskData.status}</Text>
+          <Text style={styles.fieldContent}>{taskData.status}</Text>
         </View>
 
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Tags</Text>
           <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}>{taskData.tag}</Text>
+          <Text style={styles.fieldContent}>{taskData.tag}</Text>
         </View>
-      </View>
 
-      {/*<View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Task Description: </Text>
-      </View>
-      <Text>{taskData.description}</Text>
+      
 
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Task Cost: </Text>
         <Text>{taskData.cost}</Text>
       </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Start Date: </Text>
-        <Text>{taskData.startDate}</Text>
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldName}>Date of Completion: </Text>
-        <Text>{taskData.completionDate}</Text>
-      </View>
+      
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldName}>Contractor: </Text>
         <Text>{taskData.contractor}</Text>
@@ -113,6 +169,28 @@ const TaskDetail = ({ navigation, route }) => {
           <Text style={styles.textStyle}>Delete Task</Text>
         </Pressable>
       </View> */}
+
+      <View style={styles.buttonsContainer}>
+        <Pressable
+          style={[styles.button, styles.buttonClose]}
+          // onPress={() => setIsCompanyEditOn(true)}
+        >
+          <Text
+            style={styles.textStyle}
+            onPress={() =>
+              navigation.navigate("Edit Project", { id: projectData.id })
+            }
+          >
+            Edit Project Details
+          </Text>
+        </Pressable>
+        <Pressable
+          style={styles.button}
+          // onPress={handleDeleteCompany}
+        >
+          <Text style={styles.textStyle}>Delete Project</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -131,15 +209,15 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
-  fielContent: {
+  fieldContent: {
     width: "55%",
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   container: {

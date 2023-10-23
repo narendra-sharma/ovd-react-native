@@ -229,10 +229,11 @@ const EditProject = ({ navigation, route }) => {
       validateDescription(formData.description) &&
       validatePhone(formData.contact_number) &&
       validateStartDate(formData.start_date) &&
-      validateEndDate(formData.end_date) &&
+      // validateEndDate(formData.end_date) &&
       validateHours(formData.estimated_hours) &&
-      validateAddress(formData.address) &&
-      validateBilling(formData.billing_type)
+      validateAddress(formData.address)
+      // &&
+      // validateBilling(formData.billing_type)
     ) {
       try {
         // console.log("edit project obj:", {
@@ -290,15 +291,15 @@ const EditProject = ({ navigation, route }) => {
       validateDescription(formData.description);
       validatePhone(formData.contact_number);
       validateStartDate(formData.start_date);
-      validateEndDate(formData.end_date);
+      // validateEndDate(formData.end_date);
       validateHours(formData.estimated_hours);
       validateAddress(formData.address);
-      validateBilling(formData.billing_type);
+      // validateBilling(formData.billing_type);
     }
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         estimated_hours
@@ -417,18 +418,18 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <DateTimePickerModal
+          {/* <DateTimePickerModal
             isVisible={isStartDatePickerVisible}
             mode="date"
             onConfirm={handleStartDateConfirm}
             onCancel={hideStartDatePicker}
-          />
+          /> */}
           <Text style={styles.fieldName}>Start Date:</Text>
           <Pressable
-            onPress={() => {
-              setStartDateVisibility(true);
-              setStartDateError(null);
-            }}
+            // onPress={() => {
+            //   setStartDateVisibility(true);
+            //   setStartDateError(null);
+            // }}
             style={[
               styles.input,
               {
@@ -436,6 +437,7 @@ const EditProject = ({ navigation, route }) => {
                 flexDirection: "row",
                 alignItems: "center",
                 color: "#d9d9d9",
+                backgroundColor: "#e5e5e5",
               },
             ]}
             name="start_date"
@@ -456,18 +458,18 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{startDateError}</Text>
           ) : null}
 
-          <DateTimePickerModal
+          {/* <DateTimePickerModal
             isVisible={isEndDatePickerVisible}
             mode="date"
             onConfirm={handleEndDateConfirm}
             onCancel={hideEndDatePicker}
-          />
+          /> */}
           <Text style={styles.fieldName}>Deadline:</Text>
           <Pressable
-            onPress={() => {
-              setEndDateVisibility(true);
-              setDeadlineError(null);
-            }}
+            // onPress={() => {
+            //   setEndDateVisibility(true);
+            //   setDeadlineError(null);
+            // }}
             style={[
               styles.input,
               {
@@ -475,6 +477,7 @@ const EditProject = ({ navigation, route }) => {
                 flexDirection: "row",
                 alignItems: "center",
                 color: "#d9d9d9",
+                backgroundColor: "#e5e5e5",
               },
             ]}
             name="startDate"
@@ -489,9 +492,9 @@ const EditProject = ({ navigation, route }) => {
               <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>Deadline</Text>
             )}
           </Pressable>
-          {deadlineError ? (
+          {/* {deadlineError ? (
             <Text style={styles.errorText}>{deadlineError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Total Estimated Hours:</Text>
           <TextInput
@@ -613,7 +616,7 @@ const EditProject = ({ navigation, route }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Billing Type:</Text>
+          {/* <Text style={styles.fieldName}>Billing Type:</Text>
           <DropdownMenu
             data={[
               { label: "Net Banking", value: 1 },
@@ -630,18 +633,18 @@ const EditProject = ({ navigation, route }) => {
           />
           {billingError ? (
             <Text style={styles.errorText}>{billingError}</Text>
-          ) : null}
+          ) : null} */}
         </View>
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -764,7 +767,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -803,13 +806,13 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   opacity: {

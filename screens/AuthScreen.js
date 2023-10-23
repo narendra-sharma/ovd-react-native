@@ -202,10 +202,16 @@ const AuthScreen = ({ navigation }) => {
   };
 
   return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", position: "relative" }}>
-        <View style={styles.containerMain}>
-
-          <Text style={styles.heading}>Login</Text>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+      }}
+    >
+      <View style={styles.containerMain}>
+        <Text style={styles.heading}>Login</Text>
 
         {/**********  INPUTS VIEW *********/}
         <View style={{ width: "100%", display: "flex" }}>
@@ -248,27 +254,29 @@ const AuthScreen = ({ navigation }) => {
             ) : null}
           </View>
 
-              {passwordError ? (
-                <Text style={styles.errorText}>{passwordError}</Text>
-              ) : null}
-            </View>
-
-          <Pressable
-            onPress={handleSubmit}
-            // onPress={() => navigation.navigate("Dashboard")}
-            style={styles.submitButton}
-          >
-            <Text style={styles.submitText}> Login </Text>
-          </Pressable>
-          <Pressable
-            style={styles.opacity}
-            // onPress={() => navigation.navigate("OTP")}
-            onPress={() => navigation.navigate("Forgot Password")}
-          >
-            <Text style={{textAlign:'center'}}>Forgot Password? Click here</Text>
-          </Pressable>
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
         </View>
+
+        <Pressable
+          onPress={handleSubmit}
+          // onPress={() => navigation.navigate("Dashboard")}
+          style={styles.submitButton}
+        >
+          <Text style={styles.submitText}> Login </Text>
+        </Pressable>
+        <Pressable
+          style={styles.opacity}
+          // onPress={() => navigation.navigate("OTP")}
+          onPress={() => navigation.navigate("Forgot Password")}
+        >
+          <Text style={{ textAlign: "center" }}>
+            Forgot Password? Click here
+          </Text>
+        </Pressable>
       </View>
+    </View>
   );
 };
 

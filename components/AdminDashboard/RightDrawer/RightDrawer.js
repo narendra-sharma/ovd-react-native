@@ -34,6 +34,8 @@ import CustomerStack from "../Companies/Users/Customers/CustomerStack";
 import EditQuote from "../Companies/Quotes/EditQuote";
 import TasksStackScreen from "../Companies/Tasks/TasksStackScreen";
 import TagsStackScreen from "../Companies/Tags/TagsStackScreen";
+import CommissionsStackScreen from "../Companies/Commissions/CommissionsStackScreen";
+import HomeStackScreen from "../Home/HomeStackScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -128,104 +130,104 @@ const RightDrawer = ({ navigation }) => {
       initialRouteName="Home"
       drawerContent={(props) => {
         return (
-            <ScrollView
-              style={{
-                display: "flex",
-                height: "100%",
-              }}
-              contentContainerStyle={{
-                justifyContent: "space-between",
-              }}
-            >
-              {/* <ScrollView> */}
-              <StatusBar style="auto" />
-              <View>
-                {/* User Details Section */}
-                <Pressable
-                  style={styles.detailsContainer}
-                  onPress={() => {
-                    navigation.navigate("Profile");
-                  }}
-                >
-                  <View style={styles.innerContainer}>
-                    <Icon
-                      style={{ color: "#ffff", fontSize: 40 }}
-                      // style={styles.drawerIcon}
-                      name="user-circle-o"
-                      size={35}
-                    />
-                    <View>
-                      <Text
-                        style={{ fontSize: 14, marginLeft: 8, color: "#ffff" }}
-                      >
-                        {userData?.name}
-                      </Text>
-                      <Text
-                        style={{ fontSize: 15, marginLeft: 8, color: "#ffff" }}
-                      >
-                        {userData?.email}
-                      </Text>
-                    </View>
+          <ScrollView
+            style={{
+              display: "flex",
+              height: "100%",
+            }}
+            contentContainerStyle={{
+              justifyContent: "space-between",
+            }}
+          >
+            {/* <ScrollView> */}
+            <StatusBar style="auto" />
+            <View>
+              {/* User Details Section */}
+              <Pressable
+                style={styles.detailsContainer}
+                onPress={() => {
+                  navigation.navigate("Profile");
+                }}
+              >
+                <View style={styles.innerContainer}>
+                  <Icon
+                    style={{ color: "#ffff", fontSize: 40 }}
+                    // style={styles.drawerIcon}
+                    name="user-circle-o"
+                    size={35}
+                  />
+                  <View>
+                    <Text
+                      style={{ fontSize: 14, marginLeft: 8, color: "#ffff" }}
+                    >
+                      {userData?.name}
+                    </Text>
+                    <Text
+                      style={{ fontSize: 15, marginLeft: 8, color: "#ffff" }}
+                    >
+                      {userData?.email}
+                    </Text>
                   </View>
+                </View>
+              </Pressable>
+
+              <ScrollView>
+                {/* Custom Home */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("Home");
+                    setActiveScreenName("Home");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "Home" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="home"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>Home</Text>
                 </Pressable>
 
-                <ScrollView>
-                  {/* Custom Home */}
-                  <Pressable
-                    onPress={() => {
-                      props.navigation.navigate("Home");
-                      setActiveScreenName("Home");
-                      // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "Home" && styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="home"
-                      size={28}
-                    />
-                    {/* <Icon name="home" size={28} /> */}
-                    <Text>Home</Text>
-                  </Pressable>
-
-                  {/* Accounts/Users Sub-Menu */}
-                  <Pressable
-                    onPress={() => {
-                      setIsUsersSubMenuOpen(!isUsersSubMenuOpen);
-                      setIsCompaniesSubMenuOpen(false);
-                    }}
-                    style={styles.subMenuButton}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="people"
-                      size={28}
-                    />
-                    <Text>
-                      Manage Users{" "}
-                      {isUsersSubMenuOpen ? (
-                        <Icon
-                          style={{ marginLeft: 8 }}
-                          name="angle-up"
-                          size={16}
-                        />
-                      ) : (
-                        <Icon
-                          style={{ marginLeft: 8 }}
-                          name="angle-down"
-                          size={16}
-                        />
-                      )}
-                    </Text>
-                  </Pressable>
-                  {isUsersSubMenuOpen && (
+                {/* Accounts/Users Sub-Menu */}
+                <Pressable
+                  onPress={() => {
+                    setIsUsersSubMenuOpen(!isUsersSubMenuOpen);
+                    setIsCompaniesSubMenuOpen(false);
+                  }}
+                  style={styles.subMenuButton}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="people"
+                    size={28}
+                  />
+                  <Text>
+                    Manage Users{" "}
+                    {isUsersSubMenuOpen ? (
+                      <Icon
+                        style={{ marginLeft: 8 }}
+                        name="angle-up"
+                        size={16}
+                      />
+                    ) : (
+                      <Icon
+                        style={{ marginLeft: 8 }}
+                        name="angle-down"
+                        size={16}
+                      />
+                    )}
+                  </Text>
+                </Pressable>
+                {isUsersSubMenuOpen && (
+                  <View>
                     <View>
-                      <View>
-                        {/* Render sub-menu items */}
-                        {/* <Pressable
+                      {/* Render sub-menu items */}
+                      {/* <Pressable
                           onPress={() => {
                             setActiveScreenName("Accounts");
                             props.navigation.navigate("Accounts");
@@ -239,172 +241,194 @@ const RightDrawer = ({ navigation }) => {
                         >
                           <Text>All Accounts</Text>
                         </Pressable> */}
-                        <Pressable
-                          onPress={() => {
-                            props.navigation.navigate("Consultant Managers");
-                            setActiveScreenName("Consultant Managers");
-                            // Handle sub-menu item click here
-                          }}
-                          style={[
-                            styles.subMenuItem,
-                            activeScreenName == "Consultant Managers" &&
-                              styles.activeSubMenu,
-                          ]}
-                        >
-                          <Text>Consultant Managers</Text>
-                        </Pressable>
-                        <Pressable
-                          onPress={() => {
-                            props.navigation.navigate("Consultants");
-                            setActiveScreenName("Consultants");
-                            // Handle sub-menu item click here
-                          }}
-                          style={[
-                            styles.subMenuItem,
-                            activeScreenName == "Consultants" &&
-                              styles.activeSubMenu,
-                          ]}
-                        >
-                          <Text>Consultants</Text>
-                        </Pressable>
-                        <Pressable
-                          onPress={() => {
-                            props.navigation.navigate("Contractors");
-                            setActiveScreenName("Contractors");
-                            // Handle sub-menu item click here
-                          }}
-                          style={[
-                            styles.subMenuItem,
-                            activeScreenName == "Contractors" &&
-                              styles.activeSubMenu,
-                          ]}
-                        >
-                          <Text>Contractors</Text>
-                        </Pressable>
-                        <Pressable
-                          onPress={() => {
-                            props.navigation.navigate("Customers");
-                            setActiveScreenName("Customers");
-                            // Handle sub-menu item click here
-                          }}
-                          style={[
-                            styles.subMenuItem,
-                            activeScreenName == "Customers" &&
-                              styles.activeSubMenu,
-                          ]}
-                        >
-                          <Text>Customers</Text>
-                        </Pressable>
-                        {/* Add more sub-menu items as needed */}
-                      </View>
+                      <Pressable
+                        onPress={() => {
+                          props.navigation.navigate("Consultant Managers");
+                          setActiveScreenName("Consultant Managers");
+                          // Handle sub-menu item click here
+                        }}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreenName == "Consultant Managers" &&
+                            styles.activeSubMenu,
+                        ]}
+                      >
+                        <Text>Consultant Managers</Text>
+                      </Pressable>
+                      <Pressable
+                        onPress={() => {
+                          props.navigation.navigate("Consultants");
+                          setActiveScreenName("Consultants");
+                          // Handle sub-menu item click here
+                        }}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreenName == "Consultants" &&
+                            styles.activeSubMenu,
+                        ]}
+                      >
+                        <Text>Consultants</Text>
+                      </Pressable>
+                      <Pressable
+                        onPress={() => {
+                          props.navigation.navigate("Contractors");
+                          setActiveScreenName("Contractors");
+                          // Handle sub-menu item click here
+                        }}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreenName == "Contractors" &&
+                            styles.activeSubMenu,
+                        ]}
+                      >
+                        <Text>Contractors</Text>
+                      </Pressable>
+                      <Pressable
+                        onPress={() => {
+                          props.navigation.navigate("Customers");
+                          setActiveScreenName("Customers");
+                          // Handle sub-menu item click here
+                        }}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreenName == "Customers" &&
+                            styles.activeSubMenu,
+                        ]}
+                      >
+                        <Text>Customers</Text>
+                      </Pressable>
+                      {/* Add more sub-menu items as needed */}
                     </View>
-                  )}
+                  </View>
+                )}
 
-                  {/* Custom Companies */}
-                  <Pressable
-                    onPress={() => {
-                      props.navigation.navigate("Manage Companies");
-                      setActiveScreenName("Manage Companies");
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "Manage Companies" &&
-                        styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="admin-panel-settings"
-                      size={28}
-                    />
-                    <Text>All Companies</Text>
-                  </Pressable>
+                {/* Custom Companies */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("Manage Companies");
+                    setActiveScreenName("Manage Companies");
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "Manage Companies" &&
+                      styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="admin-panel-settings"
+                    size={28}
+                  />
+                  <Text>All Companies</Text>
+                </Pressable>
 
-                  {/* Custom Quotes Link */}
-                  <Pressable
-                    onPress={() => {
-                      props.navigation.navigate("Quotes");
-                      setActiveScreenName("Quotes");
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "Quotes" && styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="request-quote"
-                      size={28}
-                    />
-                    {/* <Icon name="home" size={28} /> */}
-                    <Text>All Quotes</Text>
-                  </Pressable>
+                {/* Custom Quotes Link */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("Quotes");
+                    setActiveScreenName("Quotes");
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "Quotes" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="request-quote"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>All Quotes</Text>
+                </Pressable>
 
-                  {/* Custom Projects */}
-                  <Pressable
-                    onPress={() => {
-                      props.navigation.navigate("Projects");
-                      setActiveScreenName("Projects");
-                      // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "Projects" && styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="view-sidebar"
-                      size={28}
-                    />
-                    {/* <Icon name="home" size={28} /> */}
-                    <Text>All Projects</Text>
-                  </Pressable>
+                {/* Custom Projects */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("Projects");
+                    setActiveScreenName("Projects");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "Projects" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="view-sidebar"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>All Projects</Text>
+                </Pressable>
 
-                  {/* Custom Tasks */}
-                  <Pressable
-                    onPress={() => {
-                      props.navigation.navigate("Tasks");
-                      setActiveScreenName("Tasks");
-                      // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "Tasks" && styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="view-sidebar"
-                      size={28}
-                    />
-                    {/* <Icon name="home" size={28} /> */}
-                    <Text>All Tasks</Text>
-                  </Pressable>
+                {/* Custom Tasks */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("Tasks");
+                    setActiveScreenName("Tasks");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "Tasks" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="view-sidebar"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>All Tasks</Text>
+                </Pressable>
 
-                  {/* Custom Tags */}
-                  <Pressable
-                    onPress={() => {
-                      props.navigation.navigate("All Tags");
-                      setActiveScreenName("All Tags");
-                      // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "All Tags" && styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="view-sidebar"
-                      size={28}
-                    />
-                    {/* <Icon name="home" size={28} /> */}
-                    <Text>All Tags</Text>
-                  </Pressable>
+                {/* Custom Tags */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("All Tags");
+                    setActiveScreenName("All Tags");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "All Tags" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="view-sidebar"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>All Tags</Text>
+                </Pressable>
 
-                  {/* Custom Profile */}
-                  {/* <Pressable
+                {/* Custom Commissions */}
+                <Pressable
+                  onPress={() => {
+                    props.navigation.navigate("All Commissions");
+                    setActiveScreenName("All Commissions");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "All Commissions" &&
+                      styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="view-sidebar"
+                    size={28}
+                  />
+                  {/* <Icon name="home" size={28} /> */}
+                  <Text>All Commissions</Text>
+                </Pressable>
+
+                {/* Custom Profile */}
+                {/* <Pressable
                     onPress={() => {
                       setActiveScreenName("Profile");
                       props.navigation.navigate("Profile");
@@ -423,29 +447,29 @@ const RightDrawer = ({ navigation }) => {
                     <Text>Profile </Text>
                   </Pressable> */}
 
-                  {/* Custom Change Password */}
-                  <Pressable
-                    onPress={() => {
-                      setActiveScreenName("Change Password");
-                      props.navigation.navigate("Change Password");
-                      setIsCompaniesSubMenuOpen(false);
-                      // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "Change Password" &&
-                        styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="settings"
-                      size={28}
-                    />
-                    <Text>Change Password</Text>
-                  </Pressable>
+                {/* Custom Change Password */}
+                <Pressable
+                  onPress={() => {
+                    setActiveScreenName("Change Password");
+                    props.navigation.navigate("Change Password");
+                    setIsCompaniesSubMenuOpen(false);
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreenName == "Change Password" &&
+                      styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="settings"
+                    size={28}
+                  />
+                  <Text>Change Password</Text>
+                </Pressable>
 
-                  {/* <DrawerItemList
+                {/* <DrawerItemList
                   {...props}
                   onItemPress={({ route }) => {
                     if (route.name !== "Manage Companies") {
@@ -454,7 +478,7 @@ const RightDrawer = ({ navigation }) => {
                     props.navigation.navigate(route.name);
                   }}
                 /> */}
-                </ScrollView>
+              </ScrollView>
             </View>
             <View
               style={{
@@ -480,14 +504,16 @@ const RightDrawer = ({ navigation }) => {
       {/* Home Screen */}
       <Drawer.Screen
         name="Home"
+        initialParams={{ resetStack: true }}
         options={{
           drawerIcon: () => <Icon name="home" size={28} />,
           // drawerItemStyle: { display: "none" },
+          headerShown: false,
         }}
-        component={Home}
+        component={HomeStackScreen}
       />
 
-        {/* All Company Screens */}
+      {/* All Company Screens */}
       <Drawer.Screen
         options={{
           drawerIcon: () => (
@@ -587,6 +613,7 @@ const RightDrawer = ({ navigation }) => {
       <Drawer.Screen
         name="Projects"
         component={ViewProjects}
+        initialParams={{ homeFlag: false }}
         options={({ navigation }) => ({
           title: "My Projects",
           headerShown: false,
@@ -609,6 +636,16 @@ const RightDrawer = ({ navigation }) => {
         component={TagsStackScreen}
         options={({ navigation }) => ({
           title: "My Tags",
+          headerShown: false,
+        })}
+      />
+
+      {/* Commissions Screens */}
+      <Drawer.Screen
+        name="All Commissions"
+        component={CommissionsStackScreen}
+        options={({ navigation }) => ({
+          title: "Commissions",
           headerShown: false,
         })}
       />

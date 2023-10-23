@@ -55,8 +55,10 @@ const CustomerDetails = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
-      <View style={{width: "90%", marginHorizontal: "auto"}}>
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
+    >
+      <View style={{ width: "90%", marginHorizontal: "auto" }}>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Name</Text>
           <Text style={styles.span}>:</Text>
@@ -112,7 +114,7 @@ const CustomerDetails = ({ navigation, route }) => {
           <Text
             style={styles.textStyle}
             onPress={() =>
-              navigation.navigate("Edit Consultant Manager", {
+              navigation.navigate("Edit Customer", {
                 id: userData.id,
               })
             }
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
   fielContent: {
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   container: {
