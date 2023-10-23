@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 0.5,
     borderColor: "#B76E79",
-    borderRadius: 8,
+    borderRadius: 5,
     width: "60%",
     justifyContent: "center",
     alignItems: "center",
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     height: 50,
     backgroundColor: "#B76E79",
-    borderRadius: 8,
+    borderRadius: 5,
     width: "60%",
     justifyContent: "center",
     alignItems: "center",

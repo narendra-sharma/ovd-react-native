@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 8,
     margin: 4,
-    borderRadius: 8,
+    borderRadius: 5,
   },
 
   boxNumText: {

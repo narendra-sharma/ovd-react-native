@@ -278,7 +278,7 @@ const AddContractor = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text >Organisation:</Text>
+          <Text style={styles.fieldName}>Organisation:</Text>
           <TextInput
             style={styles.input}
             name="org"
@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 34,
+    borderRadius: 5,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
@@ -599,7 +599,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     marginTop: 2,
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
     marginBottom: 5,

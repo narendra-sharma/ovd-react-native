@@ -229,14 +229,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 10,
     padding: 5,
-    borderRadius: 8,
+    borderRadius: 5,
   },
 
   submitButton: {
     margin: 10,
     backgroundColor: "#B76E79",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 5,
     width: "80%",
     alignItems: "center",
   },

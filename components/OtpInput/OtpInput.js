@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 10,
     padding: 5,
-    borderRadius: 8,
+    borderRadius: 5,
     width: 300,
     position: "absolute",
     opacity: 0,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 5,
     width: "64%",
     alignItems: "center",
     marginBottom: 15
