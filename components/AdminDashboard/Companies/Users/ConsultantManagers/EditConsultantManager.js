@@ -653,7 +653,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     alignItems: "center",
-    borderRadius: 34,
+    borderRadius: 5,
   },
 
   cancelBtn: {
@@ -680,7 +680,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
     marginBottom: 5,

@@ -483,16 +483,16 @@ const RightDrawer = ({ navigation }) => {
             <View
               style={{
                 display: "flex",
-                width: "80%",
+                width: "90%",
                 marginLeft: 10,
                 justifyContent: "center",
                 alignItems: "center",
-                paddingHorizontal: 10,
+                padding: 10,
               }}
             >
               <Pressable style={styles.logoutButton} onPress={handleLogout}>
                 <Icon style={{ color: "#ffff" }} name="sign-out" size={28} />
-                <Text style={{ color: "#ffff" }}>Logout</Text>
+                <Text style={{ color: "#ffff", fontWeight: "600" }}>Logout</Text>
               </Pressable>
             </View>
 
@@ -738,7 +738,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 0.5,
     borderColor: "#B76E79",
-    borderRadius: 8,
+    borderRadius: 5,
     width: "60%",
     justifyContent: "center",
     alignItems: "center",
@@ -749,14 +749,15 @@ const styles = StyleSheet.create({
   },
 
   logoutButton: {
-    height: 40,
-    backgroundColor: "#484848",
+    height: 45,
+    backgroundColor: "#696cff",
     borderRadius: 5,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    margin: "auto",
     display: "flex",
     flexDirection: "row",
+    marginTop: 10,
+    marginBottom: 10,
   },
 });

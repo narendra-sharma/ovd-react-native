@@ -30,9 +30,10 @@ const EditCommission = ({ navigation }) => {
     <View style={{ flex: 1, alignItems: "center"}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ justifyContent: "center", padding: 10 }}
+        contentContainerStyle={{ justifyContent: "center", padding: 10, height: '100%' }}
         keyboardShouldPersistTaps="always"
       >
+      <View style={{ flex: 1, alignItems: "center", height: "100%", justifyContent: "space-between" }}>
         <View style={styles.formContainer}>
           <Text style={styles.fieldName}>Project Name:</Text>
           <TextInput
@@ -87,6 +88,7 @@ const EditCommission = ({ navigation }) => {
             <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
+      </View>
       </ScrollView>
     </View>
   );
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 34,
+    borderRadius: 5,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",

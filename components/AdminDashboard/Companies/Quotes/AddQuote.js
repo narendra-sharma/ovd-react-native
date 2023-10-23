@@ -879,7 +879,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 34,
+    borderRadius: 5,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
@@ -928,7 +928,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#B76E79",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 5,
     width: "50%",
     alignItems: "center",
     justifyContent: "space-between",
@@ -939,7 +939,7 @@ const styles = StyleSheet.create({
   addButton: {
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 5,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
@@ -956,6 +956,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 12,
     margin: 8,
-    borderRadius: 8,
+    borderRadius: 5,
   },
 });

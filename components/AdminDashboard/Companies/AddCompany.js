@@ -746,7 +746,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     alignItems: "center",
-    borderRadius: 34
+    borderRadius: 5
   },
 
   cancelBtn: {

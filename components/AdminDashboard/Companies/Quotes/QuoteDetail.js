@@ -168,14 +168,14 @@ const QuoteDetail = ({ navigation, route }) => {
 
   return (
     <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
+      style={{ flex: 1, alignItems: "center", justifyContent: "space-between", padding: 16 }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ justifyContent: "center", padding: 10 }}
+        contentContainerStyle={{ justifyContent: "center", alignItems: 'center'}}
         keyboardShouldPersistTaps="always"
       >
-        <View style={{ width: "90%", marginHorizontal: "auto" }}>
+        <View style={{ width: "95%", marginHorizontal: "auto" }}>
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Title</Text>
             <Text style={styles.span}>:</Text>
@@ -277,13 +277,13 @@ export default QuoteDetail;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    padding: 22,
+    width: "100%"
   },
 
   fieldContainer: {
     display: "flex",
     flexDirection: "row",
-    margin: 5,
+    // margin: 5,
     padding: 2,
   },
 
@@ -304,6 +304,7 @@ const styles = StyleSheet.create({
 
   buttonsContainer: {
     display: "flex",
+    padding: 10,
     width: "100%",
     flexDirection: "column",
     justifyContent: "center",
@@ -316,8 +317,8 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
-    width: "80%",
+    borderRadius: 5,
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
@@ -344,11 +345,11 @@ const styles = StyleSheet.create({
   },
 
   itemFormContainer: {
-    width: "95%",
+    width: "100%",
     backgroundColor: "#fff",
     padding: 12,
-    margin: 8,
-    borderRadius: 8,
+    marginVertical: 15,
+    borderRadius: 5,
   },
 
   input: {

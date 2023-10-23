@@ -650,7 +650,7 @@ const EditQuote = ({ navigation, route }) => {
           <Pressable
             style={[
               styles.addButton,
-              { width: "95%", alignSelf: "center", marginVertical: 10 },
+              { width: "100%", alignSelf: "center", marginVertical: 10 },
             ]}
             onPress={() => {
               setItemsList([...itemsList, { ...itemsForm }]);
@@ -728,7 +728,7 @@ const DropdownMenu = ({
 
 const styles = StyleSheet.create({
   mainContainer: {
-    padding: 22,
+    padding: 10,
   },
 
   formContainer: {
@@ -759,7 +759,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
     padding: 8,
     borderRadius: 5,
-    // paddingHorizontal: 8,
     height: 44,
     minWidth: "100%",
     borderColor: "gray",
@@ -770,7 +769,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 34,
+    borderRadius: 5,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
@@ -803,24 +802,24 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 8,
     width: "100%",
     marginBottom: 5,
   },
 
   itemFormContainer: {
-    width: "95%",
+    width: "100%",
     backgroundColor: "#fff",
     padding: 12,
-    margin: 8,
-    borderRadius: 8,
+    marginVertical: 15,
+    borderRadius: 5,
   },
 
   addButton: {
     backgroundColor: "#696cff",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 5,
     width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
