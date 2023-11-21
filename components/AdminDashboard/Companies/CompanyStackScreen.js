@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CompanyDetail from "./CompanyDetail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AllCompanies from "./AllCompanies";
@@ -26,6 +26,8 @@ import AddUser from "./Users/AddUser";
 import AddQuote from "./Quotes/AddQuote";
 import EditQuote from "./Quotes/EditQuote";
 import AddProject from "./Projects/AddProject";
+import { useIsFocused } from "@react-navigation/native";
+import { useCustomActiveScreenStatus } from "../../../Contexts/ActiveScreenContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +66,15 @@ const DropdownMenu = ({ navigation }) => {
 };
 
 const CompanyStackScreen = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const { setActiveScreen } = useCustomActiveScreenStatus();
+
+  useEffect(() => {
+    if (isFocused) {
+      setActiveScreen("Manage Companies");
+    }
+  }, []);
+
   return (
     <Stack.Navigator>
       <Stack.Screen

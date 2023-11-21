@@ -48,6 +48,7 @@ const AddConsultant = ({ navigation }) => {
   const [zipcodeError, setZipcodeError] = useState(null);
   const [responseError, setResponseError] = useState(null);
   const [cmError, setCmError] = useState(null);
+  const [commissionError, setCommissionError] = useState(null);
 
   const [consultantManagerList, setConsultantManagerList] = useState([]);
 
@@ -73,6 +74,14 @@ const AddConsultant = ({ navigation }) => {
   const validateName = (name) => {
     if (name == "") {
       setNameError("Name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCommission = (commission) => {
+    if (commission == "" || commission == null) {
+      setCommissionError("Commision is required*");
       return false;
     }
     return true;
@@ -176,13 +185,14 @@ const AddConsultant = ({ navigation }) => {
   const handleSubmit = async () => {
     if (
       validateName(formData.name) &&
-      validateUsername(formData.username) &&
-      validateOrg(formData.org) &&
+      // validateUsername(formData.username) &&
+      // validateOrg(formData.org) &&
+      validateCommission(formData.commission) &&
       validatePhone(formData.phone_number) &&
       validateCm(formData.parent_id) &&
       validateAddress(formData.address) &&
-      validateCountry(formData.country) &&
-      validateState(formData.state) &&
+      // validateCountry(formData.country) &&
+      // validateState(formData.state) &&
       validateZipcode(formData.zip_code) &&
       validateEmail(formData.email)
     ) {
@@ -229,21 +239,22 @@ const AddConsultant = ({ navigation }) => {
       }
       // setFormData(initialFormData);
     } else {
-      validateUsername(formData.username);
+      // validateUsername(formData.username);
       validateName(formData.name);
-      validateOrg(formData.org);
+      // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
-      validateCountry(formData.country);
-      validateState(formData.state);
+      // validateCountry(formData.country);
+      // validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
       validateCm(formData.parent_id);
+      validateCommission(formData.commission);
     }
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -263,7 +274,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          {/* <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -276,7 +287,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -319,6 +330,35 @@ const AddConsultant = ({ navigation }) => {
             setErrorState={setCmError}
           />
           {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+
+          <Text style={styles.fieldName}>Commision: </Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={[
+              { label: "30%", value: 30 },
+              { label: "40%", value: 40 },
+              { label: "50%", value: 50 },
+            ]}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Commission"
+            value={formData.commission}
+            onChange={(item) => {
+              setFormData({
+                ...formData,
+                commission: item.value,
+              });
+              setCommissionError(null);
+            }}
+          />
+          {commissionError ? (
+            <Text style={styles.errorText}>{commissionError}</Text>
+          ) : null}
 
           <Text style={styles.fieldName}>Organisation:</Text>
           <TextInput
@@ -427,7 +467,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -487,7 +527,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
@@ -507,13 +547,13 @@ const AddConsultant = ({ navigation }) => {
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -604,7 +644,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -636,13 +676,13 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitButton: {

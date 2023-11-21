@@ -4,7 +4,7 @@ import { apiSendForgotPasswordCode } from "../../apis/auth";
 import Toast from "react-native-root-toast";
 
 const ResendOtp = ({ email }) => {
-  const timeInSeconds = 10;
+  const timeInSeconds = 60;
   const [time, setTime] = useState(timeInSeconds);
   const [resetCount, setResetCount] = useState(0);
   const timerRef = useRef(time);
@@ -70,7 +70,9 @@ const ResendOtp = ({ email }) => {
         <Text>Resend Code in: {time} seconds</Text>
       ) : (
         <>
-          <Text style={{fontSize: 16, marginRight: 8}}>Did not receive OTP? </Text>
+          <Text style={{ fontSize: 16, marginRight: 8 }}>
+            Did not receive OTP?{" "}
+          </Text>
           <Pressable onPress={handleResendOtp} style={styles.submitButton}>
             <Text style={styles.submitText}>Resend Code</Text>
           </Pressable>
@@ -90,12 +92,12 @@ const styles = StyleSheet.create({
     // width: "64%",
     alignItems: "center",
     borderBottomWidth: 1,
-    borderColor: "#B76E79",
+    borderColor: "#696cff",
     paddingHorizontal: 4,
   },
 
   submitText: {
-    color: "#B76E79",
+    color: "#696cff",
     display: "flex",
     flexDirection: "row",
     fontSize: 16,

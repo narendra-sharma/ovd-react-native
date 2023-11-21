@@ -7,95 +7,525 @@ import {
   Pressable,
   TextInput,
   ScrollView,
-  ToastAndroid,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-root-toast";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from "moment";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { Dropdown, MultiSelect } from "react-native-element-dropdown";
+import {
+  apiAddNewProject,
+  apiGetPreFilledProjectDetails,
+  apiGetProjectsDropdownData,
+  apiGetQuotationsByCompanyId,
+  apiUpdateProjectDetails,
+} from "../../../../apis/projects";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Country, State, City } from "country-state-city";
-import { Dropdown } from "react-native-element-dropdown";
 
-// import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-
-const initialProjectData = {
-  customerName: "",
+const initialFormData = {
+  name: "",
+  company: "",
+  customer: "",
+  // tags: [],
+  description: "",
+  start_date: "",
+  deadline: "",
+  estimated_hour: "",
   consultant: "",
-  pointOfContact: "",
-  projectLocation: "",
+  status: 1,
+  address: "",
+  lat: "",
+  long: "",
+  billing_type: "",
+  number: "",
 };
 
-const EditProject = ({ navigation }) => {
-  const [projectData, setProjectData] = useState(initialProjectData);
-  const [isFocus, setIsFocus] = useState(false);
+const EditProject = ({ navigation, route }) => {
+  const [formData, setFormData] = useState(initialFormData);
+  const [endDate, setEndDate] = useState();
+  const [isEndDatePickerVisible, setEndDateVisibility] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [isStartDatePickerVisible, setStartDateVisibility] = useState(false);
+  const [companyList, setCompanyList] = useState([]);
+  const [consultantList, setConsultantList] = useState([]);
+  const [customersList, setCustomersList] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [quotationList, setQuotationList] = useState([]);
 
-  const handleSubmit = async () => {
-    try {
-      // const res = await apiUpdateProfile({
-      //   ...projectData,
-      //   name: projectData.name,
-      //   phonenumber: projectData.phone_number,
-      //   address: projectData.address,
-      //   org: projectData.org,
-      //   state: projectData.state,
-      //   country: projectData.country,
-      //   country_code: projectData.country_code,
-      //   latitude: projectData.lat,
-      //   longitude: projectData.long,
-      //   zipcode: projectData.zip_code,
+  const [nameError, setNameError] = useState(null);
+  const [companyError, setCompanyError] = useState(null);
+  const [quotationError, setQuotationError] = useState(null);
+  const [descriptionError, setDescriptionError] = useState(null);
+  const [phoneError, setPhoneError] = useState(null);
+  const [startDateError, setStartDateError] = useState(null);
+  const [deadlineError, setDeadlineError] = useState(null);
+  const [hoursError, setHoursError] = useState(null);
+  const [addressError, setAddressError] = useState(null);
+  const [billingError, setBillingError] = useState(null);
+
+  useEffect(() => {
+    const getAllData = async () => {
+      const res = await apiGetPreFilledProjectDetails(route.params.id);
+      setFormData({ ...res.data.project });
+      const tempCompanies = res.data.companies.map((company) => {
+        return { label: company.name, value: company.id };
+      });
+      setCompanyList([...tempCompanies]);
+
+      // const tempConsultants = res.data.consultant.map((consultant) => {
+      //   return { label: consultant.name, value: consultant.id };
       // });
-      // console.log(projectData);
-      //   console.log(res);
-      // if (res.status == 200) {
-      //   ToastAndroid.show("Profile Updated Successfully", ToastAndroid.SHORT);
-      //   const resp = await apiGetProfileDetails();
-      //   console.log("we got from api: ", res.data);
-      //   setProjectData(resp.data.users);
-      //   await AsyncStorage.setItem("profile", JSON.stringify(resp.data.users));
-      //   navigation.navigate("My Profile");
-      // }
-      //   console.log(res.data);
-    } catch (error) {
-      console.log(error);
+      // setConsultantList([...tempConsultants]);
+
+      // const tempCustomers = res.data.customers.map((customer) => {
+      //   return { label: customer.name, value: customer.id };
+      // });
+      // setCustomersList([...tempCustomers]);
+    };
+
+    getAllData();
+  }, []);
+
+  useEffect(() => {
+    const getQuotations = async () => {
+      const res = await apiGetQuotationsByCompanyId(formData.company_id);
+      console.log("quotes", res.data);
+
+      const tempQuotes = res.data.data.map((quote) => {
+        return { label: quote.name, value: quote.id };
+      });
+
+      setQuotationList([...tempQuotes]);
+    };
+
+    getQuotations();
+  }, [formData.company_id]);
+
+  //date functions
+  const hideStartDatePicker = () => {
+    setStartDateVisibility(false);
+  };
+
+  const handleStartDateConfirm = (date) => {
+    setStartDate(date);
+    setFormData({ ...formData, start_date: date });
+    hideStartDatePicker();
+  };
+
+  const hideEndDatePicker = () => {
+    setEndDateVisibility(false);
+  };
+
+  const handleEndDateConfirm = (date) => {
+    if (
+      moment(startDate).format("MM/DD/YYYY") <=
+      moment(date).format("MM/DD/YYYY")
+    ) {
+      setEndDate(date);
+      setFormData({ ...formData, end_date: date });
+    } else {
+      setDeadlineError("Deadline cannot be before the start date");
+    }
+    hideEndDatePicker();
+  };
+
+  //validation functions
+  const validateProjectName = (name) => {
+    if (name == "" || name == null) {
+      setNameError("Project name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCompanyName = (name) => {
+    if (name == "") {
+      setCompanyError("Company name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateQuotation = (quote) => {
+    if (quote == "" || quote == null) {
+      setQuotationError("Quotation is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateDescription = (description) => {
+    if (description == "" || description == null) {
+      setDescriptionError("Description is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validatePhone = (num) => {
+    if (num == "" || num == null) {
+      setPhoneError("Phone number is required*");
+      return false;
+    }
+    // return true;
+
+    let reg = /^[0-9]{10}$/g;
+
+    if (reg.test(num) === false) {
+      setPhoneError("Please Enter a valid phone number");
+      return false; //return false if in wrong format
+    } else {
+      setPhoneError(null);
+      return true; //return true if in right format
+    }
+  };
+
+  const validateStartDate = (date) => {
+    if (date == "" || date == null) {
+      setStartDateError("Start date is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateEndDate = (date) => {
+    if (date == "" || date == null) {
+      setDeadlineError("Deadline is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateHours = (hours) => {
+    if (hours == "" || hours == null) {
+      setHoursError("Estimated hours is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateAddress = (address) => {
+    if (address == "" || address == null) {
+      setAddressError("Address is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateBilling = (billing) => {
+    if (billing == "" || billing == null) {
+      setBillingError("Billing type is required*");
+      return false;
+    }
+    return true;
+  };
+
+  //handle submit
+  const handleSubmit = async () => {
+    if (
+      validateProjectName(formData.project_name) &&
+      validateCompanyName(formData.company) &&
+      validateQuotation(formData.quotes_id) &&
+      validateDescription(formData.description) &&
+      validatePhone(formData.contact_number) &&
+      validateStartDate(formData.start_date) &&
+      // validateEndDate(formData.end_date) &&
+      validateHours(formData.estimated_hours) &&
+      validateAddress(formData.address)
+      // &&
+      // validateBilling(formData.billing_type)
+    ) {
+      try {
+        // console.log("edit project obj:", {
+        //   ...formData,
+        //   company: formData.company_id,
+        //   customer: formData.customer_id,
+        //   name: formData.project_name,
+        //   consultant: formData.consultant_id,
+        //   estimated_hour: formData.estimated_hours,
+        //   deadline: formData.end_date,
+        //   number: formData.contact_number,
+        // });
+        const res = await apiUpdateProjectDetails(
+          {
+            ...formData,
+            company: formData.company_id,
+            // customer: formData.customer_id,
+            name: formData.project_name,
+            // consultant: formData.consultant_id,
+            estimated_hour: formData.estimated_hours,
+            deadline: formData.end_date,
+            number: formData.contact_number,
+            quotation: formData.quotes_id,
+          },
+          route.params.id
+        );
+        console.log("res: ", res);
+        if (res.status == 200) {
+          Toast.show("Project Updated", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+          navigation.goBack();
+        } else {
+          Toast.show("Project Update Failed", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      validateProjectName(formData.project_name);
+      validateCompanyName(formData.company);
+      validateQuotation(formData.quotes_id);
+      validateDescription(formData.description);
+      validatePhone(formData.contact_number);
+      validateStartDate(formData.start_date);
+      // validateEndDate(formData.end_date);
+      validateHours(formData.estimated_hours);
+      validateAddress(formData.address);
+      // validateBilling(formData.billing_type);
     }
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", padding: 10 }}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
+        estimated_hours
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
-          <Text>Project Name:</Text>
+          <Text style={styles.fieldName}>Project Name:</Text>
           <TextInput
             style={styles.input}
-            name="name"
-            value={projectData.projectName}
-            onChangeText={(text) =>
-              setProjectData({ ...projectData, projectName: text })
-            }
+            name="project_name"
+            value={formData.project_name}
+            onChangeText={(text) => {
+              setFormData({ ...formData, project_name: text });
+              setNameError(null);
+            }}
             placeholder="Project Name"
           />
-          <Text>Consutant:</Text>
+          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+
+          <Text style={styles.fieldName}>Company:</Text>
+          <DropdownMenu
+            data={companyList}
+            placeholder="Select Company"
+            value={formData.company_id}
+            setValue={setFormData}
+            label="company_id"
+            originalObj={formData}
+            setErrorState={setCompanyError}
+          />
+          {companyError ? (
+            <Text style={styles.errorText}>{companyError}</Text>
+          ) : null}
+
+          <Text style={styles.fieldName}>Quotation:</Text>
+          <DropdownMenu
+            data={quotationList}
+            placeholder="Select Quotation"
+            value={formData.quotes_id}
+            setValue={setFormData}
+            label="quotes_id"
+            originalObj={formData}
+            setErrorState={setQuotationError}
+          />
+          {quotationError ? (
+            <Text style={styles.errorText}>{quotationError}</Text>
+          ) : null}
+
+          {/*<Text>Customer:</Text>
+          <DropdownMenu
+            data={customersList}
+            placeholder="Select Customer"
+            value={formData.customer_id}
+            setValue={setFormData}
+            label="customer_id"
+            originalObj={formData}
+            setErrorState={setCustomerError}
+          />
+          {customerError ? (
+            <Text style={styles.errorText}>{customerError}</Text>
+          ) : null}
+
+           <Text>Tags:</Text>
+          <MultiSelect
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            search
+            data={[
+              { label: "Carpentry", value: 1 },
+              { label: "Electrical", value: 2 },
+              { label: "Piping", value: 3 },
+              { label: "Sewerage", value: 4 },
+            ]}
+            labelField="label"
+            valueField="value"
+            placeholder="Select item"
+            searchPlaceholder="Search..."
+            value={selectedTags}
+            onChange={(item) => {
+              setSelectedTags(item);
+            }}
+            selectedStyle={styles.selectedStyle}
+          />
+          {tagsError ? <Text style={styles.errorText}>{tagsError}</Text> : null} */}
+
+          <Text style={styles.fieldName}>Task Description:</Text>
           <TextInput
             style={styles.input}
-            name="organization"
-            value={projectData.consultant}
-            onChangeText={(text) =>
-              setProjectData({ ...projectData, consultant: text })
-            }
+            name="description"
+            value={formData.description}
+            onChangeText={(text) => {
+              setFormData({ ...formData, description: text });
+              setDescriptionError(null);
+            }}
+            placeholder="Task Description"
           />
-          <Text>Point of Contact:</Text>
+          {descriptionError ? (
+            <Text style={styles.errorText}>{descriptionError}</Text>
+          ) : null}
+
+          <Text style={styles.fieldName}>Phone Number:</Text>
           <TextInput
             style={styles.input}
-            name="phonenumber"
-            value={projectData.pointOfContact}
-            onChangeText={(text) =>
-              setProjectData({ ...projectData, pointOfContact: text })
-            }
+            name="contact_number"
+            value={formData.contact_number}
+            onChangeText={(text) => {
+              setFormData({ ...formData, contact_number: text });
+              setPhoneError(null);
+            }}
+            placeholder="Number"
           />
-          <Text>Project Location:</Text>
+          {phoneError ? (
+            <Text style={styles.errorText}>{phoneError}</Text>
+          ) : null}
+
+          {/* <DateTimePickerModal
+            isVisible={isStartDatePickerVisible}
+            mode="date"
+            onConfirm={handleStartDateConfirm}
+            onCancel={hideStartDatePicker}
+          /> */}
+          <Text style={styles.fieldName}>Start Date:</Text>
+          <Pressable
+            // onPress={() => {
+            //   setStartDateVisibility(true);
+            //   setStartDateError(null);
+            // }}
+            style={[
+              styles.input,
+              {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                color: "#d9d9d9",
+                backgroundColor: "#e5e5e5",
+              },
+            ]}
+            name="start_date"
+            value={formData.start_date}
+          >
+            <Icon name="calendar-alt" size={25} color="#A9A9AC" />
+            {formData.start_date ? (
+              <Text style={{ color: "#000", marginLeft: 10 }}>
+                {moment(formData.start_date).format("MM/DD/YYYY")}
+              </Text>
+            ) : (
+              <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>
+                Start Date
+              </Text>
+            )}
+          </Pressable>
+          {startDateError ? (
+            <Text style={styles.errorText}>{startDateError}</Text>
+          ) : null}
+
+          {/* <DateTimePickerModal
+            isVisible={isEndDatePickerVisible}
+            mode="date"
+            onConfirm={handleEndDateConfirm}
+            onCancel={hideEndDatePicker}
+          /> */}
+          <Text style={styles.fieldName}>Deadline:</Text>
+          <Pressable
+            // onPress={() => {
+            //   setEndDateVisibility(true);
+            //   setDeadlineError(null);
+            // }}
+            style={[
+              styles.input,
+              {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                color: "#d9d9d9",
+                backgroundColor: "#e5e5e5",
+              },
+            ]}
+            name="startDate"
+            value={formData.deadline}
+          >
+            <Icon name="calendar-alt" size={25} color="#A9A9AC" />
+            {formData.end_date ? (
+              <Text style={{ color: "#000", marginLeft: 10 }}>
+                {moment(formData.end_date).format("MM/DD/YYYY")}
+              </Text>
+            ) : (
+              <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>Deadline</Text>
+            )}
+          </Pressable>
+          {/* {deadlineError ? (
+            <Text style={styles.errorText}>{deadlineError}</Text>
+          ) : null} */}
+
+          <Text style={styles.fieldName}>Total Estimated Hours:</Text>
+          <TextInput
+            style={styles.input}
+            name="estimated_hours"
+            value={formData.estimated_hours}
+            onChangeText={(text) => {
+              setFormData({ ...formData, estimated_hours: text });
+              setDescriptionError;
+            }}
+            placeholder="Total Estimated Hours"
+          />
+          {hoursError ? (
+            <Text style={styles.errorText}>{hoursError}</Text>
+          ) : null}
+
+          {/* <Text>Assign Consultant:</Text>
+          <DropdownMenu
+            data={consultantList}
+            placeholder="Select Consultant"
+            value={formData.consultant_id}
+            setValue={setFormData}
+            label="consultant_id"
+            originalObj={formData}
+            setErrorState={setConsultantError}
+          />
+          {consultantError ? (
+            <Text style={styles.errorText}>{consultantError}</Text>
+          ) : null} */}
+
+          <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
             placeholder="Search"
             autoFocus={true}
@@ -103,9 +533,10 @@ const EditProject = ({ navigation }) => {
             returnKeyType={"search"}
             fetchDetails={true}
             textInputProps={{
-              value: projectData.address,
+              value: formData.address,
               onChangeText: (text) => {
-                setProjectData({ ...projectData, address: text });
+                setFormData({ ...formData, address: text });
+                setAddressError(null);
               },
             }}
             onPress={(data, details = null) => {
@@ -160,15 +591,15 @@ const EditProject = ({ navigation }) => {
                 areaZip
               );
 
-              props.notifyChange(details.geometry.location, data);
+              // props.notifyChange(details.geometry.location, data);
 
-              setProjectData({
-                ...projectData,
+              setFormData({
+                ...formData,
                 lat: details.geometry.location.lat,
                 long: details.geometry.location.lng,
                 address: details.formatted_address,
                 state: stateName,
-                zip_code: areaZip,
+                zipcode: areaZip,
                 country_code: countryCode,
                 country: countryName,
               });
@@ -181,104 +612,39 @@ const EditProject = ({ navigation }) => {
             debounce={200}
             styles={placesStyle}
           />
-          <Text>Country: </Text>
-          <Dropdown
-            style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={Country.getAllCountries().map((country) => {
-              return {
-                label: country.name,
-                value: country.isoCode,
-              };
-            })}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? "Select Country" : "..."}
-            searchPlaceholder="Search..."
-            value={projectData.country_code}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={(item) => {
-              setProjectData({
-                ...projectData,
-                country_code: item.value,
-                country: item.label,
-                state: null,
-              });
-              setIsFocus(false);
-            }}
-          />
-          {/* <TextInput
-              style={styles.input}
-              name="country"
-              value={projectData.country}
-              onChangeText={(text) =>
-                setProjectData({ ...projectData, country: text })
-              }
-            /> */}
-          <Text>State/UT: </Text>
-          <Dropdown
-            style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={State.getStatesOfCountry(projectData.country_code).map(
-              (state) => {
-                return { label: state.name, value: state.name };
-              }
-            )}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? "Select State/UT" : "..."}
-            searchPlaceholder="Search..."
-            value={projectData.state}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={(item) => {
-              setProjectData({ ...projectData, state: item.label });
-              setIsFocus(false);
-            }}
-          />
-          {/* <TextInput
-              style={styles.input}
-              name="state"
-              value={projectData.state}
-              onChangeText={(text) => setProjectData({ ...projectData, state: text })}
-            /> */}
+          {addressError ? (
+            <Text style={styles.errorText}>{addressError}</Text>
+          ) : null}
 
-          <Text>Zip Code: </Text>
-          <TextInput
-            style={styles.input}
-            name="zip_code"
-            value={projectData.zip_code}
-            onChangeText={(text) =>
-              setProjectData({ ...projectData, zip_code: text })
-            }
+          {/* <Text style={styles.fieldName}>Billing Type:</Text>
+          <DropdownMenu
+            data={[
+              { label: "Net Banking", value: 1 },
+              { label: "Credit Card", value: 2 },
+              { label: "Debit Card", value: 3 },
+              { label: "UPI", value: 4 },
+            ]}
+            placeholder="Select Company"
+            value={Number(formData.billing_type)}
+            setValue={setFormData}
+            label="billing_type"
+            originalObj={formData}
+            setErrorState={setBillingError}
           />
+          {billingError ? (
+            <Text style={styles.errorText}>{billingError}</Text>
+          ) : null} */}
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
+
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={styles.submitButton}
+            style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -288,16 +654,49 @@ const EditProject = ({ navigation }) => {
 
 export default EditProject;
 
+const DropdownMenu = ({
+  data,
+  placeholder,
+  value,
+  setValue,
+  label,
+  originalObj,
+  setErrorState,
+}) => {
+  return (
+    <Dropdown
+      style={styles.dropdown}
+      placeholder={placeholder}
+      placeholderStyle={styles.placeholderStyle}
+      selectedTextStyle={styles.selectedTextStyle}
+      iconStyle={styles.iconStyle}
+      data={data}
+      maxHeight={300}
+      labelField="label"
+      valueField="value"
+      containerStyle={styles.listStyle}
+      dropdownPosition="bottom"
+      value={value}
+      onChange={(item) => {
+        setValue({ ...originalObj, [label]: item.value });
+        setErrorState(null);
+      }}
+    />
+  );
+};
+
 const placesStyle = StyleSheet.create({
   textInputContainer: {
     // backgroundColor: "rgba(0,0,0,0)",
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
+    // maxWidth: "100%",
+    // minWidth: "90%",
     borderColor: "gray",
+    width: "100%",
   },
   textInput: {
+    backgroundColor: "transparent",
     height: 45,
     color: "#5d5d5d",
     fontSize: 16,
@@ -310,7 +709,7 @@ const placesStyle = StyleSheet.create({
   listView: {
     color: "black",
     borderColor: "gray",
-    maxWidth: "89%",
+    maxWidth: "100%",
   },
   separator: {
     flex: 1,
@@ -332,7 +731,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 5,
     paddingHorizontal: 8,
-    width: "90%",
+    width: "100%",
     marginBottom: 5,
   },
   icon: {
@@ -349,6 +748,7 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    color: "#A9A9AC",
   },
   selectedTextStyle: {
     fontSize: 16,
@@ -366,6 +766,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    width: "100%",
+    padding: 10,
   },
 
   fieldContainer: {
@@ -377,33 +779,40 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 300,
-    height: 35,
+    width: "100%",
+    fontSize: 16,
     marginTop: 2,
-    marginBottom: 10,
     padding: 5,
     borderRadius: 5,
-    minWidth: 80,
     paddingHorizontal: 8,
-    height: 50,
+    height: 44,
+    minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
   },
 
   submitButton: {
     marginTop: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 5,
-    width: "30%",
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
   },
 
-  submitText: {
-    color: "white",
-    justifyContent: "center",
+  bothButtons: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    paddingHorizontal: 10,
+  },
+
+  cancelBtn: {
+    backgroundColor: "transparent",
+    borderColor: "#696cff",
+    borderWidth: 1,
   },
 
   opacity: {
@@ -411,7 +820,7 @@ const styles = StyleSheet.create({
   },
 
   fieldName: {
-    fontWeight: "bold",
+    marginTop: 10,
     display: "flex",
     flexDirection: "row",
   },

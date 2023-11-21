@@ -14,15 +14,15 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import Toast from "react-native-root-toast";
 
 const initialValues = {
-  username: "",
+  email: "",
   password: "",
 };
 
 const AuthScreen = ({ navigation }) => {
-  //state for password and username
+  //state for password and email
   const [formData, setFormData] = useState(initialValues);
   //state for email error
-  const [usernameError, setUsernameError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const [token, setToken] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -62,8 +62,8 @@ const AuthScreen = ({ navigation }) => {
     setFormData({ ...formData, [label]: value });
 
     switch (label) {
-      case "username":
-        return validateUsername(value);
+      case "email":
+        return validateEmail(value);
       case "password":
         return validatePassword(value);
       default:
@@ -72,24 +72,24 @@ const AuthScreen = ({ navigation }) => {
   };
 
   //handle email validation
-  const validateUsername = (username) => {
-    if (username == "") {
-      setUsernameError("Username is required");
+  const validateEmail = (email) => {
+    if (email == "") {
+      setEmailError("Email is required");
       return false;
     }
 
-    setUsernameError(null);
-    return true;
+    // setEmailError(null);
+    // return true;
 
-    // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-    // if (reg.test(email) === false) {
-    //   setUsernameError("Please Enter a valid email address");
-    //   return false; //return false if in wrong format
-    // } else {
-    //   setUsernameError(null);
-    //   return true; //return true if in right format
-    // }
+    if (reg.test(email.trim()) === false) {
+      setEmailError("Please Enter a valid email address");
+      return false; //return false if in wrong format
+    } else {
+      setEmailError(null);
+      return true; //return true if in right format
+    }
   };
 
   //handle password validation
@@ -154,7 +154,7 @@ const AuthScreen = ({ navigation }) => {
 
   //handle form submit
   const handleSubmit = async () => {
-    if (formData.password.length > 0 && validateUsername(formData.username)) {
+    if (formData.password.length > 0 && validateEmail(formData.email)) {
       //call the api function
       try {
         const res = await apiAuth(formData);
@@ -191,9 +191,9 @@ const AuthScreen = ({ navigation }) => {
 
       // console.log(jwtDecode(res.data.token));
     }
-    if (!validateUsername(formData.username)) {
-      //   setUsernameError("Please enter a valid email address");
-      console.log(usernameError);
+    if (!validateEmail(formData.email)) {
+      //   setEmailError("Please enter a valid email address");
+      console.log(emailError);
     }
     if (formData.password.length == 0) {
       setPasswordError("Password is required");
@@ -217,14 +217,14 @@ const AuthScreen = ({ navigation }) => {
         <View style={{ width: "100%", display: "flex" }}>
           <TextInput
             style={styles.input}
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChangeText={(text) => handleChange(text, "username")}
-            type="username"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChangeText={(text) => handleChange(text, "email")}
+            type="email"
           />
-          {usernameError ? (
-            <Text style={styles.errorText}>{usernameError}</Text>
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
           ) : null}
 
           <View
@@ -309,6 +309,7 @@ const styles = StyleSheet.create({
   },
   passwordInput: {
     fontSize: 16,
+    width: "90%",
   },
   submitButton: {
     marginTop: 10,

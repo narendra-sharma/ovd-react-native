@@ -12,7 +12,6 @@ import {
   DrawerItemList,
   createDrawerNavigator,
 } from "@react-navigation/drawer";
-import Home from "../Home/Home";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,20 +21,19 @@ import ProfileStackScreen from "../Profile/ProfileStackScreen";
 import { useFocusEffect } from "@react-navigation/native";
 import ChangePassword from "../Settings/ChangePassword";
 import AccountsStackScreen from "../Accounts/AccountsStackScreen";
-import { useRoute } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import ViewProjects from "../Companies/Projects/ViewProjects";
 import ViewQuotes from "../Companies/Quotes/ViewQuotes";
-import AddProject from "../Companies/Projects/AddProject";
 import ConsultantManagerStack from "../Companies/Users/ConsultantManagers/ConsultantManagerStack";
 import ConsultantStack from "../Companies/Users/Consultants/ConsultantStack";
 import ContractorStack from "../Companies/Users/Contractors/ContractorStack";
 import CustomerStack from "../Companies/Users/Customers/CustomerStack";
-import EditQuote from "../Companies/Quotes/EditQuote";
-import TasksStackScreen from "../Companies/Tasks/TasksStackScreen";
+// import TasksStackScreen from "../Companies/Tasks/TasksStackScreen";
 import TagsStackScreen from "../Companies/Tags/TagsStackScreen";
 import CommissionsStackScreen from "../Companies/Commissions/CommissionsStackScreen";
 import HomeStackScreen from "../Home/HomeStackScreen";
+import { useCustomActiveScreenStatus } from "../../../Contexts/ActiveScreenContext";
+// import ViewInvoices from "../Companies/Invoices/ViewInvoices";
 
 const Drawer = createDrawerNavigator();
 
@@ -46,9 +44,6 @@ const RightDrawer = ({ navigation }) => {
   const [isUsersSubMenuOpen, setIsUsersSubMenuOpen] = useState(false);
   const [activeScreenName, setActiveScreenName] = useState("Home");
   // const [isManageCompaniesActive, setIsManageCompaniesActive] = useState(false);
-
-  const route = useRoute();
-  // console.log(route.name);
 
   const handleLogout = () => {
     const logout = async () => {
@@ -108,6 +103,9 @@ const RightDrawer = ({ navigation }) => {
       };
     }, [userData])
   );
+
+  const { activeScreen, setActiveScreen } = useCustomActiveScreenStatus();
+  // console.log("active screen in drawer: ", activeScreen);
 
   // useEffect(() => {
   //   const getData = async () => {
@@ -176,21 +174,21 @@ const RightDrawer = ({ navigation }) => {
                 <Pressable
                   onPress={() => {
                     props.navigation.navigate("Home");
-                    setActiveScreenName("Home");
+                    setActiveScreen("Home");
                     // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "Home" && styles.activeSubMenu,
+                    activeScreen == "Home" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="home"
-                    size={28}
+                    size={30}
                   />
-                  {/* <Icon name="home" size={28} /> */}
-                  <Text>Home</Text>
+                  {/* <Icon name="home" size={30} /> */}
+                  <Text style={styles.menuItemText}>Home</Text>
                 </Pressable>
 
                 {/* Accounts/Users Sub-Menu */}
@@ -204,9 +202,9 @@ const RightDrawer = ({ navigation }) => {
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="people"
-                    size={28}
+                    size={30}
                   />
-                  <Text>
+                  <Text style={styles.menuItemText}>
                     Manage Users{" "}
                     {isUsersSubMenuOpen ? (
                       <Icon
@@ -227,77 +225,61 @@ const RightDrawer = ({ navigation }) => {
                   <View>
                     <View>
                       {/* Render sub-menu items */}
-                      {/* <Pressable
-                          onPress={() => {
-                            setActiveScreenName("Accounts");
-                            props.navigation.navigate("Accounts");
-                            // setIsManageCompaniesActive(true);
-                          }}
-                          style={[
-                            styles.subMenuItem,
-                            activeScreenName == "Accounts" &&
-                              styles.activeSubMenu,
-                          ]}
-                        >
-                          <Text>All Accounts</Text>
-                        </Pressable> */}
                       <Pressable
                         onPress={() => {
                           props.navigation.navigate("Consultant Managers");
-                          setActiveScreenName("Consultant Managers");
+                          setActiveScreen("Consultant Managers");
                           // Handle sub-menu item click here
                         }}
                         style={[
                           styles.subMenuItem,
-                          activeScreenName == "Consultant Managers" &&
+                          activeScreen == "Consultant Managers" &&
                             styles.activeSubMenu,
                         ]}
                       >
-                        <Text>Consultant Managers</Text>
+                        <Text style={styles.menuItemText}>
+                          Consultant Managers
+                        </Text>
                       </Pressable>
                       <Pressable
                         onPress={() => {
                           props.navigation.navigate("Consultants");
-                          setActiveScreenName("Consultants");
+                          setActiveScreen("Consultants");
                           // Handle sub-menu item click here
                         }}
                         style={[
                           styles.subMenuItem,
-                          activeScreenName == "Consultants" &&
-                            styles.activeSubMenu,
+                          activeScreen == "Consultants" && styles.activeSubMenu,
                         ]}
                       >
-                        <Text>Consultants</Text>
+                        <Text style={styles.menuItemText}>Consultants</Text>
                       </Pressable>
                       <Pressable
                         onPress={() => {
                           props.navigation.navigate("Contractors");
-                          setActiveScreenName("Contractors");
+                          setActiveScreen("Contractors");
                           // Handle sub-menu item click here
                         }}
                         style={[
                           styles.subMenuItem,
-                          activeScreenName == "Contractors" &&
-                            styles.activeSubMenu,
+                          activeScreen == "Contractors" && styles.activeSubMenu,
                         ]}
                       >
-                        <Text>Contractors</Text>
+                        <Text style={styles.menuItemText}>Contractors</Text>
                       </Pressable>
                       <Pressable
                         onPress={() => {
                           props.navigation.navigate("Customers");
-                          setActiveScreenName("Customers");
+                          setActiveScreen("Customers");
                           // Handle sub-menu item click here
                         }}
                         style={[
                           styles.subMenuItem,
-                          activeScreenName == "Customers" &&
-                            styles.activeSubMenu,
+                          activeScreen == "Customers" && styles.activeSubMenu,
                         ]}
                       >
-                        <Text>Customers</Text>
+                        <Text style={styles.menuItemText}>Customers</Text>
                       </Pressable>
-                      {/* Add more sub-menu items as needed */}
                     </View>
                   </View>
                 )}
@@ -306,167 +288,163 @@ const RightDrawer = ({ navigation }) => {
                 <Pressable
                   onPress={() => {
                     props.navigation.navigate("Manage Companies");
-                    setActiveScreenName("Manage Companies");
+                    setActiveScreen("Manage Companies");
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "Manage Companies" &&
-                      styles.activeSubMenu,
+                    activeScreen == "Manage Companies" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="admin-panel-settings"
-                    size={28}
+                    size={30}
                   />
-                  <Text>All Companies</Text>
+                  <Text style={styles.menuItemText}>All Companies</Text>
                 </Pressable>
 
                 {/* Custom Quotes Link */}
                 <Pressable
                   onPress={() => {
                     props.navigation.navigate("Quotes");
-                    setActiveScreenName("Quotes");
+                    setActiveScreen("Quotes");
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "Quotes" && styles.activeSubMenu,
+                    activeScreen == "Quotes" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="request-quote"
-                    size={28}
+                    size={30}
                   />
-                  {/* <Icon name="home" size={28} /> */}
-                  <Text>All Quotes</Text>
+                  {/* <Icon name="home" size={30} /> */}
+                  <Text style={styles.menuItemText}>All Quotes</Text>
                 </Pressable>
 
                 {/* Custom Projects */}
                 <Pressable
                   onPress={() => {
                     props.navigation.navigate("Projects");
-                    setActiveScreenName("Projects");
+                    setActiveScreen("Projects");
                     // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "Projects" && styles.activeSubMenu,
+                    activeScreen == "Projects" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="view-sidebar"
-                    size={28}
+                    size={30}
                   />
-                  {/* <Icon name="home" size={28} /> */}
-                  <Text>All Projects</Text>
+                  {/* <Icon name="home" size={30} /> */}
+                  <Text style={styles.menuItemText}>All Projects</Text>
                 </Pressable>
 
                 {/* Custom Tasks */}
-                <Pressable
+                {/* <Pressable
                   onPress={() => {
                     props.navigation.navigate("Tasks");
-                    setActiveScreenName("Tasks");
+                    setActiveScreen("Tasks");
                     // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "Tasks" && styles.activeSubMenu,
+                    activeScreen == "Tasks" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="view-sidebar"
-                    size={28}
+                    size={30}
                   />
-                  {/* <Icon name="home" size={28} /> */}
-                  <Text>All Tasks</Text>
-                </Pressable>
+                  <Text style={styles.menuItemText}>All Tasks</Text>
+                </Pressable> */}
 
                 {/* Custom Tags */}
                 <Pressable
                   onPress={() => {
                     props.navigation.navigate("All Tags");
-                    setActiveScreenName("All Tags");
+                    setActiveScreen("All Tags");
                     // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "All Tags" && styles.activeSubMenu,
+                    activeScreen == "All Tags" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="view-sidebar"
-                    size={28}
+                    size={30}
                   />
-                  {/* <Icon name="home" size={28} /> */}
-                  <Text>All Tags</Text>
+                  {/* <Icon name="home" size={30} /> */}
+                  <Text style={styles.menuItemText}>All Tags</Text>
                 </Pressable>
 
                 {/* Custom Commissions */}
                 <Pressable
                   onPress={() => {
                     props.navigation.navigate("All Commissions");
-                    setActiveScreenName("All Commissions");
+                    setActiveScreen("All Commissions");
                     // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "All Commissions" &&
-                      styles.activeSubMenu,
+                    activeScreen == "All Commissions" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="view-sidebar"
-                    size={28}
+                    size={30}
                   />
-                  {/* <Icon name="home" size={28} /> */}
-                  <Text>All Commissions</Text>
+                  {/* <Icon name="home" size={30} /> */}
+                  <Text style={styles.menuItemText}>All Commissions</Text>
                 </Pressable>
 
-                {/* Custom Profile */}
+                {/* Custom Invoices */}
                 {/* <Pressable
-                    onPress={() => {
-                      setActiveScreenName("Profile");
-                      props.navigation.navigate("Profile");
-                      // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                    }}
-                    style={[
-                      styles.subMenuButton,
-                      activeScreenName == "Profile" && styles.activeSubMenu,
-                    ]}
-                  >
-                    <MaterialIcons
-                      style={styles.drawerIcon}
-                      name="account-circle"
-                      size={28}
-                    />
-                    <Text>Profile </Text>
-                  </Pressable> */}
+                  onPress={() => {
+                    props.navigation.navigate("All Invoices");
+                    setActiveScreen("All Invoices");
+                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
+                  }}
+                  style={[
+                    styles.subMenuButton,
+                    activeScreen == "All Invoices" && styles.activeSubMenu,
+                  ]}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="view-sidebar"
+                    size={30}
+                  />
+                  <Text style={styles.menuItemText}>All Invoices</Text>
+                </Pressable> */}
 
                 {/* Custom Change Password */}
                 <Pressable
                   onPress={() => {
-                    setActiveScreenName("Change Password");
+                    setActiveScreen("Change Password");
                     props.navigation.navigate("Change Password");
                     setIsCompaniesSubMenuOpen(false);
                     // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
                   }}
                   style={[
                     styles.subMenuButton,
-                    activeScreenName == "Change Password" &&
-                      styles.activeSubMenu,
+                    activeScreen == "Change Password" && styles.activeSubMenu,
                   ]}
                 >
                   <MaterialIcons
                     style={styles.drawerIcon}
                     name="settings"
-                    size={28}
+                    size={30}
                   />
-                  <Text>Change Password</Text>
+                  <Text style={styles.menuItemText}>Change Password</Text>
                 </Pressable>
 
                 {/* <DrawerItemList
@@ -491,8 +469,10 @@ const RightDrawer = ({ navigation }) => {
               }}
             >
               <Pressable style={styles.logoutButton} onPress={handleLogout}>
-                <Icon style={{ color: "#ffff" }} name="sign-out" size={28} />
-                <Text style={{ color: "#ffff", fontWeight: "600" }}>Logout</Text>
+                <Icon style={{ color: "#ffff" }} name="sign-out" size={30} />
+                <Text style={{ color: "#ffff", fontWeight: "600" }}>
+                  Logout
+                </Text>
               </Pressable>
             </View>
 
@@ -506,7 +486,7 @@ const RightDrawer = ({ navigation }) => {
         name="Home"
         initialParams={{ resetStack: true }}
         options={{
-          drawerIcon: () => <Icon name="home" size={28} />,
+          drawerIcon: () => <Icon name="home" size={30} />,
           // drawerItemStyle: { display: "none" },
           headerShown: false,
         }}
@@ -517,7 +497,7 @@ const RightDrawer = ({ navigation }) => {
       <Drawer.Screen
         options={{
           drawerIcon: () => (
-            <MaterialIcons name="admin-panel-settings" size={28} />
+            <MaterialIcons name="admin-panel-settings" size={30} />
           ),
           // headerTitle: () => <></>,
           headerShown: false,
@@ -530,7 +510,7 @@ const RightDrawer = ({ navigation }) => {
       {/*All Accounts/Users Screens */}
       <Drawer.Screen
         options={{
-          drawerIcon: () => <Icon name="users" size={28} />,
+          drawerIcon: () => <Icon name="users" size={30} />,
           title: "Accounts",
           headerShown: false,
           // drawerItemStyle: { display: "none" },
@@ -582,7 +562,7 @@ const RightDrawer = ({ navigation }) => {
       {/* Profile Stack */}
       <Drawer.Screen
         options={{
-          drawerIcon: () => <Icon name="user" size={28} />,
+          drawerIcon: () => <Icon name="user" size={30} />,
           title: "Profile",
           headerShown: false,
         }}
@@ -621,14 +601,14 @@ const RightDrawer = ({ navigation }) => {
       />
 
       {/* Task Screens */}
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Tasks"
         component={TasksStackScreen}
         options={({ navigation }) => ({
           title: "My Tasks",
           headerShown: false,
         })}
-      />
+      /> */}
 
       {/* Tags Screens */}
       <Drawer.Screen
@@ -650,10 +630,20 @@ const RightDrawer = ({ navigation }) => {
         })}
       />
 
+      {/* Invoices Screens */}
+      {/* <Drawer.Screen
+        name="All Invoices"
+        component={ViewInvoices}
+        options={({ navigation }) => ({
+          title: "Invoices",
+          headerShown: false,
+        })}
+      /> */}
+
       {/* Change Password */}
       <Drawer.Screen
         options={({ navigation }) => ({
-          drawerIcon: () => <MaterialIcons name="settings" size={28} />,
+          drawerIcon: () => <MaterialIcons name="settings" size={30} />,
           title: "Change Password",
           // headerShown: false,
         })}
@@ -662,7 +652,7 @@ const RightDrawer = ({ navigation }) => {
       />
       {/* <Drawer.Screen
         options={{
-          drawerIcon: () => <Icon name="user" size={28} />,
+          drawerIcon: () => <Icon name="user" size={30} />,
           title: isEditOn ? "Edit Profile Details" : "Profile",
         }}
         name="Profile"
@@ -705,7 +695,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     borderRadius: 4,
-    padding: 8,
+    padding: 10,
   },
 
   subMenuItem: {
@@ -721,7 +711,13 @@ const styles = StyleSheet.create({
   },
 
   activeSubMenu: {
-    backgroundColor: "#E0E0E0", // Add your desired active background color
+    backgroundColor: "#DAE4FF", // Add your desired active background color
+    transition: "0.2s",
+  },
+
+  menuItemText: {
+    fontSize: 15,
+    paddingLeft: 12,
   },
 
   drawerIcon: {

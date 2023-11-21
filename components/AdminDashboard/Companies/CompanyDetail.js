@@ -72,19 +72,21 @@ const CompanyInfo = ({
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
-      <View style={{width: "90%", marginHorizontal: "auto"}}>
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
+    >
+      <View style={{ width: "90%", marginHorizontal: "auto" }}>
         {/* <Text style={styles.heading}>{companyData?.name}</Text> */}
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Name</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}>{companyData?.name}</Text>
         </View>
-        <View style={styles.fieldContainer}>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>VAT Number</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}>{companyData?.vat_number}</Text>
-        </View>
+        </View> */}
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Email</Text>
           <Text style={styles.span}>:</Text>
@@ -98,7 +100,9 @@ const CompanyInfo = ({
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Customer</Text>
           <Text style={styles.span}>:</Text>
-          {customerData?.name !== "" && <Text style={styles.fielContent}>{customerData?.name}</Text>}
+          {customerData?.name !== "" && (
+            <Text style={styles.fielContent}>{customerData?.name}</Text>
+          )}
         </View>
         {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Consultant Manager: </Text>
@@ -111,11 +115,6 @@ const CompanyInfo = ({
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Contractor: </Text>
           <Text>{contractor}</Text>
-        </View> */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Address</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}> {companyData?.address} </Text>
         </View>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>State/UT</Text>
@@ -126,6 +125,12 @@ const CompanyInfo = ({
           <Text style={styles.fieldName}>Country</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {companyData?.country} </Text>
+        </View>
+         */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Address</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {companyData?.address} </Text>
         </View>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Zip Code</Text>
@@ -384,7 +389,7 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
   fielContent: {
@@ -392,7 +397,7 @@ const styles = StyleSheet.create({
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   scrollBox: {

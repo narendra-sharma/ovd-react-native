@@ -23,7 +23,7 @@ const CONSULTANT_MANAGER_USER_TYPE = 3;
 
 const initialFormData = {
   name: "",
-  username: "",
+  // username: "",
   email: "",
   parent_id: "",
   org: "",
@@ -50,7 +50,6 @@ const EditConsultantManager = ({ navigation, route }) => {
   const [countryError, setCountryError] = useState(null);
   const [stateError, setStateError] = useState(null);
   const [zipcodeError, setZipcodeError] = useState(null);
-  const [commissionError, setCommissionError] = useState(null);
 
   const [responseError, setResponseError] = useState(null);
 
@@ -84,14 +83,6 @@ const EditConsultantManager = ({ navigation, route }) => {
   const validateOrg = (org) => {
     if (org == "") {
       setOrgError("Organization is required*");
-      return false;
-    }
-    return true;
-  };
-
-  const validateCommission = (commission) => {
-    if (commission == "" || commission == null) {
-      setCommissionError("Commision is required*");
       return false;
     }
     return true;
@@ -171,13 +162,13 @@ const EditConsultantManager = ({ navigation, route }) => {
   const handleSubmit = async () => {
     if (
       validateName(formData.name) &&
-      validateUsername(formData.username) &&
-      validateOrg(formData.org) &&
-      validateCommission(formData.commission) &&
+      // validateUsername(formData.username) &&
+      // validateOrg(formData.org) &&
+      // validateCommission(formData.commission) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
-      validateCountry(formData.country) &&
-      validateState(formData.state) &&
+      // validateCountry(formData.country) &&
+      // validateState(formData.state) &&
       validateZipcode(formData.zip_code) &&
       validateEmail(formData.email)
     ) {
@@ -219,16 +210,16 @@ const EditConsultantManager = ({ navigation, route }) => {
       }
       // setFormData(initialFormData);
     } else {
-      validateUsername(formData.username);
+      // validateUsername(formData.username);
       validateName(formData.name);
-      validateOrg(formData.org);
+      // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
-      validateCountry(formData.country);
-      validateState(formData.state);
+      // validateCountry(formData.country);
+      // validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
-      validateCommission(formData.commission);
+      // validateCommission(formData.commission);
     }
   };
 
@@ -253,7 +244,7 @@ const EditConsultantManager = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          {/* <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -266,7 +257,7 @@ const EditConsultantManager = ({ navigation, route }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -310,35 +301,6 @@ const EditConsultantManager = ({ navigation, route }) => {
             }}
           />
           {orgError ? <Text style={styles.errorText}>{orgError}</Text> : null}
-
-          <Text style={styles.fieldName}>Commision: </Text>
-          <Dropdown
-            style={[styles.dropdown]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={[
-              { label: "5%", value: 5 },
-              { label: "10%", value: 10 },
-              { label: "15%", value: 15 },
-            ]}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Commission"
-            value={Number(formData.commission)}
-            onChange={(item) => {
-              setFormData({
-                ...formData,
-                commission: item.value,
-              });
-              setCommissionError(null);
-            }}
-          />
-          {commissionError ? (
-            <Text style={styles.errorText}>{commissionError}</Text>
-          ) : null}
 
           <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
@@ -434,7 +396,7 @@ const EditConsultantManager = ({ navigation, route }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -494,7 +456,7 @@ const EditConsultantManager = ({ navigation, route }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
@@ -644,7 +606,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginTop: 10,
   },
-
 
   submitButton: {
     marginTop: 15,

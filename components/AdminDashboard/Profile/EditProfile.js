@@ -145,11 +145,11 @@ const EditProfile = ({ navigation }) => {
     if (
       validateName(userData.name) &&
       validateUsername(userData.username) &&
-      validateOrg(userData.org) &&
+      // validateOrg(userData.org) &&
       validatePhone(userData.phone_number) &&
       validateAddress(userData.address) &&
-      validateCountry(userData.country) &&
-      validateState(userData.state) &&
+      // validateCountry(userData.country) &&
+      // validateState(userData.state) &&
       validateZipcode(userData.zip_code)
     ) {
       try {
@@ -202,11 +202,11 @@ const EditProfile = ({ navigation }) => {
     } else {
       validateUsername(userData.username);
       validateName(userData.name);
-      validateOrg(userData.org);
+      // validateOrg(userData.org);
       validatePhone(userData.phone_number);
       validateAddress(userData.address);
-      validateCountry(userData.country);
-      validateState(userData.state);
+      // validateCountry(userData.country);
+      // validateState(userData.state);
       validateZipcode(userData.zip_code);
     }
   };
@@ -244,7 +244,7 @@ const EditProfile = ({ navigation }) => {
     <View style={styles.centeredView}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ justifyContent: "center"}}
+        contentContainerStyle={{ justifyContent: "center" }}
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
@@ -260,7 +260,8 @@ const EditProfile = ({ navigation }) => {
             placeholder="Name"
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-          <Text style={styles.fieldName}>Username:</Text>
+
+          {/* <Text style={styles.fieldName}>Username:</Text>
           <TextInput
             style={styles.input}
             name="name"
@@ -273,11 +274,13 @@ const EditProfile = ({ navigation }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
+
           <Text style={styles.fieldName}>Organization:</Text>
           <TextInput
             style={styles.input}
             name="organization"
+            placeholder="Organisation"
             value={userData.org}
             onChangeText={(text) => {
               setUserData({ ...userData, org: text });
@@ -289,6 +292,7 @@ const EditProfile = ({ navigation }) => {
           <TextInput
             style={styles.input}
             name="phonenumber"
+            placeholder="Phone Number"
             value={userData.phone_number}
             onChangeText={(text) => {
               setUserData({ ...userData, phone_number: text });
@@ -406,7 +410,7 @@ const EditProfile = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
             placeholderStyle={styles.placeholderStyle}
@@ -466,7 +470,7 @@ const EditProfile = ({ navigation }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput

@@ -2,12 +2,15 @@ import { useEffect } from "react";
 import { request } from "./index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const apiGetAllTasks = async () => {
+export const apiGetAllTasks = async (tagId = null, projectId) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
-    path: "auth/view-all-tasks",
+    path: `auth/view-all-tasks/${projectId}`,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+    params: {
+      tag: tagId ? Number(tagId) : null,
     },
   });
   return response;
@@ -75,16 +78,27 @@ export const apiDeleteTask = async (id) => {
   return response;
 };
 
-// export const apiGetQuotationsByCompanyId = async (id) => {
-//   const token = await AsyncStorage.getItem("token");
-//   const response = await request({
-//     path: `auth/get-quotation/${id}`,
-//     headers: {
-//       Authorization: `Bearer ${JSON.parse(token)}`,
-//     },
-//   });
-//   return response;
-// };
+export const apiChangeDocApprovalStatus = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: `auth/document-approval/${id}`,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiChangeDocumentStatus = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: `auth/document-status/${id}`,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
 
 // export const apiDeleteProject = async (id) => {
 //   const token = await AsyncStorage.getItem("token");

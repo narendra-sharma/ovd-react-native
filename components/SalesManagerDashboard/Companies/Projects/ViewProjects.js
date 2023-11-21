@@ -13,6 +13,13 @@ import { mockData } from "../MOCK_DATA";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import ProjectsList from "./ProjectsList";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import EditProject from "./EditProject";
+import AddProject from "./AddProject";
+import ProjectDetail from "./ProjectDetail";
+import { useIsFocused } from "@react-navigation/native";
+import { useCustomActiveScreenStatus } from "../../../../Contexts/ActiveScreenContext";
 
 const initialFormData = {
   companyName: "",
@@ -21,25 +28,15 @@ const initialFormData = {
   jobs: [{}],
 };
 
-const ViewProjects = ({ navigation }) => {
-  const [addCompanyModalVisible, setAddCompanyModalVisible] = useState(false);
-  const [companiesList, setCompaniesList] = useState(mockData);
-  const [newCompanyData, setNewCompanyData] = useState(initialFormData);
-  useEffect(() => {}, [companiesList]);
+const Stack = createNativeStackNavigator();
 
-  const handleNewCompanySubmit = () => {
-    setCompaniesList([...companiesList, newCompanyData]);
-    setAddCompanyModalVisible(!addCompanyModalVisible);
-    setNewCompanyData(initialFormData);
-  };
-
+const ProjectsLayout = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          setAddCompanyModalVisible(true);
-          navigation.se;
+          navigation.navigate("Add Project");
         }}
       >
         <Text style={styles.addText}>
@@ -47,118 +44,57 @@ const ViewProjects = ({ navigation }) => {
         </Text>
       </Pressable>
 
-      {/* Add new company form */}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={addCompanyModalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setAddCompanyModalVisible(!addCompanyModalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <Text>Project Name:</Text>
-          <TextInput
-            placeholder="Company Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.companyName}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, companyName: text })
-            }
-          />
-
-          <Text>Email:</Text>
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            name="email"
-            value={newCompanyData.email}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, email: text })
-            }
-          />
-
-          <Text>Phone Number:</Text>
-          <TextInput
-            placeholder="Company Name"
-            style={styles.input}
-            name="phoneNo"
-            value={newCompanyData.phoneNo}
-            onChangeText={(text) =>
-              setNewCompanyData({ ...newCompanyData, phoneNo: text })
-            }
-          />
-
-          <View>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setAddCompanyModalVisible(false)}
-            >
-              <Text style={styles.textStyle}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={handleNewCompanySubmit}
-            >
-              <Text style={styles.textStyle}>Add</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-
       <ProjectsList navigation={navigation} />
     </View>
   );
 };
 
-export default ViewProjects;
+const ViewProjects = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const { setActiveScreen } = useCustomActiveScreenStatus();
 
-const placesStyle = StyleSheet.create({
-  textInputContainer: {
-    backgroundColor: "rgba(0,0,0,0)",
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    maxWidth: "100%",
-    minWidth: "90%",
-  },
-  textInput: {
-    height: 45,
-    color: "#5d5d5d",
-    fontSize: 16,
-    borderWidth: 1,
-  },
-  predefinedPlacesDescription: {
-    color: "#1faadb",
-  },
-  listView: {
-    color: "black",
-    backgroundColor: "white",
-    maxWidth: "89%",
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "blue",
-  },
-  description: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    fontSize: 14,
-    maxWidth: "89%",
-  },
-});
+  useEffect(() => {
+    if (isFocused) {
+      setActiveScreen("Projects");
+    }
+  }, []);
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="My Projects"
+        component={ProjectsLayout}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <MaterialIcons
+              onPress={() => navigation.toggleDrawer()}
+              name="menu"
+              size={25}
+              style={{ marginRight: 30 }}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen name="Edit Project" component={EditProject} />
+      <Stack.Screen name="Add Project" component={AddProject} />
+      <Stack.Screen name="Project Details" component={ProjectDetail} />
+    </Stack.Navigator>
+  );
+};
+
+export default ViewProjects;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 22,
-    justifyContent: "center",
-    alignItems: "center",
     width: "100%",
     height: "100%",
+    padding: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -166,6 +102,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: "100%",
   },
+
   modalView: {
     margin: 10,
     backgroundColor: "white",
@@ -182,6 +119,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: "90%",
   },
+
   button: {
     margin: 10,
     backgroundColor: "#B76E79",
@@ -192,14 +130,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignContent: "space-around",
   },
+
   buttonClose: {
     backgroundColor: "#B76E79",
   },
+
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
+
   modalText: {
     marginBottom: 15,
     textAlign: "center",
@@ -224,7 +165,7 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 5,
     width: "50%",
