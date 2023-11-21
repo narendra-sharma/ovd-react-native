@@ -19,7 +19,7 @@ const CONTRACTOR_USER_TYPE = 5;
 
 const initialFormData = {
   name: "",
-  username: "",
+  // username: "",
   email: "",
   parent_id: "",
   org: "",
@@ -148,8 +148,8 @@ const AddContractor = ({ navigation }) => {
   const handleSubmit = async () => {
     if (
       validateName(formData.name) &&
-      validateUsername(formData.username) &&
-      validateOrg(formData.org) &&
+      // validateUsername(formData.username) &&
+      // validateOrg(formData.org) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
       validateCountry(formData.country) &&
@@ -200,9 +200,9 @@ const AddContractor = ({ navigation }) => {
       }
       // setFormData(initialFormData);
     } else {
-      validateUsername(formData.username);
       validateName(formData.name);
-      validateOrg(formData.org);
+      // validateUsername(formData.username);
+      // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
       validateCountry(formData.country);
@@ -213,7 +213,7 @@ const AddContractor = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -233,7 +233,7 @@ const AddContractor = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          {/* <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -246,7 +246,7 @@ const AddContractor = ({ navigation }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -385,7 +385,7 @@ const AddContractor = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -445,7 +445,7 @@ const AddContractor = ({ navigation }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
@@ -465,13 +465,13 @@ const AddContractor = ({ navigation }) => {
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -521,14 +521,13 @@ const placesStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-
   formContainer: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -577,7 +576,7 @@ const styles = StyleSheet.create({
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitText: {

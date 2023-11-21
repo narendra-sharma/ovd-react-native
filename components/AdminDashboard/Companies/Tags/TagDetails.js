@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { apiDeleteTag, apiGetPreFilledTagDetails } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
+import TasksList from "../Projects/Tasks/TaskList";
 
 const TagDetails = ({ navigation, route }) => {
   const [tagData, setTagData] = useState({});
@@ -51,8 +52,10 @@ const TagDetails = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
-      <View style={{width: "90%", marginHorizontal: "auto"}}>
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
+    >
+      <View style={{ width: "90%", marginHorizontal: "auto" }}>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Name</Text>
           <Text style={styles.span}>:</Text>
@@ -65,17 +68,20 @@ const TagDetails = ({ navigation, route }) => {
           <Text style={styles.fielContent}>{tagData.description}</Text>
         </View>
 
-        <View style={styles.fieldContainer}>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Tag Cost</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}>{tagData.total_cost}</Text>
-        </View>
+        </View> */}
+
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Deadline</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}>{tagData.deadline}</Text>
         </View>
       </View>
+
+      {tagData?.id && <TasksList navigation={navigation} tagId={tagData?.id} />}
 
       <View style={styles.buttonsContainer}>
         <Pressable
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
   fielContent: {
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   container: {

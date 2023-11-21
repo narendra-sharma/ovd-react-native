@@ -9,7 +9,6 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { mockData } from "../MOCK_DATA";
 import QuotesList from "./QuotesList";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -17,6 +16,8 @@ import EditQuote from "./EditQuote";
 import AddQuote from "./AddQuote";
 import QuoteDetail from "./QuoteDetail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useIsFocused } from "@react-navigation/native";
+import { useCustomActiveScreenStatus } from "../../../../Contexts/ActiveScreenContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,14 +40,16 @@ const QuotesLayout = ({ navigation }) => {
   );
 };
 
-const initialFormData = {
-  companyName: "",
-  email: "",
-  phoneNo: "",
-  jobs: [{}],
-};
-
 const ViewQuotes = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const { setActiveScreen } = useCustomActiveScreenStatus();
+
+  useEffect(() => {
+    if (isFocused) {
+      setActiveScreen("Quotes");
+    }
+  }, []);
+
   return (
     <Stack.Navigator>
       <Stack.Screen

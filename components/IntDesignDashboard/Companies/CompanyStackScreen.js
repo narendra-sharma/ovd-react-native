@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CompanyDetail from "./CompanyDetail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AllCompanies from "./AllCompanies";
@@ -13,16 +13,21 @@ import ViewQuotes from "./Quotes/ViewQuotes";
 import EditProject from "./Projects/EditProject";
 import QuoteDetail from "./Quotes/QuoteDetail";
 import ProjectDetail from "./Projects/ProjectDetail";
-import TaskDetail from "./Projects/Tasks/TaskDetail";
-import EditTask from "./Projects/Tasks/EditTask";
+// import TaskDetail from "./Projects/Tasks/TaskDetail";
+// import EditTask from "./Projects/Tasks/EditTask";
 import AddCompany from "./AddCompany";
 import ViewCommissions from "./Commissions/ViewCommissions";
 import CommissionDetail from "./Commissions/CommissionDetail";
 import EditCommission from "./Commissions/EditCommission";
-import ViewUsers from "./User/ViewUsers";
-import UserDetail from "./User/UserDetails";
-import EditUser from "./User/EditUser";
-import AddUser from "./User/AddUser";
+import ViewUsers from "./Users/ViewUsers";
+import UserDetail from "./Users/UserDetails";
+import EditUser from "./Users/EditUser";
+import AddUser from "./Users/AddUser";
+import AddQuote from "./Quotes/AddQuote";
+import EditQuote from "./Quotes/EditQuote";
+import AddProject from "./Projects/AddProject";
+import { useIsFocused } from "@react-navigation/native";
+import { useCustomActiveScreenStatus } from "../../../Contexts/ActiveScreenContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +66,15 @@ const DropdownMenu = ({ navigation }) => {
 };
 
 const CompanyStackScreen = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const { setActiveScreen } = useCustomActiveScreenStatus();
+
+  useEffect(() => {
+    if (isFocused) {
+      setActiveScreen("Manage Companies");
+    }
+  }, []);
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -77,6 +91,7 @@ const CompanyStackScreen = ({ navigation }) => {
               style={{ marginRight: 30 }}
             />
           ),
+          headerRight: () => <DropdownMenu navigation={navigation} />,
         })}
       />
       <Stack.Screen
@@ -103,11 +118,18 @@ const CompanyStackScreen = ({ navigation }) => {
         name="Edit Company Details"
         component={EditCompanyDetails}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Projects"
         component={ViewProjects}
         options={({ navigation }) => ({
           title: "My Projects",
+        })}
+      /> */}
+      <Stack.Screen
+        name="Add Project"
+        component={AddProject}
+        options={({ navigation }) => ({
+          title: "Add Project",
         })}
       />
       <Stack.Screen
@@ -124,39 +146,47 @@ const CompanyStackScreen = ({ navigation }) => {
           title: "Edit Project",
         })}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Task Detail"
         component={TaskDetail}
         options={({ navigation }) => ({
           title: "Task Detail",
         })}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="Edit Task"
         component={EditTask}
         options={({ navigation }) => ({
           title: "Edit Task",
         })}
-      />
-      <Stack.Screen
-        name="Quote Details"
-        component={QuoteDetail}
-        options={({ navigation }) => ({
-          title: "Quotes",
-        })}
-      />
+      /> */}
+
       <Stack.Screen
         name="View Quotes"
         component={ViewQuotes}
+        options={({ navigation }) => ({
+          title: "All Quotes",
+        })}
+      />
+      <Stack.Screen
+        name="Add Quote"
+        component={AddQuote}
         options={({ navigation }) => ({
           title: "Quotes",
         })}
       />
       <Stack.Screen
         name="Edit Quote"
-        component={EditProject}
+        component={EditQuote}
         options={({ navigation }) => ({
           title: "Edit Quote",
+        })}
+      />
+      <Stack.Screen
+        name="Quote Details"
+        component={QuoteDetail}
+        options={({ navigation }) => ({
+          title: "Quote Detail",
         })}
       />
       <Stack.Screen name="Commissions" component={ViewCommissions} />

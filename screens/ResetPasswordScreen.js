@@ -87,7 +87,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
     ) {
       try {
         const res = await apiResetPassword({
-          username: route.params.username,
+          email: route.params.email,
           password: formData.newPassword,
           password_confirmation: formData.confirmPassword,
           otp: route.params.otp,
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
 
   submitButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 5,
     width: "80%",

@@ -1,14 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Pressable,
-  ToastAndroid,
-} from "react-native";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { apiChangePasswordFromDashboard } from "../../../apis/auth";
+import Toast from "react-native-root-toast";
+import { useFocusEffect } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { useCustomActiveScreenStatus } from "../../../Contexts/ActiveScreenContext";
 
 const passwords = {
   oldPassword: "",
@@ -26,6 +23,12 @@ const ChangePassword = ({ navigation }) => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
 
+  const isFocused = useIsFocused();
+  if (isFocused) {
+    const { setActiveScreen } = useCustomActiveScreenStatus();
+    setActiveScreen("Change Password");
+  }
+
   const passRef = useRef(false);
 
   useEffect(() => {
@@ -33,11 +36,17 @@ const ChangePassword = ({ navigation }) => {
     console.log(passRef.current);
   }, []);
 
-  useEffect(() => {
-    setOldPasswordError(null);
-    setNewPasswordError(null);
-    setConfirmPasswordError(null);
-  }, [navigation]);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      setOldPasswordError(null);
+      setNewPasswordError(null);
+      setConfirmPasswordError(null);
+
+      return () => (isActive = false);
+    }, [])
+  );
 
   // useEffect(() => {});
 
@@ -73,7 +82,7 @@ const ChangePassword = ({ navigation }) => {
   //check if the passwords are matching
   const validateOldPassword = (value) => {
     if (value == "") {
-      setOldPasswordError("*Required");
+      setOldPasswordError("Current password is required");
       return false;
     }
     return true;
@@ -82,7 +91,7 @@ const ChangePassword = ({ navigation }) => {
   //handle password validation
   const validatePassword = (password) => {
     if (password == "") {
-      setNewPasswordError("*Required");
+      setNewPasswordError("New password is required");
       return false;
     }
 
@@ -101,7 +110,7 @@ const ChangePassword = ({ navigation }) => {
   //check if the passwords are matching
   const validateConfirmPassword = (value) => {
     if (value == "") {
-      setConfirmPasswordError("*Required");
+      setConfirmPasswordError("Confirm password is required");
       return false;
     }
     if (value == formData.newPassword) {
@@ -128,29 +137,31 @@ const ChangePassword = ({ navigation }) => {
         });
         console.log(res.data);
         if (res.status == 200) {
-          ToastAndroid.show(
-            "Password changed successfully",
-            ToastAndroid.SHORT
-          );
+          Toast.show("Password changed successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
           navigation.navigate("Home");
         }
       } catch (error) {
-        ToastAndroid.show("Password changed failed", ToastAndroid.SHORT);
+        Toast.show("Password change failed", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
         console.log(error);
       }
-    }
-    if (
-      !validateOldPassword(formData.oldPassword) ||
-      !validatePassword(formData.newPassword) ||
-      !validateConfirmPassword(formData.confirmPassword)
-    ) {
-      console.log("no");
-    }
-    if (
-      !validatePassword(formData.newPassword) ||
-      !validateConfirmPassword(formData.confirmPassword)
-    ) {
-      console.log("no");
+    } else {
+      validateOldPassword(formData.oldPassword);
+      validatePassword(formData.newPassword);
+      validateConfirmPassword(formData.confirmPassword);
     }
   };
 
@@ -163,23 +174,25 @@ const ChangePassword = ({ navigation }) => {
       }}
     >
       {/**********  INPUT PASSWORDS VIEW *********/}
-      <View style={{ width: "80%", display: "flex" }}>
-        <Text>Enter Old Password: </Text>
+      <View style={{ width: "100%", display: "flex", paddingHorizontal: 15 }}>
+        <Text style={styles.fieldName}>Enter Current Password:</Text>
         <View
           style={[
             {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
+              alignItems: "center",
             },
             styles.input,
           ]}
         >
           <TextInput
+            style={{ width: "100%" }}
             ref={passRef}
             autoCorrect={false}
             name="oldPassword"
-            placeholder="Old Password"
+            placeholder="Current Password"
             value={formData.oldPassword}
             onChangeText={(text) => handleChange(text, "oldPassword")}
             secureTextEntry={isOldPasswordVisible ? false : true}
@@ -196,7 +209,7 @@ const ChangePassword = ({ navigation }) => {
           <Text style={styles.errorText}>{oldPasswordError}</Text>
         ) : null}
 
-        <Text>Enter New Password: </Text>
+        <Text style={styles.fieldName}>Enter New Password: </Text>
         <View
           style={[
             {
@@ -209,6 +222,7 @@ const ChangePassword = ({ navigation }) => {
         >
           <TextInput
             name="newPassword"
+            style={{ width: "100%" }}
             placeholder="New Password"
             value={formData.newPassword}
             onChangeText={(text) => handleChange(text, "newPassword")}
@@ -226,7 +240,7 @@ const ChangePassword = ({ navigation }) => {
           <Text style={styles.errorText}>{newPasswordError}</Text>
         ) : null}
 
-        <Text>Confirm New Password: </Text>
+        <Text style={styles.fieldName}>Confirm New Password: </Text>
         <View
           style={[
             {
@@ -239,6 +253,7 @@ const ChangePassword = ({ navigation }) => {
         >
           <TextInput
             name="confirmPassword"
+            style={{ width: "100%" }}
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChangeText={(text) => handleChange(text, "confirmPassword")}
@@ -255,11 +270,11 @@ const ChangePassword = ({ navigation }) => {
         {confirmPasswordError ? (
           <Text style={styles.errorText}>{confirmPasswordError}</Text>
         ) : null}
-      </View>
 
-      <Pressable onPress={handleSubmit} style={styles.submitButton}>
-        <Text style={styles.submitText}>Submit</Text>
-      </Pressable>
+        <Pressable onPress={handleSubmit} style={styles.submitButton}>
+          <Text style={styles.submitText}>Submit</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -278,21 +293,33 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderWidth: 1,
-    height: 35,
-    marginBottom: 5,
-    marginTop: 10,
+    width: "100%",
+    fontSize: 16,
+    marginTop: 2,
     padding: 5,
     borderRadius: 5,
+    paddingHorizontal: 8,
+    height: 44,
+    minWidth: "100%",
+    borderColor: "gray",
+    borderWidth: 0.5,
   },
 
   submitButton: {
-    margin: 10,
-    backgroundColor: "#B76E79",
+    marginTop: 15,
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 5,
-    width: "80%",
+    width: "100%",
     alignItems: "center",
+    justifyContent: "space-between",
+    alignContent: "space-around",
+  },
+
+  fieldName: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
   },
 
   submitText: {

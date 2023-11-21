@@ -19,7 +19,7 @@ import { Country, State, City } from "country-state-city";
 
 const initialCompanyData = {
   name: "",
-  vat_number: "",
+  // vat_number: "",
   email: "",
   phoneNo: "",
   address: "",
@@ -241,7 +241,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
     if (
       validateCompanyName(companyData.name) &&
       validateAddress(companyData.address) &&
-      validateVat(companyData.vat_number) &&
+      // validateVat(companyData.vat_number) &&
       // validateEmail(companyData.email) &&
       // validatePhone(companyData.phoneNo) &&
       // validateCm(companyData.consultantManager) &&
@@ -295,7 +295,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
     } else {
       validateCompanyName(companyData.name);
       validateAddress(companyData.address);
-      validateVat(companyData.vat_number);
+      // validateVat(companyData.vat_number);
       // validateEmail(companyData.email);
       validateCm(companyData.consultantManager);
       validateConsultant(companyData.consultant);
@@ -324,6 +324,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
+          {/*
           <Text style={styles.fieldName}>VAT Number:</Text>
           <TextInput
             style={styles.input}
@@ -336,7 +337,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
             placeholder="VAT Number"
           />
           {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
-          {/* 
+           
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
@@ -367,7 +368,6 @@ const EditCompanyDetails = ({ navigation, route }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null} */}
 
-          {/* Dropdowns */}
           <Text style={styles.fieldName}>Assign Customer:</Text>
           <DropdownMenu
             data={customersList}
@@ -396,9 +396,9 @@ const EditCompanyDetails = ({ navigation, route }) => {
             setValue={setCompanyData}
             label="consultant_id"
             originalObj={companyData}
-          /> */}
+          /> 
 
-          {/* <Text style={styles.fieldName}>Contractor:</Text>
+          <Text style={styles.fieldName}>Contractor:</Text>
           <DropdownMenu
             data={contractorsList}
             placeholder="Select Contractor"
@@ -500,7 +500,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -560,7 +560,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
@@ -580,13 +580,13 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
         <View style={styles.bothButtons}>
           <Pressable style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             style={[styles.submitButton, styles.cancelBtn]}
             onPress={() => navigation.goBack()}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -721,13 +721,13 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    marginTop: 10
+    marginTop: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   errorText: {

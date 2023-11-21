@@ -61,7 +61,7 @@ const OtpInput = ({
         delay: 0,
       });
       const res = await apiVerifyOtp({
-        username: route.params.username,
+        email: route.params.email,
         otp: code,
       });
       if (res.data.status == true) {
@@ -74,7 +74,7 @@ const OtpInput = ({
           delay: 0,
         });
         navigation.navigate("Reset Password", {
-          username: route.params.username,
+          email: route.params.email,
           otp: code,
         });
       } else {
@@ -104,7 +104,7 @@ const OtpInput = ({
   return (
     <Pressable style={styles.otpInputContainer} onPress={Keyboard.dismiss}>
       <View style={styles.otpInputContainer}>
-        <Text style={{fontSize: 16}}>Enter the 4-digit code:</Text>
+        <Text style={{ fontSize: 16 }}>Enter the 4-digit code:</Text>
         <Pressable
           onPress={handleOnPress}
           style={styles.splitOTPBoxesContainer}
@@ -157,7 +157,7 @@ const OtpInput = ({
           <Text style={styles.submitText}> Submit </Text>
         </TouchableOpacity>
 
-        <ResendOtp username={route?.params?.username} />
+        <ResendOtp email={route?.params?.email} />
       </View>
     </Pressable>
   );
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginBottom: 10,
-    marginTop: 12
+    marginTop: 12,
   },
 
   splitBoxes: {
@@ -200,12 +200,12 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     borderRadius: 7,
-    backgroundColor: "#ffff"
+    backgroundColor: "#ffff",
   },
 
   splitBoxesFocused: {
     marginTop: 10,
-    borderColor: "#d3b4ed",
+    borderColor: "#696cff",
     borderWidth: 1,
     padding: "12px",
     width: 40,
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     borderRadius: 7,
-    backgroundColor: "#ffff"
+    backgroundColor: "#ffff",
   },
 
   splitBoxText: {
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "64%",
     alignItems: "center",
-    marginBottom: 15
+    marginBottom: 15,
   },
 
   submitText: {

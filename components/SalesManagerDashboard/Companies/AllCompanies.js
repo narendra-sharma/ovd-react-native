@@ -3,20 +3,27 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  View,
   Pressable,
-  Modal,
+  View,
   Alert,
-  TextInput,
+  TouchableNativeFeedback,
 } from "react-native";
-import { mockData } from "./MOCK_DATA";
+import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
-import { apiGetAllCompanies } from "../../../apis/companies";
+import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
 
+const randomHexColor = () => {
+  return "#b7d0d1";
+};
+
 const AllCompanies = ({ navigation }) => {
-  const [companiesList, setCompaniesList] = useState(mockData);
+  const [companiesList, setCompaniesList] = useState([]);
+  const [deleteFlag, setDeteleFlag] = useState(false);
+  const [rippleColor, setRippleColor] = useState(randomHexColor());
+  const [rippleRadius, setRippleRadius] = useState(10);
+  const [rippleOverflow, setRippleOverflow] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -37,25 +44,61 @@ const AllCompanies = ({ navigation }) => {
       return () => {
         isActive = false;
       };
-    }, [])
+    }, [deleteFlag])
   );
 
-  useEffect(() => {
-    const getAllCompanies = async () => {
+  // useEffect(() => {
+  //   const getAllCompanies = async () => {
+  //     try {
+  //       const res = await apiGetAllCompanies();
+  //       console.log(res.data.data);
+  //       setCompaniesList([...res.data.data]);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getAllCompanies();
+  // }, []);
+
+  //function to delete the company
+  const handleDeleteCompany = async (companyName, companyId) => {
+    const deleteCompany = async () => {
       try {
-        const res = await apiGetAllCompanies();
-        console.log(res.data.data);
-        setCompaniesList([...res.data.data]);
+        const res = await apiDeleteCompany(companyId);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          setDeteleFlag((prev) => !prev);
+          Toast.show("Company Deleted Successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+          // navigation.navigate("All Companies");
+        }
       } catch (error) {
         console.log(error);
       }
     };
-    getAllCompanies();
-  }, []);
+    Alert.alert(
+      `Delete ${companyName}`,
+      `Are you sure you want to delete ${companyName}?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => deleteCompany() },
+      ]
+    );
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* <Pressable
+      <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Company");
@@ -65,24 +108,74 @@ const AllCompanies = ({ navigation }) => {
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> Add New
         </Text>
-      </Pressable> */}
+      </Pressable>
 
       <FlatList
+        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+        // style={{ height: 100 }}
         data={companiesList}
         renderItem={({ item }) => (
           <>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Company Details", { id: item.id });
-              }}
-              style={styles.listItem}
-            >
-              <Text style={styles.item}>{item.name}</Text>
-              <Icon name="angle-right" size={28} />
+            <Pressable style={styles.listItem}>
+              <Pressable
+                style={{ width: "76%" }}
+                onPress={() => {
+                  navigation.navigate("Company Details", { id: item.id });
+                  // navigation.setOptions({ title: "Updated!" });
+                }}
+              >
+                <Text style={styles.item}>{item.name}</Text>
+              </Pressable>
+
+              <View style={styles.iconsContainer}>
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
+                    navigation.navigate("Edit Company Details", {
+                      company: item,
+                      id: item.id,
+                    });
+                    // setRippleOverflow(!rippleOverflow);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon
+                        name="pen"
+                        size={18}
+                        color="#444"
+                      />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setRippleColor(randomHexColor());
+                    handleDeleteCompany(item.name, item.id);
+                    // setRippleOverflow(!rippleOverflow);
+                  }}
+                  background={TouchableNativeFeedback.Ripple(
+                    rippleColor,
+                    rippleOverflow
+                  )}
+                >
+                  <View style={styles.touchable}>
+                    <Text style={styles.text}>
+                      <Icon name="trash-alt" size={18} color="#444" />
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+              </View>
             </Pressable>
           </>
         )}
       />
+      {/* <Signature /> */}
     </ScrollView>
   );
 };
@@ -93,37 +186,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 22,
-    justifyContent: "center",
-    alignItems: "center",
     width: "100%",
     height: "100%",
-  },
-
-  centeredView: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    marginTop: 10,
-    height: "80%",
-    padding: 20,
-  },
-
-  modalView: {
-    margin: 10,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
+    padding: 12,
+    justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: "90%",
-    height: "80%",
   },
 
   button: {
@@ -137,25 +204,11 @@ const styles = StyleSheet.create({
     alignContent: "space-around",
   },
 
-  buttonClose: {
-    backgroundColor: "#B76E79",
-  },
-
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-
   listItem: {
     backgroundColor: "#fff",
     margin: 2,
-    width: "80%",
+    minWidth: "98%",
+    maxWidth: "98%",
     display: "flex",
     flexDirection: "row",
     borderWidth: 1,
@@ -167,31 +220,35 @@ const styles = StyleSheet.create({
   item: {
     padding: 10,
     fontSize: 16,
+    // maxW,
   },
 
-  input: {
-    width: 300,
-    height: 35,
-    marginTop: 2,
-    marginBottom: 10,
-    padding: 5,
-    borderRadius: 5,
-    minWidth: 80,
-    paddingHorizontal: 8,
-    height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
+  iconsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    // backgroundColor: "pink",
+    padding: 2,
+    marginHorizontal: 8,
+    width: "20%",
+    justifyContent: "space-between",
+  },
+
+  rippleView: {
+    padding: 2,
+    borderRadius: 10,
+    overflow: "hidden",
   },
 
   addButton: {
     margin: 5,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 5,
     width: "40%",
     alignItems: "center",
     justifyContent: "space-between",
     alignContent: "space-around",
+    marginBottom: 20,
   },
 
   addText: {

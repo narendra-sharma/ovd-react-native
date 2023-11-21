@@ -38,16 +38,23 @@ const initialFormData = {
 };
 
 const itemsForm = {
-  itemName: "",
-  itemDescription: "",
+  item_name: "",
+  item_description: "",
   quantity: "",
-  itemCostPerQuantity: "",
-  itemTax: "",
+  cost: "",
+  tax: "",
   itemTotalCost: "",
 };
 
 /////////////******** ITEMS FORM **********/////////////////
-const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
+const ItemForm = ({
+  item,
+  itemsList,
+  setItemsList,
+  idx,
+  itemsValidations,
+  setItemsValidations,
+}) => {
   const handleRemoveItem = () => {
     let tempList = itemsList.filter((item, index) => index != idx);
     console.log("temp list", tempList);
@@ -57,8 +64,12 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
   //handle change input text
   const handleChange = (text, label) => {
     let tempList = [...itemsList];
+    let tempErrList = [...itemsValidations];
 
     tempList[idx][label] = text;
+    if (tempErrList[idx]) {
+      tempErrList[idx][label] = null;
+    }
 
     if (label == "quantity" || label == "cost" || label == "tax") {
       tempList[idx].total_cost = (
@@ -68,6 +79,7 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
     }
 
     setItemsList([...tempList]);
+    setItemsValidations([...tempErrList]);
     // console.log("items list", itemsList);
   };
 
@@ -84,6 +96,9 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
         onChangeText={(text) => handleChange(text, "item_name")}
         placeholder="Item Name"
       />
+      {itemsValidations[idx]?.item_name ? (
+        <Text style={styles.errorText}>{itemsValidations[idx].item_name}</Text>
+      ) : null}
 
       <Text style={styles.fieldName}>Item Description:</Text>
       <TextInput
@@ -93,6 +108,11 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
         onChangeText={(text) => handleChange(text, "description")}
         placeholder="Description"
       />
+      {itemsValidations[idx]?.description ? (
+        <Text style={styles.errorText}>
+          {itemsValidations[idx].description}
+        </Text>
+      ) : null}
 
       <View
         style={{
@@ -110,6 +130,11 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
             onChangeText={(text) => handleChange(text, "quantity")}
             placeholder="Quantity"
           />
+          {itemsValidations[idx]?.quantity ? (
+            <Text style={styles.errorText}>
+              {itemsValidations[idx].quantity}
+            </Text>
+          ) : null}
         </View>
 
         <View>
@@ -121,6 +146,9 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
             onChangeText={(text) => handleChange(text, "cost")}
             placeholder="Cost Per Quantity"
           />
+          {itemsValidations[idx]?.cost ? (
+            <Text style={styles.errorText}>{itemsValidations[idx].cost}</Text>
+          ) : null}
         </View>
       </View>
 
@@ -140,6 +168,9 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
             onChangeText={(text) => handleChange(text, "tax")}
             placeholder="Tax %"
           />
+          {itemsValidations[idx]?.tax ? (
+            <Text style={styles.errorText}>{itemsValidations[idx].tax}</Text>
+          ) : null}
         </View>
 
         <View>
@@ -167,6 +198,7 @@ const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
   );
 };
 
+//***************** MAIN FORM ******************//
 const EditQuote = ({ navigation, route }) => {
   const [nameError, setNameError] = useState(null);
   const [customerError, setCustomerError] = useState(null);
@@ -188,13 +220,14 @@ const EditQuote = ({ navigation, route }) => {
   const [projectList, setProjectList] = useState([]);
   const [consultantList, setConsultantList] = useState([]);
   const [consultantManagerList, setConsultantManagerList] = useState([]);
+  const [itemsValidations, setItemsValidations] = useState([]);
 
   // console.log(route.params.id);
 
   useEffect(() => {
     const getAllData = async () => {
       const res = await apiGetQuoteDetails(route.params.id);
-      console.log("quotes data:", res.data);
+      console.log("quote data:", res.data.quotes);
       setFormData({ ...res.data.quotes });
 
       const tempCompanies = res.data.companies.map((company) => {
@@ -366,6 +399,70 @@ const EditQuote = ({ navigation, route }) => {
     return true;
   };
 
+  const itemValidations = () => {
+    let temp = [];
+    let flag = true;
+    let reg = /^\d*\.?\d*$/;
+
+    itemsList.map((item, idx) => {
+      if (
+        item.item_name != "" &&
+        item.item_description != "" &&
+        item.quantity != "" &&
+        item.cost != "" &&
+        item.tax != "" &&
+        item.itemTotalCost != "" &&
+        reg.test(item.quantity) == true &&
+        reg.test(item.cost) == true &&
+        reg.test(item.tax) == true
+      ) {
+        console.log("no errors apparently");
+        temp.push({});
+      } else {
+        let obj = {};
+        if (item.item_name == "") {
+          obj.item_name = "Name is required*";
+        }
+
+        if (item.item_description == "") {
+          obj.item_description = "Description is required*";
+        }
+
+        if (item.quantity == "") {
+          obj.quantity = "Quantity is required*";
+        } else {
+          if (reg.test(item.quantity) == false) {
+            obj.quantity = "Only number values are allowed";
+          }
+        }
+
+        if (item.cost == "") {
+          obj.cost = "Cost per quantity is required*";
+        } else {
+          if (reg.test(item.cost) == false) {
+            obj.cost = "Only number values are allowed";
+          }
+        }
+
+        if (item.tax == "") {
+          obj.tax = "Tax is required*";
+        } else {
+          if (reg.test(item.tax) == false) {
+            obj.tax = "Only number values are allowed";
+          }
+        }
+
+        temp.push(obj);
+        flag = false;
+      }
+    });
+
+    setItemsValidations([...temp]);
+    console.log("items validations: ", temp);
+
+    return flag;
+  };
+
   //handle new quote submit
   const handleSubmit = async () => {
     if (
@@ -379,7 +476,8 @@ const EditQuote = ({ navigation, route }) => {
       validateTotalAmount(formData.total_cost) &&
       validateDescription(formData.description) &&
       validateTitle(formData.name) &&
-      validateCm(formData.cons_manager_id)
+      validateCm(formData.cons_manager_id) &&
+      itemValidations()
     ) {
       //refine data according to api
       let item_name = [];
@@ -407,6 +505,7 @@ const EditQuote = ({ navigation, route }) => {
             consultant_manager: formData.cons_manager_id,
             consultant: formData.consultant_id,
             total_amount: formData.total_cost,
+            discount_percent: formData.discount,
             item_name: item_name,
             item_description: item_description,
             quantity: quantity,
@@ -462,8 +561,31 @@ const EditQuote = ({ navigation, route }) => {
       validateDescription(formData.description);
       validateTitle(formData.name);
       validateCm(formData.cons_manager_id);
+      itemValidations();
     }
   };
+
+  //autocompute the values
+  useEffect(() => {
+    let tempList = itemsList.map((item) => item.total_cost);
+
+    tempList.reduce((subTotal, cost) => {
+      subTotal += Number(cost);
+      const discountPercent = Number(formData.discount) || 0;
+      console.log("discount ", discountPercent);
+      console.log(
+        "total amount",
+        Number(subTotal) - (Number(subTotal) * 10) / 100
+      );
+      setFormData({
+        ...formData,
+        sub: Number(subTotal),
+        total_cost:
+          Number(subTotal) - (Number(subTotal) * discountPercent) / 100,
+      });
+      return Number(subTotal);
+    }, 0);
+  }, [itemsList, formData.discount]);
 
   return (
     <View style={styles.mainContainer}>
@@ -643,6 +765,8 @@ const EditQuote = ({ navigation, route }) => {
                   itemsList={itemsList}
                   setItemsList={setItemsList}
                   idx={idx}
+                  itemsValidations={itemsValidations}
+                  setItemsValidations={setItemsValidations}
                 />
               );
             })}
@@ -661,8 +785,78 @@ const EditQuote = ({ navigation, route }) => {
             </Text>
           </Pressable>
 
-          <Text style={styles.fieldName}>Total Amount:</Text>
-          <TextInput
+          {itemsList.length > 0 && (
+            <View style={styles.itemFormContainer}>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ marginRight: "2%" }}>
+                  <Text style={styles.fieldName}>Subtotal:</Text>
+                  <Text
+                    style={[
+                      styles.input,
+                      {
+                        minWidth: "49%",
+                        backgroundColor: "#e5e5e5",
+                        color: "gray",
+                      },
+                    ]}
+                  >
+                    {formData.sub}
+                  </Text>
+                  {/* <TextInput
+                  style={[styles.input, { minWidth: "49%" }]}
+                  name="name"
+                  // value={quantity}
+                  onChangeText={(text) => {
+                    // setFormData({ ...formData, name: text });
+                    // setTitleError(null);
+                  }}
+                  placeholder="Subtotal"
+                /> */}
+                </View>
+
+                <View>
+                  <Text style={styles.fieldName}>Discount:</Text>
+                  <TextInput
+                    style={[styles.input, { minWidth: "49%" }]}
+                    name="discount"
+                    value={formData.discount}
+                    onChangeText={(text) => {
+                      setFormData({ ...formData, discount: text });
+                      setDiscountError(null);
+                    }}
+                    placeholder="Discount %"
+                  />
+                  {discountError ? (
+                    <Text style={styles.errorText}>{discountError}</Text>
+                  ) : null}
+                </View>
+              </View>
+
+              <Text style={styles.fieldName}>Total Amount:</Text>
+              <Text
+                style={[
+                  styles.input,
+                  {
+                    minWidth: "49%",
+                    backgroundColor: "#e5e5e5",
+                    color: "gray",
+                  },
+                ]}
+              >
+                {formData.total_cost}
+              </Text>
+              {totalAmountError ? (
+                <Text style={styles.errorText}>{totalAmountError}</Text>
+              ) : null}
+            </View>
+          )}
+          {/* <TextInput
             style={styles.input}
             name="total_cost"
             value={formData.total_cost}
@@ -671,7 +865,7 @@ const EditQuote = ({ navigation, route }) => {
               setTotalAmountError(null);
             }}
             placeholder="Total Amount"
-          />
+          /> */}
           {totalAmountError ? (
             <Text style={styles.errorText}>{totalAmountError}</Text>
           ) : null}

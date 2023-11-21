@@ -241,7 +241,7 @@ const ProjectsList = ({ navigation, companyId }) => {
                   onPress={() =>
                     handleClicked(item.project_name, item.id, item.status)
                   }
-                  name="tasks"
+                  name="check-square"
                   size={22}
                   color="#444"
                 />

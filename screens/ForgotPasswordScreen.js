@@ -11,40 +11,40 @@ import { apiSendForgotPasswordCode } from "../apis/auth";
 import Toast from "react-native-root-toast";
 
 const ForgotPasswordScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [usernameError, setUsernameError] = useState(null);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(null);
 
   //handle change in input
   const handleChange = (text) => {
-    setUsername(text);
-    validateUsername(text);
+    setEmail(text);
+    validateEmail(text);
   };
 
-  //validate username
-  const validateUsername = (username) => {
-    if (username == "") {
-      setUsernameError("Username is required");
+  //validate email
+  const validateEmail = (email) => {
+    if (email == "") {
+      setEmailError("Email is required");
       return false;
     }
-    setUsernameError(null);
-    return true;
+    // setEmailError(null);
+    // return true;
 
-    // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-    // if (!reg.test(username)) {
-    //   setUsernameError("Please enter a valid username");
-    //   return false;
-    // } else {
-    //   setUsernameError(null);
-    //   return true;
-    // }
+    if (!reg.test(email.trim(u))) {
+      setEmailError("Please enter a valid email");
+      return false;
+    } else {
+      setEmailError(null);
+      return true;
+    }
   };
 
   //handle form submit
   const handleSubmit = async () => {
     try {
-      if (validateUsername(username)) {
-        const res = await apiSendForgotPasswordCode({ username: username });
+      if (validateEmail(email)) {
+        const res = await apiSendForgotPasswordCode({ email: email });
         console.log(res.data);
         if (res.data.success == true) {
           Toast.show("Code Sent", {
@@ -55,10 +55,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
             hideOnPress: true,
             delay: 0,
           });
-          navigation.navigate("OTP", { username });
-          // navigation.navigate("OTP", { username });
+          navigation.navigate("OTP", { email });
+          // navigation.navigate("OTP", { email });
         } else {
-          Toast.show("Username does not exist", {
+          Toast.show("email does not exist", {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
             shadow: true,
@@ -90,26 +90,24 @@ const ForgotPasswordScreen = ({ navigation }) => {
         justifyContent: "center",
       }}
     >
-      <Text style={styles.heading}>Enter your username:</Text>
+      <Text style={styles.heading}>Enter your email:</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          name="username"
-          placeholder="Username"
-          value={username}
+          name="email"
+          placeholder="Email"
+          value={email}
           onChangeText={(text) => handleChange(text)}
         />
-        {usernameError ? (
-          <Text style={styles.errorText}>{usernameError}</Text>
-        ) : null}
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
         <Pressable
-        onPress={handleSubmit}
-        // onPress={() => setResetTokenExists(true)}
-        style={styles.submitButton}>
-        
-        <Text style={styles.submitText}>Submit</Text>
-      </Pressable>
+          onPress={handleSubmit}
+          // onPress={() => setResetTokenExists(true)}
+          style={styles.submitButton}
+        >
+          <Text style={styles.submitText}>Submit</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );

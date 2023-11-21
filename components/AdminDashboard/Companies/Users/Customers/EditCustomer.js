@@ -95,7 +95,7 @@ const EditCustomer = ({ navigation, route }) => {
     }
     // return true;
 
-    let reg = /^[0-9]{10}$/g;
+    let reg = /^[0-9]{8}$/g;
 
     if (reg.test(num) === false) {
       setPhoneError("Please Enter a valid phone number");
@@ -162,12 +162,12 @@ const EditCustomer = ({ navigation, route }) => {
   const handleSubmit = async () => {
     if (
       validateName(formData.name) &&
-      validateUsername(formData.username) &&
-      validateOrg(formData.org) &&
+      // validateUsername(formData.username) &&
+      // validateOrg(formData.org) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
-      validateCountry(formData.country) &&
-      validateState(formData.state) &&
+      // validateCountry(formData.country) &&
+      // validateState(formData.state) &&
       validateZipcode(formData.zip_code) &&
       validateEmail(formData.email)
     ) {
@@ -209,13 +209,13 @@ const EditCustomer = ({ navigation, route }) => {
       }
       // setFormData(initialFormData);
     } else {
-      validateUsername(formData.username);
+      // validateUsername(formData.username);
       validateName(formData.name);
-      validateOrg(formData.org);
+      // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
-      validateCountry(formData.country);
-      validateState(formData.state);
+      // validateCountry(formData.country);
+      // validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
     }
@@ -242,7 +242,7 @@ const EditCustomer = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          {/* <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -255,7 +255,7 @@ const EditCustomer = ({ navigation, route }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -396,7 +396,7 @@ const EditCustomer = ({ navigation, route }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -456,7 +456,7 @@ const EditCustomer = ({ navigation, route }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
@@ -476,13 +476,13 @@ const EditCustomer = ({ navigation, route }) => {
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitText: {
