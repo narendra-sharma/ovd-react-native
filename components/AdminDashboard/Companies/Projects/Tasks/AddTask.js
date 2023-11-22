@@ -17,6 +17,7 @@ import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import * as DocumentPicker from "expo-document-picker";
 import Toast from "react-native-root-toast";
 import * as ImagePicker from "expo-image-picker";
+import { apiAddNewTask } from "../../../../../apis/tasks";
 
 const AddTask = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});

@@ -376,6 +376,7 @@ const AddCustomer = ({ navigation }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}

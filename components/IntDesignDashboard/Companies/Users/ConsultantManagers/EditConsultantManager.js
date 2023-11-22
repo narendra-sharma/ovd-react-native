@@ -104,7 +104,7 @@ const EditConsultantManager = ({ navigation, route }) => {
     }
     // return true;
 
-    let reg = /^[0-9]{10}$/g;
+    let reg = /^[0-9]{8}$/g;
 
     if (reg.test(num) === false) {
       setPhoneError("Please Enter a valid phone number");
@@ -425,6 +425,7 @@ const EditConsultantManager = ({ navigation, route }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
@@ -644,7 +645,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginTop: 10,
   },
-
 
   submitButton: {
     marginTop: 15,

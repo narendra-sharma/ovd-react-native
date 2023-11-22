@@ -95,7 +95,7 @@ const EditCustomer = ({ navigation, route }) => {
     }
     // return true;
 
-    let reg = /^[0-9]{10}$/g;
+    let reg = /^[0-9]{8}$/g;
 
     if (reg.test(num) === false) {
       setPhoneError("Please Enter a valid phone number");
@@ -387,6 +387,7 @@ const EditCustomer = ({ navigation, route }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
@@ -476,13 +477,13 @@ const EditCustomer = ({ navigation, route }) => {
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -590,7 +591,7 @@ const styles = StyleSheet.create({
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitText: {

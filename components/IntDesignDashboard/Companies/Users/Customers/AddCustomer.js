@@ -81,7 +81,7 @@ const AddCustomer = ({ navigation }) => {
     }
     // return true;
 
-    let reg = /^[0-9]{10}$/g;
+    let reg = /^[0-9]{8}$/g;
 
     if (reg.test(num) === false) {
       setPhoneError("Please Enter a valid phone number");
@@ -213,7 +213,7 @@ const AddCustomer = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -376,6 +376,7 @@ const AddCustomer = ({ navigation }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
@@ -463,16 +464,15 @@ const AddCustomer = ({ navigation }) => {
           ) : null}
         </View>
 
-        <View style={styles.bothButtons}
-        >
+        <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -522,14 +522,13 @@ const placesStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-
   formContainer: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -578,7 +577,7 @@ const styles = StyleSheet.create({
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitText: {

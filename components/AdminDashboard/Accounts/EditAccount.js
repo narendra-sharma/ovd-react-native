@@ -80,7 +80,7 @@ const EditAccount = () => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center"}}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ justifyContent: "center", padding: 10 }}
@@ -216,6 +216,7 @@ const EditAccount = () => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}

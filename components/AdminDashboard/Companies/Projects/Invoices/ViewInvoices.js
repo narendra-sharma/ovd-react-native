@@ -18,7 +18,7 @@ const InvoiceLayout = ({ navigation, projectId }) => {
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          navigation.navigate("Add Invoice");
+          navigation.navigate("Add Invoice", { id: projectId });
         }}
       >
         <Text style={styles.addText}>

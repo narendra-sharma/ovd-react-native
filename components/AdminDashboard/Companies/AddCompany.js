@@ -172,7 +172,7 @@ const AddCompany = ({ navigation }) => {
   //   }
   //   // return true;
 
-  //   let reg = /^[0-9]{10}$/g;
+  //   let reg = /^[0-9]{8}$/g;
 
   //   if (reg.test(num) === false) {
   //     setPhoneError("Please Enter a valid phone number");
@@ -519,6 +519,7 @@ const AddCompany = ({ navigation }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}

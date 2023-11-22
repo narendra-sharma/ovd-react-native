@@ -12,7 +12,6 @@ import {
 import { mockData } from "../MOCK_DATA";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import ProjectsList from "./ProjectsList";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import EditProject from "./EditProject";
