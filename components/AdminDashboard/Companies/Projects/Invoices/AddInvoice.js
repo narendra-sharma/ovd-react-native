@@ -7,8 +7,9 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  TouchableOpacity,
+  Button,
 } from "react-native";
-import Toast from "react-native-root-toast";
 // import { apiCreateNewCompany, apiGetAllUsers } from "../../../apis/companies";
 import { Dropdown } from "react-native-element-dropdown";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -16,7 +17,10 @@ import {
   apiAddInvoice,
   apiGetCreateInvoiceData,
 } from "../../../../../apis/invoices";
+import * as DocumentPicker from "expo-document-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from "moment";
+import Toast from "react-native-root-toast";
 
 const initialFormData = {
   name: "",
@@ -197,13 +201,15 @@ const ItemForm = ({
 };
 
 /////////////******** MAIN ADD QUOTE FORM **********///////////////
-const AddInvoice = ({ navigation }) => {
+const AddInvoice = ({ navigation, route }) => {
   const [itemsList, setItemsList] = useState([{ ...itemsForm }]);
   const [formData, setFormData] = useState(initialFormData);
-  const [projectsList, setProjectsList] = useState([]);
-  const [invoiceDate, setInvoiceDate] = useState();
-  const [isInvoiceDatePickerVisible, setInvoiceDateVisibility] =
+  const [projectData, setProjectData] = useState([]);
+  const [paymentDate, setPaymentDate] = useState();
+  const [isPaymentDatePickerVisible, setPaymentDateVisibility] =
     useState(false);
+  const [document, setDocument] = useState(null);
+  const [isFilePicked, setIsFilePicked] = useState(false);
 
   const [nameError, setNameError] = useState(null);
   const [titleError, setTitleError] = useState(null);
@@ -222,28 +228,60 @@ const AddInvoice = ({ navigation }) => {
 
   useEffect(() => {
     const getAllData = async () => {
-      const res = await apiGetCreateInvoiceData();
-      const tempProjects = res?.data?.projects?.map((project) => {
-        return {
-          label: project.project_name,
-          value: project.id,
-          ...project,
-        };
+      const res = await apiGetCreateInvoiceData(route?.params?.id);
+      setFormData({
+        ...formData,
+        invoice_number: res?.data?.invoice_number,
+        project: res?.data?.project?.id,
+        projectName: res?.data?.project?.project_name,
+        quotation: res?.data?.project?.quotes_id,
+        quotationName: res?.data?.project?.quotes?.name,
+        admin: res?.data?.project?.admin_id,
+        adminName: res?.data?.project?.assign_to?.name,
+        company: res?.data?.project?.company_id,
+        companyName: res?.data?.project?.company?.name,
+        customer: res?.data?.project?.customer_id,
+        customerName: res?.data?.project?.customer?.name,
+        consultant_manager: res?.data?.project?.cons_manager_id,
+        consultantManagerName: res?.data?.project?.consultant_manager?.name,
+        consultant_id: res?.data?.project?.consultant_id,
+        consultantName: res?.data?.project?.consultant?.name,
+        description: res?.data?.project?.description,
+        discount_percent: res?.data?.project?.quotes_items[0]?.discount_percent,
+        total_amount: 0,
       });
-      setProjectsList([...tempProjects]);
-      setFormData({ ...formData, invoice_number: res?.data?.invoice_number });
+      setProjectData({ ...res?.data?.project });
+      setItemsList([...res?.data?.project?.quotes_items]);
     };
     getAllData();
   }, []);
 
-  useEffect(() => {
-    const getConsultantData = async () => {
-      const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
-      // console.log("consultants", res.data);
-    };
+  //handle file upload
+  const UploadFile = async () => {
+    let result = await DocumentPicker.getDocumentAsync();
+    console.log(result.assets[0].uri);
+    if (result.assets[0].uri) {
+      setIsFilePicked(true);
 
-    getConsultantData();
-  }, [formData.consultant_manager]);
+      setDocument({
+        document: result.assets[0].uri,
+        fileName: result.assets[0].name,
+        fileType: result.assets[0].mimeType,
+      });
+
+      // console.log(docs);
+    }
+  };
+
+  //date functions
+  const hidePayementDatePicker = () => {
+    setPaymentDateVisibility(false);
+  };
+
+  const handleStartDateConfirm = (date) => {
+    setPaymentDate(date);
+    hidePayementDatePicker();
+  };
 
   //validation functions
   const validateTitle = (name, label = "Name") => {
@@ -476,6 +514,22 @@ const AddInvoice = ({ navigation }) => {
     // )
     // {
     //refine data according to api
+    const form_data = new FormData();
+
+    let tasksString = JSON.stringify(formData?.tasks?.map((task) => task?.id));
+    tasksString = [tasksString?.substring(1, tasksString?.length - 1)];
+    console.log(tasksString);
+
+    for (var key in formData) {
+      form_data.append(key, formData[key]);
+    }
+
+    form_data.append("document", {
+      uri: document.document,
+      type: document.fileType,
+      name: document.fileName,
+    });
+
     let item_name = [];
     let item_description = [];
     let quantity = [];
@@ -485,37 +539,27 @@ const AddInvoice = ({ navigation }) => {
 
     itemsList.map((item) => {
       item_name.push(item.item_name);
-      item_description.push(item.description);
-      quantity.push(item.quantity);
-      cost.push(item.cost);
-      tax.push(item.tax);
-      total_cost.push(item.total_cost);
-    });
+      form_data.append("item_name[]", item.item_name);
 
-    let tasksString = JSON.stringify(formData?.tasks?.map((task) => task?.id));
-    tasksString = [tasksString.substring(1, tasksString.length - 1)];
-    console.log(tasksString);
+      item_description.push(item.description);
+      form_data.append("item_description[]", item.item_description);
+
+      quantity.push(item.quantity);
+      form_data.append("quantity[]", item.quantity);
+
+      cost.push(item.cost);
+      form_data.append("cost[]", item.cost);
+
+      tax.push(item.tax);
+      form_data.append("tax[]", item.tax);
+
+      total_cost.push(item.total_cost);
+      form_data.append("total_cost[]", item.total_cost);
+    });
 
     try {
       console.log(formData);
-      const res = await apiAddInvoice({
-        ...formData,
-        status: 1,
-        item_name: item_name,
-        item_description: item_description,
-        quantity: quantity,
-        cost: cost,
-        tax: tax,
-        total_cost: total_cost,
-        quotation: formData?.quotes?.id,
-        admin: formData?.assign_to?.id,
-        company: formData?.company?.id,
-        customer: formData?.customer?.id,
-        consultant_manager: formData?.consultant_manager?.id,
-        consultant: formData?.consultant?.id,
-        total_amount: formData?.total_amount,
-        tasks_id: tasksString,
-      });
+      const res = await apiAddInvoice(form_data);
       console.log("response: ");
       console.log(res.data);
       if (res.status == 200) {
@@ -576,7 +620,7 @@ const AddInvoice = ({ navigation }) => {
     tempList.reduce((subTotal, cost) => {
       subTotal += Number(cost);
 
-      console.log("discount ", Number(formData.discount));
+      console.log("discount ", Number(formData.discount_percent));
 
       console.log(
         "total amount",
@@ -588,11 +632,11 @@ const AddInvoice = ({ navigation }) => {
         sub: Number(subTotal),
         total_amount:
           Number(subTotal) -
-          (Number(subTotal) * Number(formData.discount)) / 100,
+          (Number(subTotal) * Number(formData.discount_percent)) / 100,
       });
       return Number(subTotal);
     }, 0);
-  }, [itemsList, formData.discount]);
+  }, [itemsList, formData.discount_percent]);
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -612,42 +656,20 @@ const AddInvoice = ({ navigation }) => {
           />
 
           <Text style={styles.fieldName}>Project:</Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholder="Select Project"
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            iconStyle={styles.iconStyle}
-            data={projectsList}
-            maxHeight={300}
-            labelField="project_name"
-            valueField="id"
-            containerStyle={styles.listStyle}
-            dropdownPosition="bottom"
-            value={formData?.project}
-            onChange={(item) => {
-              setFormData({
-                ...formData,
-                project: item.value,
-                ...item,
-                discount: item?.quotes_items[0]?.discount_percent,
-              });
-              setItemsList([...item?.quotes_items]);
-              // console.log(item.value);
-              // setErrorState(null);
-            }}
+          <TextInput
+            style={styles.input}
+            name="projectName"
+            value={formData?.projectName}
+            editable={false}
+            placeholder="Project"
           />
 
           <Text style={styles.fieldName}>Quotation:</Text>
           <TextInput
             style={styles.input}
             name="quotation"
-            value={formData?.quotes?.name}
-            // onChangeText={(text) => {
-            //   setFormData({ ...formData, name: text });
-            //   setTitleError(null);
-            // }}
-            placeholder="Admin"
+            value={formData?.quotationName}
+            placeholder="quotation"
             editable={false}
           />
 
@@ -655,7 +677,7 @@ const AddInvoice = ({ navigation }) => {
           <TextInput
             style={styles.input}
             name="name"
-            value={formData?.assign_to?.username}
+            value={formData?.adminName}
             // onChangeText={(text) => {
             //   setFormData({ ...formData, name: text });
             //   setTitleError(null);
@@ -671,60 +693,32 @@ const AddInvoice = ({ navigation }) => {
           <TextInput
             style={styles.input}
             name="company"
-            value={formData?.company?.name}
+            value={formData?.companyName}
             editable={false}
             placeholder="Company Name"
           />
           {titleError ? (
             <Text style={styles.errorText}>{titleError}</Text>
           ) : null}
-          {/* <DropdownMenu
-            data={companyList}
-            placeholder="Select Company"
-            value={formData.company}
-            setValue={setFormData}
-            label="company"
-            originalObj={formData}
-            setErrorState={setNameError}
-          />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null} */}
 
           <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <TextInput
             style={styles.input}
             name="company"
-            value={formData?.consultant_manager?.username}
+            value={formData?.consultantManagerName}
             editable={false}
             placeholder="Company Name"
           />
-          {/* <DropdownMenu
-            data={consultantManagerList}
-            placeholder="Select Consultant Manager"
-            value={formData.consultant_manager}
-            setValue={setFormData}
-            label="consultant_manager"
-            originalObj={formData}
-            setErrorState={setCmError}
-          /> */}
           {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
 
           <Text style={styles.fieldName}>Assign Consultant:</Text>
           <TextInput
             style={styles.input}
             name="company"
-            value={formData?.consultant?.username}
+            value={formData?.consultantName}
             editable={false}
             placeholder="Company Name"
           />
-          {/* <DropdownMenu
-            data={consultantList}
-            placeholder="Select Consultant"
-            value={formData.consultant}
-            setValue={setFormData}
-            label="consultant"
-            originalObj={formData}
-            setErrorState={setConsultantError}
-          /> */}
           {consultantError ? (
             <Text style={styles.errorText}>{consultantError}</Text>
           ) : null}
@@ -743,14 +737,14 @@ const AddInvoice = ({ navigation }) => {
               })}
             </>
           ) : (
-            <Text style={styles.fieldName}>Tasks are required!</Text>
+            <Text style={styles.fieldName}>Tasks are empty!</Text>
           )}
 
           <Text style={styles.fieldName}>Description:</Text>
           <TextInput
             style={styles.input}
             name="description"
-            value={formData.description}
+            value={formData?.description}
             onChangeText={(text) => {
               setFormData({ ...formData, description: text });
               setDescriptionError(null);
@@ -812,16 +806,6 @@ const AddInvoice = ({ navigation }) => {
                 >
                   {formData.sub}
                 </Text>
-                {/* <TextInput
-                  style={[styles.input, { minWidth: "49%" }]}
-                  name="name"
-                  // value={quantity}
-                  onChangeText={(text) => {
-                    // setFormData({ ...formData, name: text });
-                    // setTitleError(null);
-                  }}
-                  placeholder="Subtotal"
-                /> */}
               </View>
 
               <View>
@@ -829,9 +813,9 @@ const AddInvoice = ({ navigation }) => {
                 <TextInput
                   style={[styles.input, { minWidth: "49%" }]}
                   name="discount_percent"
-                  value={formData?.discount}
+                  value={formData?.discount_percent}
                   onChangeText={(text) => {
-                    setFormData({ ...formData, discount: text });
+                    setFormData({ ...formData, discount_percent: text });
                     setDiscountError(null);
                   }}
                   placeholder="Discount %"
@@ -855,21 +839,97 @@ const AddInvoice = ({ navigation }) => {
             >
               {formData.total_amount}
             </Text>
-            {/* <TextInput
-              style={[styles.input, { backgroundColor: "#e5e5e5" }]}
-              name="total_amount"
-              value={formData.total_amount}
-              onChangeText={(text) => {
-                setFormData({ ...formData, total_amount: text });
-                setTotalAmountError(null);
-              }}
-              placeholder="Total Amount"
-            /> */}
             {totalAmountError ? (
               <Text style={styles.errorText}>{totalAmountError}</Text>
             ) : null}
           </View>
         )}
+
+        <Text style={styles.fieldName}>Payment Details:</Text>
+
+        <View style={styles.itemFormContainer}>
+          <Text style={styles.fieldName}>Payment Date:</Text>
+          <Pressable
+            onPress={() => {
+              setPaymentDateVisibility(true);
+              setFormData({
+                ...formData,
+                payment_date: moment(paymentDate).format("MM/DD/YYYY"),
+              });
+              // setPaymentDateError(null);
+            }}
+            style={[
+              styles.input,
+              {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                color: "#d9d9d9",
+              },
+            ]}
+            name="paymentDate"
+            value={formData.payment_date}
+          >
+            <Icon name="calendar-alt" size={25} color="#A9A9AC" />
+            {paymentDate ? (
+              <Text style={{ color: "#000", marginLeft: 10 }}>
+                {moment(paymentDate).format("MM/DD/YYYY")}
+              </Text>
+            ) : (
+              <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>
+                Start Date
+              </Text>
+            )}
+          </Pressable>
+          <DateTimePickerModal
+            isVisible={isPaymentDatePickerVisible}
+            mode="date"
+            onConfirm={handleStartDateConfirm}
+            onCancel={hidePayementDatePicker}
+          />
+
+          <View style={styles.uploadFileSec}>
+            <Text style={[styles.file, styles.fieldName]}>Upload File:</Text>
+            <View>
+              <TouchableOpacity>
+                <Button
+                  title="upload your file"
+                  color="black"
+                  onPress={() => {
+                    UploadFile();
+                    // setDocumentError(null);
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {isFilePicked && <Text>{document?.document}</Text>}
+
+          <Text style={styles.fieldName}>Note:</Text>
+          <TextInput
+            style={[styles.input, { height: 150 }]}
+            name="note"
+            value={formData?.note}
+            onChangeText={(text) => {
+              setFormData({ ...formData, note: text });
+            }}
+            // placeholder="Add Note"
+            numberOfLines={10}
+            multiline={true}
+          />
+
+          <Text style={styles.fieldName}>Terms & Conditions:</Text>
+          <TextInput
+            style={[styles.input, { height: 150 }]}
+            name="terms_condition"
+            value={formData?.terms_condition}
+            onChangeText={(text) => {
+              setFormData({ ...formData, terms_condition: text });
+            }}
+            numberOfLines={10}
+            multiline={true}
+          />
+        </View>
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>

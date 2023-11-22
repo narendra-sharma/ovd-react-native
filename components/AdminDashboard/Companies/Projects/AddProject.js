@@ -7,6 +7,7 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import Toast from "react-native-root-toast";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -19,6 +20,7 @@ import {
   apiGetQuotationsByCompanyId,
 } from "../../../../apis/projects";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import * as DocumentPicker from "expo-document-picker";
 
 const initialFormData = {
   name: "",
@@ -49,6 +51,8 @@ const AddProject = ({ navigation }) => {
   const [consultantList, setConsultantList] = useState([]);
   const [customersList, setCustomersList] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [document, setDocument] = useState(null);
+  const [isFilePicked, setIsFilePicked] = useState(false);
 
   const [nameError, setNameError] = useState(null);
   const [companyError, setCompanyError] = useState(null);
@@ -60,6 +64,24 @@ const AddProject = ({ navigation }) => {
   const [hoursError, setHoursError] = useState(null);
   const [addressError, setAddressError] = useState(null);
   const [billingError, setBillingError] = useState(null);
+  const [documentError, setDocumentError] = useState(null);
+
+  //handle file upload
+  const UploadFile = async () => {
+    let result = await DocumentPicker.getDocumentAsync();
+    console.log(result.assets[0].uri);
+    if (result.assets[0].uri) {
+      setIsFilePicked(true);
+
+      setDocument({
+        document: result.assets[0].uri,
+        fileName: result.assets[0].name,
+        fileType: result.assets[0].mimeType,
+      });
+
+      // console.log(docs);
+    }
+  };
 
   useEffect(() => {
     const getAllData = async () => {
@@ -70,7 +92,7 @@ const AddProject = ({ navigation }) => {
       });
       setCompanyList([...tempCompanies]);
 
-      const tempConsultants = res.data.consultants.map((consultant) => {
+      const tempConsultants = res?.data?.consultants.map((consultant) => {
         return { label: consultant.name, value: consultant.id };
       });
       setConsultantList([...tempConsultants]);
@@ -166,7 +188,7 @@ const AddProject = ({ navigation }) => {
     }
     // return true;
 
-    let reg = /^[0-9]{10}$/g;
+    let reg = /^[0-9]{8}$/g;
 
     if (reg.test(num) === false) {
       setPhoneError("Please Enter a valid phone number");
@@ -231,12 +253,23 @@ const AddProject = ({ navigation }) => {
       validateAddress(formData.address)
       // && validateBilling(formData.billing_type)
     ) {
+      const form_data = new FormData();
+
+      for (var key in formData) {
+        form_data.append(key, formData[key]);
+      }
+
+      form_data.append("start_date", moment(startDate).format("MM/DD/YYYY"));
+
+      form_data.append("document", {
+        uri: document.document,
+        type: document.fileType,
+        name: document.fileName,
+      });
+
       try {
         console.log("add project obj:", formData);
-        const res = await apiAddNewProject({
-          ...formData,
-          start_date: moment(startDate).format("MM/DD/YYYY"),
-        });
+        const res = await apiAddNewProject(form_data);
         if (res.status == 200) {
           Toast.show("New Project Added", {
             duration: Toast.durations.SHORT,
@@ -260,19 +293,20 @@ const AddProject = ({ navigation }) => {
         console.log(res);
       } catch (error) {
         console.log(error);
+        console.log(error.response.data);
       }
     } else {
+      validateProjectName(formData.project_name);
+      validateCompanyName(formData.company);
+      validateQuotation(formData.quotation);
+      validateDescription(formData.description);
+      validatePhone(formData.contact_number);
+      // validateStartDate(formData.start_date);
+      // validateEndDate(formData.deadline);
+      validateHours(formData.estimated_hour);
+      validateAddress(formData.address);
+      // validateBilling(formData.billing_type);
     }
-    validateProjectName(formData.project_name);
-    validateCompanyName(formData.company);
-    validateQuotation(formData.quotation);
-    validateDescription(formData.description);
-    validatePhone(formData.contact_number);
-    // validateStartDate(formData.start_date);
-    // validateEndDate(formData.deadline);
-    validateHours(formData.estimated_hour);
-    validateAddress(formData.address);
-    // validateBilling(formData.billing_type);
   };
 
   return (
@@ -590,6 +624,7 @@ const AddProject = ({ navigation }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
@@ -599,24 +634,22 @@ const AddProject = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          {/* <Text style={styles.fieldName}>Billing Type:</Text>
-          <DropdownMenu
-            data={[
-              { label: "Net Banking", value: 1 },
-              { label: "Credit Card", value: 2 },
-              { label: "Debit Card", value: 3 },
-              { label: "UPI", value: 4 },
-            ]}
-            placeholder="Select Company"
-            value={formData.billing_type}
-            setValue={setFormData}
-            label="billing_type"
-            originalObj={formData}
-            setErrorState={setBillingError}
-          />
-          {billingError ? (
-            <Text style={styles.errorText}>{billingError}</Text>
-          ) : null} */}
+          <View style={styles.uploadFileSec}>
+            <Text style={[styles.file, styles.fieldName]}>Upload File</Text>
+            <View style={styles.button}>
+              <TouchableOpacity>
+                <Button
+                  title="upload your file"
+                  color="black"
+                  onPress={() => {
+                    UploadFile();
+                    setDocumentError(null);
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {isFilePicked && <Text>{document?.document}</Text>}
         </View>
 
         <View style={styles.bothButtons}>

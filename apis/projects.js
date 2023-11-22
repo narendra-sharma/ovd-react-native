@@ -43,6 +43,7 @@ export const apiAddNewProject = async (formData) => {
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
+      "Content-Type": "multipart/form-data",
     },
   });
   return response;
@@ -67,6 +68,7 @@ export const apiUpdateProjectDetails = async (formData, id) => {
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
+      "Content-Type": "multipart/form-data",
     },
   });
   return response;

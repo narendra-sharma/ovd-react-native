@@ -171,7 +171,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
   //   }
   //   // return true;
 
-  //   let reg = /^[0-9]{10}$/g;
+  //   let reg = /^[0-9]{8}$/g;
 
   //   if (reg.test(num) === false) {
   //     setPhoneError("Please Enter a valid phone number");
@@ -491,6 +491,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
@@ -580,13 +581,13 @@ const EditCompanyDetails = ({ navigation, route }) => {
 
         <View style={styles.bothButtons}>
           <Pressable style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             style={[styles.submitButton, styles.cancelBtn]}
             onPress={() => navigation.goBack()}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -721,13 +722,13 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    marginTop: 10
+    marginTop: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   errorText: {

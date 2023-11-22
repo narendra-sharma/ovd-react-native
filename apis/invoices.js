@@ -12,10 +12,10 @@ export const apiGetAllInvoices = async (projectId) => {
   return response;
 };
 
-export const apiGetCreateInvoiceData = async () => {
+export const apiGetCreateInvoiceData = async (projectId) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
-    path: `auth/create-invoice`,
+    path: `auth/create-invoice/${projectId}`,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },

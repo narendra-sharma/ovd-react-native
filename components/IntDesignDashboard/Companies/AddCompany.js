@@ -172,7 +172,7 @@ const AddCompany = ({ navigation }) => {
   //   }
   //   // return true;
 
-  //   let reg = /^[0-9]{10}$/g;
+  //   let reg = /^[0-9]{8}$/g;
 
   //   if (reg.test(num) === false) {
   //     setPhoneError("Please Enter a valid phone number");
@@ -420,7 +420,7 @@ const AddCompany = ({ navigation }) => {
 
           <Text style={styles.fieldName}>Assign Customer:</Text>
           <DropdownMenu
-           style={[styles.dropdown]}
+            style={[styles.dropdown]}
             data={customersList}
             placeholder="Select Customer"
             value={newCompanyData.customer_id}
@@ -519,6 +519,7 @@ const AddCompany = ({ navigation }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
@@ -698,7 +699,6 @@ const placesStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-
   formContainer: {
     display: "flex",
     flexDirection: "column",
@@ -730,13 +730,13 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     borderColor: "gray",
     borderWidth: 0.5,
-  }, 
+  },
 
   bothButtons: {
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    marginTop: 10
+    marginTop: 10,
   },
 
   submitButton: {
@@ -746,17 +746,17 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     alignItems: "center",
-    borderRadius: 5
+    borderRadius: 5,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   btnTextCancel: {
-    color: "#696cff"
+    color: "#696cff",
   },
 
   submitText: {
@@ -785,7 +785,6 @@ const styles = StyleSheet.create({
   },
 
   btnText: {
-    color: "#ffff"
+    color: "#ffff",
   },
-
 });

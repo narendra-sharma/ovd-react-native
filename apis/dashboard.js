@@ -12,3 +12,14 @@ export const apiGetAllDashboardData = async () => {
   });
   return response;
 };
+
+export const apiGetAnalyticsGraphData = async () => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: "auth/analytics",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};

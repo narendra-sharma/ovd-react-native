@@ -115,7 +115,7 @@ const EditConsultant = ({ navigation, route }) => {
     }
     // return true;
 
-    let reg = /^[0-9]{10}$/g;
+    let reg = /^[0-9]{8}$/g;
 
     if (reg.test(num) === false) {
       setPhoneError("Please Enter a valid phone number");
@@ -255,7 +255,7 @@ const EditConsultant = ({ navigation, route }) => {
     <View style={styles.mainContainer}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ justifyContent: "center"}}
+        contentContainerStyle={{ justifyContent: "center" }}
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.formContainer}>
@@ -427,6 +427,7 @@ const EditConsultant = ({ navigation, route }) => {
             query={{
               key: "AIzaSyAzXDEebJV9MxtPAPhP1B2w5T3AYK2JOu0",
               language: "en",
+              components: "country:sg",
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={200}
@@ -516,13 +517,13 @@ const EditConsultant = ({ navigation, route }) => {
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>
-            <Text style={{color: "#ffff"}}>Submit</Text>
+            <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.goBack()}
             style={[styles.submitButton, styles.cancelBtn]}
           >
-            <Text style={{color: "#696cff"}}>Cancel</Text>
+            <Text style={{ color: "#696cff" }}>Cancel</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -613,7 +614,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-    padding: 10
+    padding: 10,
   },
 
   fieldContainer: {
@@ -657,13 +658,13 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 
   cancelBtn: {
     backgroundColor: "transparent",
     borderColor: "#696cff",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   submitText: {

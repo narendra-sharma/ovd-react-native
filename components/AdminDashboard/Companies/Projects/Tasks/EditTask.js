@@ -19,6 +19,7 @@ import * as DocumentPicker from "expo-document-picker";
 import Toast from "react-native-root-toast";
 import * as ImagePicker from "expo-image-picker";
 import { apiGetPreFilledTaskDetails } from "../../../../../apis/tasks";
+import { url } from "../../../../../constants";
 
 const EditTask = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});
@@ -50,7 +51,10 @@ const EditTask = ({ navigation, route }) => {
 
   const getAllData = async () => {
     const res = await apiGetPreFilledTaskDetails(route.params.id);
-    // console.log("res: ", res.data);
+    console.log(
+      `${url.slice(0, -4)}${res?.data?.after_image}`,
+      "res?.data?.after_image"
+    );
     setTaskData({
       ...res.data.task,
       // tags: JSON.parse(res.data.task.tags_id),
@@ -61,7 +65,7 @@ const EditTask = ({ navigation, route }) => {
       const tempDocs = res.data.documents.map((doc, idx) => {
         return {
           ...doc,
-          uri: `https://ovd.visionvivante.com${doc.uri}`,
+          uri: `${url.slice(0, -4)}${doc.uri}`,
         };
       });
       console.log("task documents!!!!! ", tempDocs);
@@ -69,9 +73,9 @@ const EditTask = ({ navigation, route }) => {
     }
 
     if (res?.data?.before_image)
-      setBeforeImage(`https://ovd.visionvivante.com${res?.data?.before_image}`);
+      setBeforeImage(`${url.slice(0, -4)}${res?.data?.before_image}`);
     if (res?.data?.after_image)
-      setAfterImage(`https://ovd.visionvivante.com${res?.data?.after_image}`);
+      setAfterImage(`${url.slice(0, -4)}${res?.data?.after_image}`);
 
     setProjectDetail({ ...res?.data?.project });
 
