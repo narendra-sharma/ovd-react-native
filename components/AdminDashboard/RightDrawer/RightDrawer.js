@@ -20,7 +20,6 @@ import CompanyStackScreen from "../Companies/CompanyStackScreen";
 import ProfileStackScreen from "../Profile/ProfileStackScreen";
 import { useFocusEffect } from "@react-navigation/native";
 import ChangePassword from "../Settings/ChangePassword";
-import AccountsStackScreen from "../Accounts/AccountsStackScreen";
 import { ScrollView } from "react-native-gesture-handler";
 import ViewProjects from "../Companies/Projects/ViewProjects";
 import ViewQuotes from "../Companies/Quotes/ViewQuotes";
