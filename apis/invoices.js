@@ -31,6 +31,7 @@ export const apiAddInvoice = async (formData) => {
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
+      "Content-type": "multipart/form-data",
     },
   });
   return response;
@@ -55,6 +56,7 @@ export const apiUpdateInvoiceDetails = async (formData, id) => {
     body: formData,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
+      "Content-type": "multipart/form-data",
     },
   });
   return response;

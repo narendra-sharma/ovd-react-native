@@ -23,17 +23,17 @@ import moment from "moment";
 import Toast from "react-native-root-toast";
 
 const initialFormData = {
-  name: "",
-  company: "",
-  consultant_manager: "",
-  consultant: "",
-  quantity: "",
-  cost: "",
-  tax: "",
-  total_amount: "",
-  description: "",
+  // name: "",
+  // company: "",
+  // consultant_manager: "",
+  // consultant: "",
+  // quantity: "",
+  // cost: "",
+  // tax: "",
+  // total_amount: "",
+  // description: "",
   status: 1,
-  discount_percent: 0,
+  // discount_percent: 0,
 };
 
 const itemsForm = {
@@ -203,6 +203,7 @@ const ItemForm = ({
 /////////////******** MAIN ADD QUOTE FORM **********///////////////
 const AddInvoice = ({ navigation, route }) => {
   const [itemsList, setItemsList] = useState([{ ...itemsForm }]);
+  const [tasksList, setTasksList] = useState([]);
   const [formData, setFormData] = useState(initialFormData);
   const [projectData, setProjectData] = useState([]);
   const [paymentDate, setPaymentDate] = useState();
@@ -252,6 +253,8 @@ const AddInvoice = ({ navigation, route }) => {
       });
       setProjectData({ ...res?.data?.project });
       setItemsList([...res?.data?.project?.quotes_items]);
+      setTasksList([...res?.data?.project?.tasks]);
+      // console.log("items tasks: ", [...res?.data?.project?.tasks]);
     };
     getAllData();
   }, []);
@@ -524,6 +527,8 @@ const AddInvoice = ({ navigation, route }) => {
       form_data.append(key, formData[key]);
     }
 
+    tasksList.map((task, idx) => form_data.append("tasks_id[]", task.id));
+
     form_data.append("document", {
       uri: document.document,
       type: document.fileType,
@@ -542,7 +547,7 @@ const AddInvoice = ({ navigation, route }) => {
       form_data.append("item_name[]", item.item_name);
 
       item_description.push(item.description);
-      form_data.append("item_description[]", item.item_description);
+      form_data.append("item_description[]", item.description);
 
       quantity.push(item.quantity);
       form_data.append("quantity[]", item.quantity);
@@ -584,7 +589,20 @@ const AddInvoice = ({ navigation, route }) => {
         });
       }
     } catch (error) {
-      Toast.show("An error has occurred", {
+      console.log(error);
+      console.log("errors: ", error?.response?.data);
+
+      let msg = "";
+
+      Object.keys(error?.response?.data?.errors).map(
+        (key) => (msg += error?.response?.data?.errors[key] + " ")
+      );
+
+      if (msg == "") {
+        msg += "Server Error";
+      }
+
+      Toast.show(msg, {
         duration: Toast.durations.SHORT,
         position: Toast.positions.BOTTOM,
         shadow: true,
@@ -592,8 +610,6 @@ const AddInvoice = ({ navigation, route }) => {
         hideOnPress: true,
         delay: 0,
       });
-      console.log(error);
-      console.log(error?.response?.data);
     }
 
     // } else {
@@ -724,9 +740,9 @@ const AddInvoice = ({ navigation, route }) => {
           ) : null}
 
           <Text style={styles.fieldName}>Tasks:</Text>
-          {formData?.tasks?.length > 0 ? (
+          {tasksList.length ? (
             <>
-              {formData?.tasks?.map((task, idx) => {
+              {tasksList?.map((task, idx) => {
                 return (
                   <View style={styles.input}>
                     <Text>
@@ -854,7 +870,7 @@ const AddInvoice = ({ navigation, route }) => {
               setPaymentDateVisibility(true);
               setFormData({
                 ...formData,
-                payment_date: moment(paymentDate).format("MM/DD/YYYY"),
+                payment_date: moment(paymentDate).format("YYYY/MM/DD"),
               });
               // setPaymentDateError(null);
             }}
@@ -873,7 +889,7 @@ const AddInvoice = ({ navigation, route }) => {
             <Icon name="calendar-alt" size={25} color="#A9A9AC" />
             {paymentDate ? (
               <Text style={{ color: "#000", marginLeft: 10 }}>
-                {moment(paymentDate).format("MM/DD/YYYY")}
+                {moment(paymentDate).format("YYYY/MM/DD")}
               </Text>
             ) : (
               <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>
@@ -889,7 +905,9 @@ const AddInvoice = ({ navigation, route }) => {
           />
 
           <View style={styles.uploadFileSec}>
-            <Text style={[styles.file, styles.fieldName]}>Upload File:</Text>
+            <Text style={[styles.file, styles.fieldName]}>
+              Payment Receipt:
+            </Text>
             <View>
               <TouchableOpacity>
                 <Button

@@ -1,31 +1,52 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 import {
+  FlatList,
+  StyleSheet,
   Text,
   View,
-  StyleSheet,
   Pressable,
-  FlatList,
-  ScrollView,
-  Alert,
   TextInput,
-  Image,
+  ScrollView,
+  TouchableOpacity,
+  Button,
 } from "react-native";
 import Toast from "react-native-root-toast";
-import { useFocusEffect } from "@react-navigation/native";
-import { apiGetQuoteDetails } from "../../../../../apis/quotes";
+import { Dropdown } from "react-native-element-dropdown";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import {
+  apiGetUpdateInvoiceData,
+  apiUpdateInvoiceDetails,
+} from "../../../../../apis/invoices";
+import * as DocumentPicker from "expo-document-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from "moment";
+import { url } from "../../../../../constants";
+
+const initialFormData = {
+  // name: "",
+  // company: "",
+  // consultant_manager: "",
+  // consultant: "",
+  // quantity: "",
+  // cost: "",
+  // tax: "",
+  // total_amount: "",
+  // description: "",
+  status: 1,
+  discount: 0,
+};
 
 const itemsForm = {
-  itemName: "",
-  itemDescription: "",
-  quantity: "",
-  itemCostPerQuantity: "",
-  itemTax: "",
-  itemTotalCost: "",
+  item_name: "",
+  description: "",
+  quantity: 0,
+  cost: 0,
+  tax: 0,
+  total_cost: 0,
 };
 
 /////////////******** ITEMS FORM **********/////////////////
-const ItemForm = ({ item, itemsList, setItemsList, idx, productsList }) => {
-  // console.log("productsList", productsList);
+const ItemForm = ({ item, itemsList, setItemsList, idx }) => {
   return (
     <View style={styles.itemFormContainer}>
       <Text
@@ -36,14 +57,11 @@ const ItemForm = ({ item, itemsList, setItemsList, idx, productsList }) => {
       >
         Item {idx + 1}
       </Text>
-      <Text style={styles.itemsFieldContainer}>Product :</Text>
-      <Text style={styles.input}>
-        {
-          productsList[
-            productsList.findIndex((obj) => obj.value == item.product_id)
-          ]?.label
-        }
-      </Text>
+      <Text style={styles.itemsFieldContainer}>Item Name:</Text>
+      <Text style={styles.input}> {item?.item_name}</Text>
+
+      <Text style={styles.itemsFieldContainer}>Item Description:</Text>
+      <Text style={styles.input}> {item?.description}</Text>
 
       <View
         style={{
@@ -54,134 +72,116 @@ const ItemForm = ({ item, itemsList, setItemsList, idx, productsList }) => {
       >
         <View style={{ marginRight: "2%" }}>
           <Text style={styles.itemsFieldContainer}>Item Quantity:</Text>
-          <Text style={[styles.input, { minWidth: "49%" }]}>{item?.qty}</Text>
+          <Text style={[styles.input, { minWidth: "49%" }]}>
+            {item?.quantity}
+          </Text>
         </View>
 
         <View>
           <Text style={styles.itemsFieldContainer}>Cost Per Quantity:</Text>
-          <Text style={[styles.input, { minWidth: "49%" }]}>
-            {
-              productsList[
-                productsList.findIndex((obj) => obj.value == item.product_id)
-              ]?.itemTotalCost
-            }
-          </Text>
+          <Text style={[styles.input, { minWidth: "49%" }]}>{item?.cost}</Text>
         </View>
       </View>
 
-      <View>
-        <Text style={styles.itemsFieldContainer}>Total Cost:</Text>
-        <Text style={[styles.input, { minWidth: "49%" }]}>
-          {Number(item.qty) * Number(item.price)}
-        </Text>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ marginRight: "2%" }}>
+          <Text style={styles.itemsFieldContainer}>Tax:</Text>
+          <Text style={[styles.input, { minWidth: "49%" }]}>{item?.tax}</Text>
+        </View>
+
+        <View>
+          <Text style={styles.itemsFieldContainer}>Total Cost:</Text>
+          <Text style={[styles.input, { minWidth: "49%" }]}>
+            {item?.total_cost}
+          </Text>
+        </View>
       </View>
     </View>
   );
 };
 
-/**************** Main Component *****************/
+/////////////******** MAIN ADD QUOTE FORM **********///////////////
 const InvoiceDetail = ({ navigation, route }) => {
-  const [quoteData, setQuoteData] = useState({});
-  const [itemsList, setItemsList] = useState([]);
-  const [deleteFlag, setDeteleFlag] = useState(false);
-  const [productsList, setProductsList] = useState([]);
-  const [image, setImage] = useState(null);
+  const [itemsList, setItemsList] = useState([{ ...itemsForm }]);
+  const [formData, setFormData] = useState(initialFormData);
+  const [tasksList, setTasksList] = useState([]);
 
-  // console.log("params got: ", route.params);
+  console.log(route.params.id);
 
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-
+  useEffect(() => {
+    try {
       const getAllData = async () => {
-        const res = await apiGetQuoteDetails(route.params.id);
-        // console.log("quotes res:", res.data.quotes);
-        setQuoteData({ ...res?.data?.quotation });
-        // console.log([...res?.data?.quotes?.quotes_items]);
-        setItemsList([...res?.data?.quotation?.products]);
-        // console.log("items list ", itemsList);
-        //   setCustomerList([...]);
-        //   setProjectList([...]);
-
-        var new_url = url.slice(0, -5);
-        setImage(`${new_url}${res?.data?.quotation?.url}`);
-
-        const productsRes = await apiGetAllProducts();
-        const tempProducts = productsRes?.data?.products?.map((product) => {
-          return {
-            label: `${product?.name} ${product?.dimension}`,
-            value: product.id,
-            itemTotalCost: product.price,
-          };
+        const res = await apiGetUpdateInvoiceData(route?.params?.id);
+        console.log("invoice data: ", res?.data?.invoiceData);
+        setFormData({
+          ...formData,
+          invoice_number: res?.data?.invoiceData?.invoice_number,
+          project: res?.data?.invoiceData?.project_id,
+          projectName: res?.data?.invoiceData?.project?.project_name,
+          quotation: res?.data?.invoiceData?.quotes_id,
+          quotationName: res?.data?.invoiceData?.quotes?.name,
+          admin: res?.data?.invoiceData?.admin_id,
+          adminName: res?.data?.invoiceData?.admin?.name,
+          company: res?.data?.invoiceData?.company_id,
+          companyName: res?.data?.invoiceData?.company?.name,
+          customer: res?.data?.invoiceData?.customer_id,
+          customerName: res?.data?.invoiceData?.customer?.name,
+          consultant_manager: res?.data?.invoiceData?.cons_manager_id,
+          consultantManagerName:
+            res?.data?.invoiceData?.cosultant_manager?.name,
+          consultant_id: res?.data?.invoiceData?.consultant_id,
+          consultantName: res?.data?.invoiceData?.consultant?.name,
+          description: res?.data?.invoiceData?.description,
+          discount_percent: res?.data?.invoiceData?.discount
+            ? res?.data?.invoiceData?.discount
+            : 0,
+          total_amount: res?.data?.invoiceData?.total_cost,
+          payment_date: res?.data?.invoiceData?.payment_date,
+          note: res?.data?.invoiceData?.note,
+          terms_condition: res?.data?.invoiceData?.terms_condition,
+          payment_receipt: res?.data?.invoiceData?.payment_receipt,
         });
-        setProductsList([...tempProducts]);
+        setItemsList([...res?.data?.invoiceData?.quotes_item]);
+        setTasksList([...res?.data?.tasks]);
+        setPaymentDate(res?.data?.invoiceData?.payment_date);
       };
       getAllData();
-
-      return () => (isActive = false);
-    }, [])
-  );
-
-  //function to delete the quote
-  const handleDelete = async (id) => {
-    const deleteQuote = async () => {
-      try {
-        const res = await apiDeleteQuote(id);
-        console.log(res.data);
-        if (res?.data?.status == true) {
-          // setDeteleFlag((prev) => !prev);
-          Toast.show("Quote Deleted Successfully", {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-          });
-          navigation.goBack();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    Alert.alert(`Delete Quote`, `Are you sure you want to delete this quote?`, [
-      {
-        text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      { text: "OK", onPress: () => deleteQuote() },
-    ]);
-  };
-  const showStatus = () => {
-    console.log("status ", quoteData?.status);
-    switch (quoteData?.status) {
-      case "1":
-        return "Drafted";
-      case "2":
-        return "In Review";
-      case "3":
-        return "Declined";
-      case "4":
-        "Accepted";
-      default:
-        return "Default";
+    } catch (error) {
+      console.log(error);
+      console.log(error?.response?.data);
     }
-  };
+  }, []);
 
-  // useEffect(() => {
-  //   const getAllData = async () => {
-  //     const res = await apiGetQuoteDetails(route.params.id);
-  //     console.log("quotes res:", res.data.company);
-  //     setQuoteData({ ...res.data.quotes });
-  //     //   setCustomerList([...]);
-  //     //   setProjectList([...]);
-  //   };
-  //   getAllData();
-  //   // navigation.setOptions({
-  //   //   title: `${route.params.company} - ${route.params.customer}`,
-  //   // });
-  // }, []);
+  //autocompute the values
+  useEffect(() => {
+    let tempList = itemsList.map((item) => item.total_cost);
+
+    tempList.reduce((subTotal, cost) => {
+      subTotal += Number(cost);
+
+      console.log("discount ", Number(formData.discount_percent));
+
+      console.log(
+        "total amount",
+        Number(subTotal) - (Number(subTotal) * 10) / 100
+      );
+
+      setFormData({
+        ...formData,
+        sub: Number(subTotal),
+        total_amount:
+          Number(subTotal) -
+          (Number(subTotal) * Number(formData.discount_percent)) / 100,
+      });
+      return Number(subTotal);
+    }, 0);
+  }, [itemsList, formData.discount_percent]);
 
   return (
     <View
@@ -202,60 +202,88 @@ const InvoiceDetail = ({ navigation, route }) => {
       >
         <View style={{ width: "95%", marginHorizontal: "auto" }}>
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Quote</Text>
+            <Text style={styles.fieldName}>Invoice Number</Text>
             <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}>{quoteData?.quotation_no} </Text>
+            <Text style={styles.fielContent}>{formData?.invoice_number} </Text>
           </View>
 
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Status</Text>
+            <Text style={styles.fieldName}>Project</Text>
             <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}>{showStatus()} </Text>
+            <Text style={styles.fielContent}>{formData?.projectName} </Text>
           </View>
 
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Valid Upto</Text>
+            <Text style={styles.fieldName}>Quotation</Text>
             <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}>{quoteData?.valid_upto} </Text>
+            <Text style={styles.fielContent}>{formData?.quotationName} </Text>
+          </View>
+
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Admin</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}>{formData?.adminName} </Text>
+          </View>
+
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Company</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}>{formData?.companyName} </Text>
           </View>
 
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Customer</Text>
             <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}>{formData?.customerName}</Text>
+          </View>
+
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Consultant Manager</Text>
+            <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}>
-              {quoteData?.customer?.username}
+              {formData?.consultantManagerName}
             </Text>
           </View>
 
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Details</Text>
+            <Text style={styles.fieldName}>Consultant </Text>
             <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}>{quoteData.details} </Text>
+            <Text style={styles.fielContent}>{formData?.consultantName}</Text>
           </View>
 
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldName}>Amount</Text>
+            <Text style={styles.fieldName}>Description</Text>
             <Text style={styles.span}>:</Text>
-            <Text style={styles.fielContent}>{quoteData.amount} </Text>
+            <Text style={styles.fielContent}>{formData.description} </Text>
           </View>
 
-          {image && (
-            <>
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldName}>Image</Text>
-                <Text style={styles.span}>:</Text>
-              </View>
-              <Image
-                source={{ uri: image }}
-                style={{ width: 150, height: 150, margin: 10 }}
-              />
-            </>
-          )}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Total Cost</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}>{formData.total_amount} </Text>
+          </View>
 
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Items</Text>
             <Text style={styles.span}>:</Text>
           </View>
+
+          <Text style={styles.fieldName}>Tasks:</Text>
+          {tasksList.length ? (
+            <>
+              {tasksList?.map((task, idx) => {
+                return (
+                  <View style={styles.input}>
+                    <Text>
+                      {task?.name} - ${task?.cost}
+                    </Text>
+                  </View>
+                );
+              })}
+            </>
+          ) : (
+            <Text style={styles.fieldName}>Tasks are empty!</Text>
+          )}
 
           {/******** Display Items List *******/}
           {itemsList.length > 0 &&
@@ -266,26 +294,42 @@ const InvoiceDetail = ({ navigation, route }) => {
                   itemsList={itemsList}
                   setItemsList={setItemsList}
                   idx={idx}
-                  productsList={productsList}
                 />
               );
             })}
+
+          <Text style={styles.fieldName}>Payment Details:</Text>
+
+          <View style={styles.itemFormContainer}>
+            <Text style={styles.fieldName}>Payment Date:</Text>
+            <Text style={styles.fielContent}>{formData.payment_date} </Text>
+
+            <Text style={styles.fieldName}>Payment Receipt:</Text>
+            <Text style={styles.fielContent}>{formData?.payment_receipt}</Text>
+
+            <Text style={styles.fieldName}>Note:</Text>
+            <Text style={styles.fielContent}>{formData?.note}</Text>
+
+            <Text style={styles.fieldName}>Terms & Conditions:</Text>
+            <Text style={styles.fielContent}>{formData?.terms_condition}</Text>
+          </View>
         </View>
       </ScrollView>
+
       <View style={styles.buttonsContainer}>
         <Pressable
           style={[styles.button, styles.buttonClose]}
           onPress={() =>
-            navigation.navigate("Edit Quote", { id: quoteData.id })
+            navigation.navigate("Edit Invoice", { id: formData.id })
           }
         >
-          <Text style={styles.textStyle}>Edit Quote</Text>
+          <Text style={styles.textStyle}>Edit</Text>
         </Pressable>
         <Pressable
           style={styles.button}
-          onPress={() => handleDelete(quoteData.id)}
+          onPress={() => handleDelete(formData.id)}
         >
-          <Text style={styles.textStyle}>Delete Quote</Text>
+          <Text style={styles.textStyle}>Delete</Text>
         </Pressable>
       </View>
     </View>

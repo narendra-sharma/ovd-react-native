@@ -284,6 +284,26 @@ const AddTask = ({ navigation, route }) => {
         console.log(res.data);
       } catch (error) {
         console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
       }
     } else {
       validateTaskName(taskData.name);

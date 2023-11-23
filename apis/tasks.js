@@ -100,6 +100,30 @@ export const apiChangeDocumentStatus = async (id) => {
   return response;
 };
 
+export const apiChangeBeforeImageStatus = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: `auth/before-image/${id}`,
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
+export const apiChangeAfterImageStatus = async (id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: `auth/after-image/${id}`,
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
+
 // export const apiDeleteProject = async (id) => {
 //   const token = await AsyncStorage.getItem("token");
 //   const response = await request({
