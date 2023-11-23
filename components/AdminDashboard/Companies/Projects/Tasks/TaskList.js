@@ -12,7 +12,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 import { apiDeleteTask, apiGetAllTasks } from "../../../../../apis/tasks";
 
-const TasksList = ({ navigation, route, tagId = null, projectId }) => {
+const TasksList = ({ navigation, route, tagId = null, projectId = null }) => {
   const [taskList, setTasksList] = useState([]);
   const [deleteFlag, setDeleteFlag] = useState(false);
 

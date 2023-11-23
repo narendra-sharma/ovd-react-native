@@ -18,7 +18,12 @@ import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import * as DocumentPicker from "expo-document-picker";
 import Toast from "react-native-root-toast";
 import * as ImagePicker from "expo-image-picker";
-import { apiGetPreFilledTaskDetails } from "../../../../../apis/tasks";
+import {
+  apiChangeAfterImageStatus,
+  apiChangeBeforeImageStatus,
+  apiChangeDocumentStatus,
+  apiGetPreFilledTaskDetails,
+} from "../../../../../apis/tasks";
 import { url } from "../../../../../constants";
 
 const EditTask = ({ navigation, route }) => {
@@ -331,6 +336,26 @@ const EditTask = ({ navigation, route }) => {
         console.log(res);
       } catch (error) {
         console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
       }
     } else {
       validateTaskName(taskData.name);
@@ -361,6 +386,31 @@ const EditTask = ({ navigation, route }) => {
     setDocuments(tempDocs);
     const res = await apiChangeDocumentStatus(id);
     console.log(res?.data);
+  };
+
+  //handle image show/hide
+  const handleImageStatus = async (label) => {
+    try {
+      let res = {};
+      if (label == "before") {
+        setTaskData((prev) => ({
+          ...taskData,
+          before_image_status: taskData.before_image_status == 0 ? 1 : 0,
+        }));
+        res = await apiChangeBeforeImageStatus(route?.params?.id);
+        console.log("before image res: ", res?.data);
+      } else {
+        setTaskData((prev) => ({
+          ...taskData,
+          after_image_status: taskData.after_image_status == 0 ? 1 : 0,
+        }));
+        res = await apiChangeAfterImageStatus(route?.params?.id);
+        console.log("after image res: ", res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(error?.response?.data);
+    }
   };
 
   return (
@@ -595,10 +645,27 @@ const EditTask = ({ navigation, route }) => {
           </TouchableOpacity>
           {/* View Uploaded Job Image */}
           {beforeImage && (
-            <Image
-              source={{ uri: beforeImage }}
-              style={{ width: 150, height: 150, margin: 10 }}
-            />
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={{ uri: beforeImage }}
+                style={{ width: 150, height: 150, margin: 10 }}
+              />
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={
+                  Number(taskData?.before_image_status) ? "#fff" : "#fff"
+                }
+                ios_backgroundColor="#3e3e3e"
+                onChange={() => handleImageStatus("before")}
+                value={Number(taskData?.before_image_status) ? true : false}
+              />
+            </View>
           )}
 
           <TouchableOpacity
@@ -611,10 +678,21 @@ const EditTask = ({ navigation, route }) => {
             <Text style={styles.addText}>Task Image After Completion</Text>
           </TouchableOpacity>
           {afterImage && (
-            <Image
-              source={{ uri: afterImage }}
-              style={{ width: 150, height: 150, margin: 10 }}
-            />
+            <View>
+              <Image
+                source={{ uri: afterImage }}
+                style={{ width: 150, height: 150, margin: 10 }}
+              />
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={
+                  Number(taskData?.after_image_status) ? "#fff" : "#fff"
+                }
+                ios_backgroundColor="#3e3e3e"
+                onChange={() => handleImageStatus("after")}
+                value={Number(taskData?.after_image_status) ? true : false}
+              />
+            </View>
           )}
 
           <Text style={styles.fieldName}>Task Cost:</Text>

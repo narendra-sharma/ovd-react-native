@@ -7,6 +7,8 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  TouchableOpacity,
+  Button,
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { Dropdown } from "react-native-element-dropdown";
@@ -15,19 +17,23 @@ import {
   apiGetUpdateInvoiceData,
   apiUpdateInvoiceDetails,
 } from "../../../../../apis/invoices";
+import * as DocumentPicker from "expo-document-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from "moment";
+import { url } from "../../../../../constants";
 
 const initialFormData = {
-  name: "",
-  company: "",
-  consultant_manager: "",
-  consultant: "",
-  quantity: "",
-  cost: "",
-  tax: "",
-  total_amount: "",
-  description: "",
+  // name: "",
+  // company: "",
+  // consultant_manager: "",
+  // consultant: "",
+  // quantity: "",
+  // cost: "",
+  // tax: "",
+  // total_amount: "",
+  // description: "",
   status: 1,
-  discount_percent: 0,
+  discount: 0,
 };
 
 const itemsForm = {
@@ -199,6 +205,12 @@ const EditInvoice = ({ navigation, route }) => {
   const [itemsList, setItemsList] = useState([{ ...itemsForm }]);
   const [formData, setFormData] = useState(initialFormData);
   const [projectsList, setProjectsList] = useState([]);
+  const [paymentDate, setPaymentDate] = useState();
+  const [isPaymentDatePickerVisible, setPaymentDateVisibility] =
+    useState(false);
+  const [document, setDocument] = useState(null);
+  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [tasksList, setTasksList] = useState([]);
 
   const [nameError, setNameError] = useState(null);
   const [titleError, setTitleError] = useState(null);
@@ -218,20 +230,49 @@ const EditInvoice = ({ navigation, route }) => {
   console.log(route.params.id);
 
   useEffect(() => {
+    // consultant_manager:7
+    // consultant_id:11
+    // total_amount:130.60
+    // description:testing
+    // discount_percent:0
+    // payment_date:2023/11/15
+    // note:testing textarea
+    // terms_condition:testing textarea
     try {
       const getAllData = async () => {
         const res = await apiGetUpdateInvoiceData(route?.params?.id);
         console.log("invoice data: ", res?.data?.invoiceData);
-        const tempProjects = res?.data?.projects?.map((project) => {
-          return {
-            label: project.project_name,
-            value: project.id,
-            ...project,
-          };
+        setFormData({
+          ...formData,
+          invoice_number: res?.data?.invoiceData?.invoice_number,
+          project: res?.data?.invoiceData?.project_id,
+          projectName: res?.data?.invoiceData?.project?.project_name,
+          quotation: res?.data?.invoiceData?.quotes_id,
+          quotationName: res?.data?.invoiceData?.quotes?.name,
+          admin: res?.data?.invoiceData?.admin_id,
+          adminName: res?.data?.invoiceData?.admin?.name,
+          company: res?.data?.invoiceData?.company_id,
+          companyName: res?.data?.invoiceData?.company?.name,
+          customer: res?.data?.invoiceData?.customer_id,
+          customerName: res?.data?.invoiceData?.customer?.name,
+          consultant_manager: res?.data?.invoiceData?.cons_manager_id,
+          consultantManagerName:
+            res?.data?.invoiceData?.cosultant_manager?.name,
+          consultant_id: res?.data?.invoiceData?.consultant_id,
+          consultantName: res?.data?.invoiceData?.consultant?.name,
+          description: res?.data?.invoiceData?.description,
+          discount_percent: res?.data?.invoiceData?.discount
+            ? res?.data?.invoiceData?.discount
+            : 0,
+          total_amount: 0,
+          payment_date: res?.data?.invoiceData?.payment_date,
+          note: res?.data?.invoiceData?.note,
+          terms_condition: res?.data?.invoiceData?.terms_condition,
+          payment_receipt: res?.data?.invoiceData?.payment_receipt,
         });
-        setProjectsList([...tempProjects]);
-        setFormData({ ...res?.data?.invoiceData });
         setItemsList([...res?.data?.invoiceData?.quotes_item]);
+        setTasksList([...res?.data?.tasks]);
+        setPaymentDate(res?.data?.invoiceData?.payment_date);
       };
       getAllData();
     } catch (error) {
@@ -239,6 +280,33 @@ const EditInvoice = ({ navigation, route }) => {
       console.log(error?.response?.data);
     }
   }, []);
+
+  //handle file upload
+  const UploadFile = async () => {
+    let result = await DocumentPicker.getDocumentAsync();
+    console.log(result.assets[0].uri);
+    if (result.assets[0].uri) {
+      setIsFilePicked(true);
+
+      setDocument({
+        document: result.assets[0].uri,
+        fileName: result.assets[0].name,
+        fileType: result.assets[0].mimeType,
+      });
+
+      // console.log(docs);
+    }
+  };
+
+  //date functions
+  const hidePayementDatePicker = () => {
+    setPaymentDateVisibility(false);
+  };
+
+  const handleStartDateConfirm = (date) => {
+    setPaymentDate(date);
+    hidePayementDatePicker();
+  };
 
   //validation functions
   const validateTitle = (name, label = "Name") => {
@@ -471,6 +539,14 @@ const EditInvoice = ({ navigation, route }) => {
     // )
     // {
     //refine data according to api
+    const form_data = new FormData();
+
+    for (var key in formData) {
+      form_data.append(key, formData[key]);
+    }
+
+    tasksList.map((task, idx) => form_data.append("tasks_id[]", task.id));
+
     let item_name = [];
     let item_description = [];
     let quantity = [];
@@ -480,41 +556,54 @@ const EditInvoice = ({ navigation, route }) => {
 
     itemsList.map((item) => {
       item_name.push(item.item_name);
-      item_description.push(item.item_description);
+      form_data.append("item_name[]", item.item_name);
+
+      item_description.push(item.description);
+      form_data.append("item_description[]", item.description);
+
       quantity.push(item.quantity);
+      form_data.append("quantity[]", item.quantity);
+
       cost.push(item.cost);
+      form_data.append("cost[]", item.cost);
+
       tax.push(item.tax);
+      form_data.append("tax[]", item.tax);
+
       total_cost.push(item.total_cost);
+      form_data.append("total_cost[]", item.total_cost);
     });
 
-    let tasksString = JSON.parse(formData?.tasks_id);
-    // tasksString = tasksString.substring(1, tasksString.length - 1);
-    console.log(tasksString);
+    // let tasksString = JSON.parse(formData?.tasks_id);
+    // // tasksString = tasksString.substring(1, tasksString.length - 1);
+    // console.log(tasksString);
+
+    if (isFilePicked)
+      form_data.append("payment_receipt", {
+        uri: document.document,
+        type: document.fileType,
+        name: document.fileName,
+      });
+    else {
+      let obj = {
+        uri: `${url.slice(0, -4)}${formData.payment_receipt}`,
+        name: formData.payment_receipt,
+      };
+
+      const docType = obj.uri.substring(obj.uri.lastIndexOf(".") + 1);
+      if (docType == "jpg" || docType == "jpeg") obj.type = "image/jpeg";
+      else if (docType == "png") obj.type = "image/png";
+      else if (docType == "doc") obj.type = "application/msword";
+      else if (docType == "docx")
+        obj.type =
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      else if (docType == "pdf") obj.type = "application/pdf";
+      form_data.append("payment_receipt", obj);
+    }
 
     try {
       console.log(formData);
-      const res = await apiUpdateInvoiceDetails(
-        {
-          ...formData,
-          status: 1,
-          item_name: item_name,
-          item_description: item_description,
-          quantity: quantity,
-          cost: cost,
-          tax: tax,
-          total_cost: total_cost,
-          quotation: formData?.quotes?.id,
-          admin: formData?.admin?.id,
-          company: formData?.company?.id,
-          customer: formData?.customer?.id,
-          consultant_manager: formData?.cosultant_manager?.id,
-          consultant: formData?.consultant?.id,
-          total_amount: formData?.total_amount,
-          project: formData?.project_id,
-          tasks_id: tasksString,
-        },
-        route?.params?.id
-      );
+      const res = await apiUpdateInvoiceDetails(form_data, route?.params?.id);
       console.log("response: ");
       console.log(res.data);
       if (res.status == 200) {
@@ -539,7 +628,20 @@ const EditInvoice = ({ navigation, route }) => {
         });
       }
     } catch (error) {
-      Toast.show("An error has occurred", {
+      console.log(error);
+      console.log("errors: ", error?.response?.data);
+
+      let msg = "";
+
+      Object.keys(error?.response?.data?.errors).map(
+        (key) => (msg += error?.response?.data?.errors[key] + " ")
+      );
+
+      if (msg == "") {
+        msg += "Server Error";
+      }
+
+      Toast.show(msg, {
         duration: Toast.durations.SHORT,
         position: Toast.positions.BOTTOM,
         shadow: true,
@@ -547,8 +649,6 @@ const EditInvoice = ({ navigation, route }) => {
         hideOnPress: true,
         delay: 0,
       });
-      console.log(error);
-      console.log(error?.response?.data);
     }
 
     // } else {
@@ -575,7 +675,7 @@ const EditInvoice = ({ navigation, route }) => {
     tempList.reduce((subTotal, cost) => {
       subTotal += Number(cost);
 
-      console.log("discount ", Number(formData.discount));
+      console.log("discount ", Number(formData.discount_percent));
 
       console.log(
         "total amount",
@@ -587,11 +687,11 @@ const EditInvoice = ({ navigation, route }) => {
         sub: Number(subTotal),
         total_amount:
           Number(subTotal) -
-          (Number(subTotal) * Number(formData.discount)) / 100,
+          (Number(subTotal) * Number(formData.discount_percent)) / 100,
       });
       return Number(subTotal);
     }, 0);
-  }, [itemsList, formData.discount]);
+  }, [itemsList, formData.discount_percent]);
 
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
@@ -611,44 +711,20 @@ const EditInvoice = ({ navigation, route }) => {
           />
 
           <Text style={styles.fieldName}>Project:</Text>
-          <Dropdown
-            disable={true}
-            style={styles.dropdown}
-            placeholder="Select Project"
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            iconStyle={styles.iconStyle}
-            data={projectsList}
-            maxHeight={300}
-            labelField="project_name"
-            valueField="id"
-            containerStyle={styles.listStyle}
-            dropdownPosition="bottom"
-            value={formData?.project_id}
-            onChange={(item) => {
-              setFormData({
-                ...formData,
-                project: item.value,
-                project_id: item.value,
-                ...item,
-                discount: item?.quotes_items[0]?.discount_percent,
-              });
-              setItemsList([...item?.quotes_items]);
-              // console.log(item.value);
-              // setErrorState(null);
-            }}
+          <TextInput
+            style={styles.input}
+            name="projectName"
+            value={formData?.projectName}
+            editable={false}
+            placeholder="Project"
           />
 
           <Text style={styles.fieldName}>Quotation:</Text>
           <TextInput
             style={styles.input}
             name="quotation"
-            value={formData?.quotes?.name}
-            // onChangeText={(text) => {
-            //   setFormData({ ...formData, name: text });
-            //   setTitleError(null);
-            // }}
-            placeholder="Admin"
+            value={formData?.quotationName}
+            placeholder="quotation"
             editable={false}
           />
 
@@ -656,7 +732,7 @@ const EditInvoice = ({ navigation, route }) => {
           <TextInput
             style={styles.input}
             name="name"
-            value={formData?.admin?.username}
+            value={formData?.adminName}
             // onChangeText={(text) => {
             //   setFormData({ ...formData, name: text });
             //   setTitleError(null);
@@ -672,72 +748,40 @@ const EditInvoice = ({ navigation, route }) => {
           <TextInput
             style={styles.input}
             name="company"
-            value={formData?.company?.name}
+            value={formData?.companyName}
             editable={false}
             placeholder="Company Name"
           />
           {titleError ? (
             <Text style={styles.errorText}>{titleError}</Text>
           ) : null}
-          {/* <DropdownMenu
-            data={companyList}
-            placeholder="Select Company"
-            value={formData.company}
-            setValue={setFormData}
-            label="company"
-            originalObj={formData}
-            setErrorState={setNameError}
-          />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null} */}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          <Text style={styles.fieldName}>Consultant Manager:</Text>
           <TextInput
             style={styles.input}
-            name="company"
-            value={formData?.cosultant_manager?.username}
+            name="consultantManagerName"
+            value={formData?.consultantManagerName}
             editable={false}
-            placeholder="Company Name"
+            placeholder="Consultant Manager"
           />
-          {/* <DropdownMenu
-            data={consultantManagerList}
-            placeholder="Select Consultant Manager"
-            value={formData.consultant_manager}
-            setValue={setFormData}
-            label="consultant_manager"
-            originalObj={formData}
-            setErrorState={setCmError}
-          /> */}
           {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
 
-          <Text style={styles.fieldName}>Assign Consultant:</Text>
+          <Text style={styles.fieldName}>Consultant:</Text>
           <TextInput
             style={styles.input}
-            name="company"
-            value={formData?.consultant?.username}
+            name="consultant"
+            value={formData?.consultantName}
             editable={false}
-            placeholder="Company Name"
+            placeholder="Consultant"
           />
-          {/* <DropdownMenu
-            data={consultantList}
-            placeholder="Select Consultant"
-            value={formData.consultant}
-            setValue={setFormData}
-            label="consultant"
-            originalObj={formData}
-            setErrorState={setConsultantError}
-          /> */}
           {consultantError ? (
             <Text style={styles.errorText}>{consultantError}</Text>
           ) : null}
 
           <Text style={styles.fieldName}>Tasks:</Text>
-          {projectsList[
-            projectsList.findIndex((obj) => obj?.id == formData.project_id)
-          ]?.tasks?.length > 0 ? (
+          {tasksList.length ? (
             <>
-              {projectsList[
-                projectsList.findIndex((obj) => obj?.id == formData.project_id)
-              ]?.tasks?.map((task, idx) => {
+              {tasksList?.map((task, idx) => {
                 return (
                   <View style={styles.input}>
                     <Text>
@@ -748,14 +792,14 @@ const EditInvoice = ({ navigation, route }) => {
               })}
             </>
           ) : (
-            <Text style={styles.fieldName}>Tasks not available</Text>
+            <Text style={styles.fieldName}>Tasks are empty!</Text>
           )}
 
           <Text style={styles.fieldName}>Description:</Text>
           <TextInput
             style={styles.input}
             name="description"
-            value={formData.description}
+            value={formData?.description}
             onChangeText={(text) => {
               setFormData({ ...formData, description: text });
               setDescriptionError(null);
@@ -834,9 +878,9 @@ const EditInvoice = ({ navigation, route }) => {
                 <TextInput
                   style={[styles.input, { minWidth: "49%" }]}
                   name="discount_percent"
-                  value={formData?.discount}
+                  value={formData?.discount_percent}
                   onChangeText={(text) => {
-                    setFormData({ ...formData, discount: text });
+                    setFormData({ ...formData, discount_percent: text });
                     setDiscountError(null);
                   }}
                   placeholder="Discount %"
@@ -875,6 +919,98 @@ const EditInvoice = ({ navigation, route }) => {
             ) : null}
           </View>
         )}
+
+        <Text style={styles.fieldName}>Payment Details:</Text>
+
+        <View style={styles.itemFormContainer}>
+          <Text style={styles.fieldName}>Payment Date:</Text>
+          <Pressable
+            onPress={() => {
+              setPaymentDateVisibility(true);
+              setFormData({
+                ...formData,
+                payment_date: moment(paymentDate).format("YYYY/MM/DD"),
+              });
+              // setPaymentDateError(null);
+            }}
+            style={[
+              styles.input,
+              {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                color: "#d9d9d9",
+              },
+            ]}
+            name="paymentDate"
+            value={formData.payment_date}
+          >
+            <Icon name="calendar-alt" size={25} color="#A9A9AC" />
+            {paymentDate ? (
+              <Text style={{ color: "#000", marginLeft: 10 }}>
+                {moment(paymentDate).format("YYYY/MM/DD")}
+              </Text>
+            ) : (
+              <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>
+                Start Date
+              </Text>
+            )}
+          </Pressable>
+          <DateTimePickerModal
+            isVisible={isPaymentDatePickerVisible}
+            mode="date"
+            onConfirm={handleStartDateConfirm}
+            onCancel={hidePayementDatePicker}
+          />
+
+          <View style={styles.uploadFileSec}>
+            <Text style={[styles.file, styles.fieldName]}>
+              Payment Receipt:
+            </Text>
+            <View>
+              <TouchableOpacity>
+                <Button
+                  title="upload your file"
+                  color="black"
+                  onPress={() => {
+                    UploadFile();
+                    // setDocumentError(null);
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {isFilePicked ? (
+            <Text>{document?.document}</Text>
+          ) : (
+            <Text style={{ color: "#000" }}>{formData?.payment_receipt}</Text>
+          )}
+
+          <Text style={styles.fieldName}>Note:</Text>
+          <TextInput
+            style={[styles.input, { height: 150 }]}
+            name="note"
+            value={formData?.note}
+            onChangeText={(text) => {
+              setFormData({ ...formData, note: text });
+            }}
+            // placeholder="Add Note"
+            numberOfLines={10}
+            multiline={true}
+          />
+
+          <Text style={styles.fieldName}>Terms & Conditions:</Text>
+          <TextInput
+            style={[styles.input, { height: 150 }]}
+            name="terms_condition"
+            value={formData?.terms_condition}
+            onChangeText={(text) => {
+              setFormData({ ...formData, terms_condition: text });
+            }}
+            numberOfLines={10}
+            multiline={true}
+          />
+        </View>
 
         <View style={styles.bothButtons}>
           <Pressable onPress={handleSubmit} style={styles.submitButton}>

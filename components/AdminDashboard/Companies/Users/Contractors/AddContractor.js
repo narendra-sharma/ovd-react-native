@@ -188,7 +188,20 @@ const AddContractor = ({ navigation }) => {
           });
         }
       } catch (error) {
-        Toast.show("Cannot Add New Contractor", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -196,7 +209,6 @@ const AddContractor = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
       // setFormData(initialFormData);
     } else {
