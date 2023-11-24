@@ -17,7 +17,10 @@ import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import * as DocumentPicker from "expo-document-picker";
 import Toast from "react-native-root-toast";
 import * as ImagePicker from "expo-image-picker";
-import { apiAddNewTask } from "../../../../../apis/tasks";
+import {
+  apiAddNewTask,
+  apiGetTasksDropdownData,
+} from "../../../../../apis/tasks";
 
 const AddTask = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});
@@ -44,12 +47,12 @@ const AddTask = ({ navigation, route }) => {
 
   useEffect(() => {
     const getAllData = async () => {
-      const res = await apiGetTasksDropdownData();
-      // console.log("res: ", res.data);
-      const tempProjects = res?.data?.projects?.map((project) => {
-        return { label: project.project_name, value: project.id };
-      });
-      setProjectsList([...tempProjects]);
+      const res = await apiGetTasksDropdownData(route?.params?.id);
+      console.log("res: ", res.data);
+      // const tempProjects = res?.data?.projects?.map((project) => {
+      //   return { label: project.project_name, value: project.id };
+      // });
+      // setProjectsList([...tempProjects]);
 
       const tempContractors = res?.data?.contractors?.map((contractor) => {
         return { label: contractor.name, value: contractor.id };
@@ -229,7 +232,7 @@ const AddTask = ({ navigation, route }) => {
         //   form_data.append(key, taskData[key]);
         // }
         form_data.append("name", taskData.name);
-        form_data.append("project", route.params.projectId);
+        form_data.append("project", route.params.id);
         form_data.append("contractor", taskData.contractor);
         form_data.append("cost", taskData.cost);
         form_data.append("description", taskData.description);
