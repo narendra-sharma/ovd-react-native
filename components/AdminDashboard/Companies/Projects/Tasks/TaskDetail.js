@@ -6,34 +6,70 @@ import {
   apiDeleteTask,
   apiGetPreFilledTaskDetails,
 } from "../../../../../apis/tasks";
+import { url } from "../../../../../constants";
 
 const TaskDetail = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});
-  const [projectsList, setProjectsList] = useState([]);
-  const [contractorList, setContractorList] = useState([]);
+  const [tagsList, setTagsList] = useState([]);
+  const [contractorList, setContractorsList] = useState([]);
   const [projectDetail, setProjectDetail] = useState({});
   // const [companyList, setCompanyList] = useState([]);
-
-  // useEffect(() => {
-  //   setTaskData({ ...route.params });
-  //   navigation.setOptions({
-  //     title: `Task - ${route.params.taskName}`,
-  //   });
-  // }, []);
+  const [documents, setDocuments] = useState([]);
+  const [beforeImage, setBeforeImage] = useState("");
+  const [afterImage, setAfterImage] = useState("");
 
   useEffect(() => {
-    const getAllData = async () => {
-      const res = await apiGetPreFilledTaskDetails(route?.params?.id);
-      // console.log("res: ", res.data);
-      setTaskData({ ...res?.data?.task });
-      setProjectDetail({ ...res?.data?.project });
-      setContractorList([...res?.data?.contractors]);
-      // setCompanyList([...res?.data?.contractors]);
-      // console.log(res.data);
-    };
-
     getAllData();
   }, []);
+
+  const getAllData = async () => {
+    const res = await apiGetPreFilledTaskDetails(route.params.id);
+    console.log("task data: ", res?.data);
+    console.log(
+      `${url.slice(0, -4)}${res?.data?.after_image}`,
+      "res?.data?.after_image"
+    );
+    setTaskData({
+      ...res.data.task,
+      // tags: JSON.parse(res.data.task.tags_id),
+    });
+
+    if (res?.data?.documents?.length > 0) {
+      setIsFilePicked(true);
+      const tempDocs = res.data.documents.map((doc, idx) => {
+        return {
+          ...doc,
+          uri: `${url.slice(0, -4)}${doc.uri}`,
+        };
+      });
+      console.log("task documents!!!!! ", tempDocs);
+      setDocuments([...tempDocs]);
+    }
+
+    if (res?.data?.before_image)
+      setBeforeImage(`${url.slice(0, -4)}${res?.data?.before_image}`);
+    if (res?.data?.after_image)
+      setAfterImage(`${url.slice(0, -4)}${res?.data?.after_image}`);
+
+    setProjectDetail({ ...res?.data?.project });
+
+    // const tempProjects = res?.data?.project?.map((project) => {
+    //   return { label: project.project_name, value: project.id };
+    // });
+    // setProjectsList([...tempProjects]);
+
+    const tempContractors = res?.data?.contractors?.map((contractor) => {
+      return { label: contractor.name, value: contractor.id };
+    });
+    setContractorsList([...tempContractors]);
+
+    const tempTags = res?.data?.tags?.map((tag) => {
+      return { label: tag.name, value: JSON.stringify(tag.id) };
+    });
+    setTagsList([...tempTags]);
+
+    // console.log(customersList);
+  };
 
   //handle task delete
   const handleDelete = async (name, id) => {
@@ -79,6 +115,12 @@ const TaskDetail = ({ navigation, route }) => {
           <Text style={styles.fieldName}>Project Name</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fieldContent}>{projectDetail?.project_name}</Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Status</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fieldContent}>{projectDetail?.status}</Text>
         </View>
 
         <View style={styles.fieldContainer}>

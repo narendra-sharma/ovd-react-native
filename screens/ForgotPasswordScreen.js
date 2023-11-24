@@ -6,6 +6,9 @@ import {
   TextInput,
   Pressable,
   SafeAreaView,
+  ToastAndroid,
+  ActivityIndicator,
+  Keyboard,
 } from "react-native";
 import { apiSendForgotPasswordCode } from "../apis/auth";
 import Toast from "react-native-root-toast";
@@ -13,6 +16,7 @@ import Toast from "react-native-root-toast";
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   //handle change in input
   const handleChange = (text) => {
@@ -23,16 +27,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
   //validate email
   const validateEmail = (email) => {
     if (email == "") {
-      setEmailError("Email is required");
-      return false;
+      setEmailError("Email is required*");
+      return;
     }
-    // setEmailError(null);
-    // return true;
 
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
-    if (!reg.test(email.trim(u))) {
-      setEmailError("Please enter a valid email");
+    if (!reg.test(email)) {
+      setEmailError("Please enter a valid email address");
       return false;
     } else {
       setEmailError(null);
@@ -42,13 +44,15 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   //handle form submit
   const handleSubmit = async () => {
-    try {
-      if (validateEmail(email)) {
+    if (validateEmail(email)) {
+      try {
+        setIsLoading(true);
         const res = await apiSendForgotPasswordCode({ email: email });
         console.log(res.data);
-        if (res.data.success == true) {
+        // console.log(res);
+        if (res.status == 200) {
           Toast.show("Code Sent", {
-            duration: Toast.durations.SHORT,
+            duration: Toast.durations.LONG,
             position: Toast.positions.BOTTOM,
             shadow: true,
             animation: true,
@@ -56,29 +60,21 @@ const ForgotPasswordScreen = ({ navigation }) => {
             delay: 0,
           });
           navigation.navigate("OTP", { email });
-          // navigation.navigate("OTP", { email });
-        } else {
-          Toast.show("email does not exist", {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-          });
         }
+        setIsLoading(false);
+        // navigation.navigate("OTP", { email });
+      } catch (error) {
+        setIsLoading(false);
+        Toast.show("Invalid Email", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
+        console.log(error.response.data);
       }
-    } catch (error) {
-      Toast.show("Something went wrong!", {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-
-      console.log(error);
     }
   };
 
@@ -88,9 +84,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "#fff",
       }}
     >
-      <Text style={styles.heading}>Enter your email:</Text>
+      <Text style={styles.heading}>Enter your email address</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -100,15 +97,21 @@ const ForgotPasswordScreen = ({ navigation }) => {
           onChangeText={(text) => handleChange(text)}
         />
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-        <Pressable
-          onPress={handleSubmit}
-          // onPress={() => setResetTokenExists(true)}
-          style={styles.submitButton}
-        >
-          <Text style={styles.submitText}>Submit</Text>
-        </Pressable>
       </View>
+      <Pressable
+        onPress={() => {
+          handleSubmit();
+          Keyboard.dismiss();
+        }}
+        // onPress={() => setResetTokenExists(true)}
+        style={styles.submitButton}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#fff" size={22} />
+        ) : (
+          <Text style={styles.submitText}> Submit </Text>
+        )}
+      </Pressable>
     </SafeAreaView>
   );
 };
@@ -117,40 +120,45 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "#0B1C47",
+    marginBottom: 10,
   },
 
   inputContainer: {
     width: "85%",
-    marginHorizontal: "auto",
+    display: "flex",
   },
 
   input: {
-    borderWidth: 1,
-    height: 44,
+    width: "100%",
+    height: 50,
     marginBottom: 5,
     marginTop: 10,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5,
+    paddingHorizontal: 15,
+    borderRadius: 8,
     width: "100%",
+    backgroundColor: "#EDEDED",
   },
 
   submitButton: {
     marginTop: 10,
     backgroundColor: "#696cff",
-    padding: 12,
-    borderRadius: 5,
-    width: "100%",
+    padding: 15,
+    borderRadius: 8,
+    width: "85%",
     alignItems: "center",
   },
 
   submitText: {
     color: "white",
+    fontSize: 15,
+    fontWeight: "600",
   },
 
   errorText: {
     color: "red",
     fontSize: 10,
+    marginBottom: 8,
   },
 });
 

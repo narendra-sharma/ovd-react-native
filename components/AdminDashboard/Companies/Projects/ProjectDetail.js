@@ -7,11 +7,9 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-// import TasksList from "./Tasks/TaskList";
 import { apiGetPreFilledProjectDetails } from "../../../../apis/projects";
 import { useFocusEffect } from "@react-navigation/native";
 import moment from "moment";
-import TasksList from "./Tasks/TaskList";
 import AllTasks from "./Tasks/AllTasks";
 import InvoiceLayout from "./Invoices/ViewInvoices";
 

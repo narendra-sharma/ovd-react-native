@@ -23,6 +23,7 @@ import {
   apiChangeBeforeImageStatus,
   apiChangeDocumentStatus,
   apiGetPreFilledTaskDetails,
+  apiUpdateTaskDetails,
 } from "../../../../../apis/tasks";
 import { url } from "../../../../../constants";
 
@@ -56,6 +57,7 @@ const EditTask = ({ navigation, route }) => {
 
   const getAllData = async () => {
     const res = await apiGetPreFilledTaskDetails(route.params.id);
+    console.log("task data: ", res?.data);
     console.log(
       `${url.slice(0, -4)}${res?.data?.after_image}`,
       "res?.data?.after_image"
@@ -140,7 +142,7 @@ const EditTask = ({ navigation, route }) => {
     setStartDate(date);
     setTaskData((prev) => ({
       ...prev,
-      start_date: moment(date).format("MM/DD/YYYY"),
+      start_date: moment(date).format("YYYY/MM/DD"),
     }));
     hideStartDatePicker();
   };
@@ -157,7 +159,7 @@ const EditTask = ({ navigation, route }) => {
     setEndDate(date);
     setTaskData((prev) => ({
       ...prev,
-      end_date: moment(date).format("MM/DD/YYYY"),
+      end_date: moment(date).format("YYYY/MM/DD"),
     }));
     // } else {
     //   // setend_dateError("end_date cannot be before the start date");
@@ -281,7 +283,7 @@ const EditTask = ({ navigation, route }) => {
 
         if (documents?.length > 0) {
           documents.forEach((doc) => {
-            let obj = { ...doc };
+            let obj = {};
             obj.name = `${doc.uri}`;
             obj.uri = doc.uri;
 
@@ -678,7 +680,13 @@ const EditTask = ({ navigation, route }) => {
             <Text style={styles.addText}>Task Image After Completion</Text>
           </TouchableOpacity>
           {afterImage && (
-            <View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Image
                 source={{ uri: afterImage }}
                 style={{ width: 150, height: 150, margin: 10 }}

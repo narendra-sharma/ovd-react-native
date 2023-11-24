@@ -507,7 +507,7 @@ const RightDrawer = ({ navigation }) => {
       />
 
       {/*All Accounts/Users Screens */}
-      <Drawer.Screen
+      {/* <Drawer.Screen
         options={{
           drawerIcon: () => <Icon name="users" size={30} />,
           title: "Accounts",
@@ -516,7 +516,7 @@ const RightDrawer = ({ navigation }) => {
         }}
         name="Accounts"
         component={AccountsStackScreen}
-      />
+      /> */}
 
       {/* Consultant Manager Screens */}
       <Drawer.Screen

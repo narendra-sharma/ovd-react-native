@@ -16,10 +16,10 @@ export const apiGetAllTasks = async (tagId = null, projectId) => {
   return response;
 };
 
-export const apiGetTasksDropdownData = async () => {
+export const apiGetTasksDropdownData = async (projectId) => {
   const token = await AsyncStorage.getItem("token");
   const response = await request({
-    path: "auth/create-task",
+    path: `auth/create-task/${projectId}`,
     headers: {
       Authorization: `Bearer ${JSON.parse(token)}`,
     },

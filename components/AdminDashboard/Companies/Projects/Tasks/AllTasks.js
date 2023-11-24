@@ -19,7 +19,7 @@ const AllTasks = ({ navigation, projectId }) => {
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          navigation.navigate("Add Task", { projectId: projectId });
+          navigation.navigate("Add Task", { id: projectId });
         }}
       >
         <Text style={styles.addText}>
