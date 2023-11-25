@@ -37,32 +37,12 @@ const Profile = ({ navigation }) => {
     }, [])
   );
 
-  // useEffect(() => {
-  //   const getProfileData = async () => {
-  //     try {
-  //       const res = await apiGetProfileDetails();
-  //       console.log("we got from api: ", res.data);
-  //       setUserData(res.data.users);
-  //       // await AsyncStorage.setItem("profile", JSON.stringify(res.data.users));
-  //       // const user = await AsyncStorage.getItem("profile");
-  //       // // console.log("local storage: ", user);
-  //       // const parsedUser = JSON.parse(user);
-  //       // setUserData({
-  //       //   ...parsedUser,
-  //       // });
-  //       console.log("local storage: ", userData);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-
-  //   getProfileData();
-  // }, []);
-
   useEffect(() => {}, [userData]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
+    >
       <>
         <View style={{ width: "85%", marginHorizontal: "auto" }}>
           {/* <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
@@ -96,11 +76,11 @@ const Profile = ({ navigation }) => {
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}> {userData.email} </Text>
           </View>
-          <View style={styles.fieldContainer}>
+          {/* <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Username</Text>
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}> {userData.username} </Text>
-          </View>
+          </View> */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Organization</Text>
             <Text style={styles.span}>:</Text>
@@ -116,7 +96,7 @@ const Profile = ({ navigation }) => {
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}> {userData.address} </Text>
           </View>
-          <View style={styles.fieldContainer}>
+          {/* <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>State/UT </Text>
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}> {userData.state} </Text>
@@ -125,7 +105,7 @@ const Profile = ({ navigation }) => {
             <Text style={styles.fieldName}>Country</Text>
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}> {userData.country} </Text>
-          </View>
+          </View> */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Zip Code</Text>
             <Text style={styles.span}>:</Text>
@@ -191,7 +171,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     marginTop: 20,
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
 
   input: {
@@ -217,7 +197,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "space-around",
     backgroundColor: "#696cff",
-    marginBottom: 12
+    marginBottom: 12,
   },
 
   submitText: {
@@ -232,7 +212,7 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
   fielContent: {
@@ -240,7 +220,7 @@ const styles = StyleSheet.create({
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   errorText: {

@@ -1,75 +1,51 @@
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  Modal,
-  Alert,
-  TextInput,
-} from "react-native";
-import { mockData } from "../MOCK_DATA";
+import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import ProjectsList from "./ProjectsList";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import EditProject from "./EditProject";
-import AddProject from "./AddProject";
-import ProjectDetail from "./ProjectDetail";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import EditInvoice from "./EditInvoice";
+import AddInvoice from "./AddInvoice";
+import InvoiceDetail from "./InvoiceDetail";
+import InvoiceList from "./InvoiceList";
 import { useIsFocused } from "@react-navigation/native";
-import { useCustomActiveScreenStatus } from "../../../../Contexts/ActiveScreenContext";
-import AllTasks from "./Tasks/AllTasks";
-import EditTask from "./Tasks/EditTask";
-import AddTask from "./Tasks/AddTask";
-import TaskDetail from "./Tasks/TaskDetail";
-import EditInvoice from "./Invoices/EditInvoice";
-import AddInvoice from "./Invoices/AddInvoice";
-import InvoiceDetail from "./Invoices/InvoiceDetail";
-
-const initialFormData = {
-  companyName: "",
-  email: "",
-  phoneNo: "",
-  jobs: [{}],
-};
 
 const Stack = createNativeStackNavigator();
 
-const ProjectsLayout = ({ navigation }) => {
+const InvoiceLayout = ({ navigation, projectId }) => {
   return (
     <View style={styles.container}>
+      <InvoiceList navigation={navigation} projectId={projectId} />
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          navigation.navigate("Add Project");
+          navigation.navigate("Add Invoice", { id: projectId });
         }}
       >
         <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New
+          <Icon name="plus-circle" /> New Invoice
         </Text>
       </Pressable>
-
-      <ProjectsList navigation={navigation} />
     </View>
   );
 };
 
-const ViewProjects = ({ navigation }) => {
+export default InvoiceLayout;
+
+const ViewInvoices = ({ navigation }) => {
   const isFocused = useIsFocused();
   const { setActiveScreen } = useCustomActiveScreenStatus();
 
   useEffect(() => {
     if (isFocused) {
-      setActiveScreen("Projects");
+      setActiveScreen("All Invoices");
     }
   }, []);
 
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="My Projects"
-        component={ProjectsLayout}
+        name="My Invoices"
+        component={InvoiceLayout}
         options={({ navigation }) => ({
           headerLeft: () => (
             <MaterialIcons
@@ -81,34 +57,14 @@ const ViewProjects = ({ navigation }) => {
           ),
         })}
       />
-      <Stack.Screen name="Edit Project" component={EditProject} />
-      <Stack.Screen name="Add Project" component={AddProject} />
-      <Stack.Screen name="Project Details" component={ProjectDetail} />
       <Stack.Screen name="Edit Invoice" component={EditInvoice} />
       <Stack.Screen name="Add Invoice" component={AddInvoice} />
       <Stack.Screen name="Invoice Details" component={InvoiceDetail} />
-      {/* <Stack.Screen
-        name="My Tasks"
-        component={AllTasks}
-        options={({ navigation }) => ({
-          headerLeft: () => (
-            <MaterialIcons
-              onPress={() => navigation.toggleDrawer()}
-              name="menu"
-              size={25}
-              style={{ marginRight: 30 }}
-            />
-          ),
-        })}
-      /> */}
-      <Stack.Screen name="Edit Task" component={EditTask} />
-      <Stack.Screen name="Add Task" component={AddTask} />
-      <Stack.Screen name="Task Details" component={TaskDetail} />
     </Stack.Navigator>
   );
 };
 
-export default ViewProjects;
+// export default ViewInvoices;
 
 const styles = StyleSheet.create({
   container: {

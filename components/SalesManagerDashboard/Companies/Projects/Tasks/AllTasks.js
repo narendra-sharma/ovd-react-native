@@ -12,22 +12,22 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome5";
 import TasksList from "./TaskList";
 
-const AllTasks = ({ navigation }) => {
+const AllTasks = ({ navigation, projectId }) => {
   return (
     <View style={styles.container}>
+      <TasksList navigation={navigation} projectId={projectId} />
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          navigation.navigate("Add Task");
+          navigation.navigate("Add Task", { id: projectId });
         }}
       >
         <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New
+          <Icon name="plus-circle" /> Add New Task
         </Text>
       </Pressable>
-      <TasksList navigation={navigation} />
 
-      {/* <TasksList navigation={navigation} /> */}
+      {/* <TasksList  navigation={navigation} /> */}
     </View>
   );
 };
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     paddingTop: 22,
     width: "100%",
     height: "100%",
-    padding: 12,
+    padding: 2,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -7,6 +7,7 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import Toast from "react-native-root-toast";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -21,6 +22,8 @@ import {
   apiUpdateProjectDetails,
 } from "../../../../apis/projects";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import * as DocumentPicker from "expo-document-picker";
+import { url } from "../../../../constants";
 
 const initialFormData = {
   name: "",
@@ -51,6 +54,8 @@ const EditProject = ({ navigation, route }) => {
   const [customersList, setCustomersList] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [quotationList, setQuotationList] = useState([]);
+  const [document, setDocument] = useState(null);
+  const [isFilePicked, setIsFilePicked] = useState(false);
 
   const [nameError, setNameError] = useState(null);
   const [companyError, setCompanyError] = useState(null);
@@ -62,10 +67,12 @@ const EditProject = ({ navigation, route }) => {
   const [hoursError, setHoursError] = useState(null);
   const [addressError, setAddressError] = useState(null);
   const [billingError, setBillingError] = useState(null);
+  const [documentError, setDocumentError] = useState(null);
 
   useEffect(() => {
     const getAllData = async () => {
       const res = await apiGetPreFilledProjectDetails(route.params.id);
+      console.log("edit project data: ", res.data);
       setFormData({ ...res.data.project });
       const tempCompanies = res.data.companies.map((company) => {
         return { label: company.name, value: company.id };
@@ -100,6 +107,23 @@ const EditProject = ({ navigation, route }) => {
 
     getQuotations();
   }, [formData.company_id]);
+
+  //handle file upload
+  const UploadFile = async () => {
+    let result = await DocumentPicker.getDocumentAsync();
+    console.log(result.assets[0].uri);
+    if (result.assets[0].uri) {
+      setIsFilePicked(true);
+
+      setDocument({
+        document: result.assets[0].uri,
+        fileName: result.assets[0].name,
+        fileType: result.assets[0].mimeType,
+      });
+
+      // console.log(docs);
+    }
+  };
 
   //date functions
   const hideStartDatePicker = () => {
@@ -235,6 +259,42 @@ const EditProject = ({ navigation, route }) => {
       // &&
       // validateBilling(formData.billing_type)
     ) {
+      const form_data = new FormData();
+
+      for (var key in formData) {
+        form_data.append(key, formData[key]);
+      }
+
+      form_data.append("start_date", moment(startDate).format("MM/DD/YYYY"));
+      form_data.append("company", formData.company_id);
+      form_data.append("name", formData.project_name);
+      form_data.append("estimated_hour", formData.estimated_hours);
+      form_data.append("deadline", formData.end_date);
+      form_data.append("number", formData.contact_number);
+      form_data.append("quotation", formData.quotes_id);
+
+      if (isFilePicked)
+        form_data.append("document", {
+          uri: document.document,
+          type: document.fileType,
+          name: document.fileName,
+        });
+      else {
+        let obj = {
+          uri: `${url.slice(0, -4)}${formData.document}`,
+          name: formData.document,
+        };
+
+        const docType = obj.uri.substring(obj.uri.lastIndexOf(".") + 1);
+        if (docType == "jpg" || docType == "jpeg") obj.type = "image/jpeg";
+        else if (docType == "png") obj.type = "image/png";
+        else if (docType == "doc") obj.type = "application/msword";
+        else if (docType == "docx")
+          obj.type =
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        else if (docType == "pdf") obj.type = "application/pdf";
+        form_data.append("document", obj);
+      }
       try {
         // console.log("edit project obj:", {
         //   ...formData,
@@ -246,20 +306,7 @@ const EditProject = ({ navigation, route }) => {
         //   deadline: formData.end_date,
         //   number: formData.contact_number,
         // });
-        const res = await apiUpdateProjectDetails(
-          {
-            ...formData,
-            company: formData.company_id,
-            // customer: formData.customer_id,
-            name: formData.project_name,
-            // consultant: formData.consultant_id,
-            estimated_hour: formData.estimated_hours,
-            deadline: formData.end_date,
-            number: formData.contact_number,
-            quotation: formData.quotes_id,
-          },
-          route.params.id
-        );
+        const res = await apiUpdateProjectDetails(form_data, route.params.id);
         console.log("res: ", res);
         if (res.status == 200) {
           Toast.show("Project Updated", {
@@ -283,6 +330,26 @@ const EditProject = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
       }
     } else {
       validateProjectName(formData.project_name);
@@ -616,6 +683,27 @@ const EditProject = ({ navigation, route }) => {
           {addressError ? (
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
+
+          <View style={styles.uploadFileSec}>
+            <Text style={[styles.file, styles.fieldName]}>Upload File</Text>
+            <View style={styles.button}>
+              <TouchableOpacity>
+                <Button
+                  title="upload your file"
+                  color="black"
+                  onPress={() => {
+                    UploadFile();
+                    setDocumentError(null);
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {isFilePicked ? (
+            <Text>{document?.document}</Text>
+          ) : (
+            <Text style={{ color: "#000" }}>{formData?.document}</Text>
+          )}
 
           {/* <Text style={styles.fieldName}>Billing Type:</Text>
           <DropdownMenu

@@ -227,7 +227,7 @@ const EditQuote = ({ navigation, route }) => {
   useEffect(() => {
     const getAllData = async () => {
       const res = await apiGetQuoteDetails(route.params.id);
-      console.log("quote data:", res.data);
+      console.log("quote data:", res.data.quotes);
       setFormData({ ...res.data.quotes });
 
       const tempCompanies = res.data.companies.map((company) => {
@@ -235,16 +235,29 @@ const EditQuote = ({ navigation, route }) => {
       });
       setCompanyList([...tempCompanies]);
 
-      const tempConsultants = res.data.consultant.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
+      const tempCms = res.data.consManager.map((cm) => {
+        return { label: cm.name, value: cm.id };
       });
-      setConsultantList([...tempConsultants]);
+      setConsultantManagerList([...tempCms]);
 
       setItemsList([...res?.data?.quotes?.quotes_items]);
     };
-
     getAllData();
   }, []);
+
+  useEffect(() => {
+    const getConsultantData = async () => {
+      const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
+      // console.log("consultants", res.data);
+
+      const tempConsultants = res.data.data.map((consultant) => {
+        return { label: consultant.name, value: consultant.id };
+      });
+      setConsultantList([...tempConsultants]);
+    };
+
+    getConsultantData();
+  }, [formData.consultant_manager]);
 
   //validation functions
   const validateTitle = (name) => {
@@ -525,7 +538,20 @@ const EditQuote = ({ navigation, route }) => {
           });
         }
       } catch (error) {
-        Toast.show("Error in while editing quote", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -533,7 +559,6 @@ const EditQuote = ({ navigation, route }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
       // setFormData(initialFormData);
     } else {
@@ -609,7 +634,7 @@ const EditQuote = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -619,7 +644,7 @@ const EditQuote = ({ navigation, route }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
 
           <Text style={styles.fieldName}>Assign Consultant:</Text>
           <DropdownMenu

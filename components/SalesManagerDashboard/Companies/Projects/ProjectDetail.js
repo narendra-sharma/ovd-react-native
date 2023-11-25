@@ -1,9 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
-import { Text, View, StyleSheet, Pressable, FlatList } from "react-native";
-// import TasksList from "./Tasks/TaskList";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import { apiGetPreFilledProjectDetails } from "../../../../apis/projects";
 import { useFocusEffect } from "@react-navigation/native";
 import moment from "moment";
+import AllTasks from "./Tasks/AllTasks";
+import InvoiceLayout from "./Invoices/ViewInvoices";
 
 const ProjectDetail = ({ navigation, route }) => {
   const [projectData, setProjectData] = useState({});
@@ -52,14 +60,17 @@ const ProjectDetail = ({ navigation, route }) => {
     <View
       style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
     >
-      <View style={{ width: "90%", marginHorizontal: "auto" }}>
-        <Text style={styles.item}>{projectData.companyName}</Text>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Name</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>{projectData?.project_name} </Text>
-        </View>
-        {/* <View style={styles.fieldContainer}>
+      <ScrollView>
+        <View style={{ width: "100%" }}>
+          <Text style={styles.item}>{projectData.companyName}</Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Name</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>
+              {projectData?.project_name}{" "}
+            </Text>
+          </View>
+          {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Consultant</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fieldContent}> {projectData.consultant} </Text>
@@ -69,118 +80,126 @@ const ProjectDetail = ({ navigation, route }) => {
           <Text style={styles.span}>:</Text>
           <Text style={styles.fieldContent}> {consultant} </Text>
         </View> */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Company</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>
-            {
-              companiesList[
-                companiesList?.findIndex(
-                  (company) => company?.id == projectData?.company_id
-                )
-              ]?.name
-            }
-          </Text>
-        </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Company</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>
+              {
+                companiesList[
+                  companiesList?.findIndex(
+                    (company) => company?.id == projectData?.company_id
+                  )
+                ]?.name
+              }
+            </Text>
+          </View>
 
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Phone Number</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>{projectData?.contact_number}</Text>
-        </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Phone Number</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>
+              {projectData?.contact_number}
+            </Text>
+          </View>
 
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Project Location</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>{projectData?.address}</Text>
-        </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Project Location</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>{projectData?.address}</Text>
+          </View>
 
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Start Date</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>{projectData?.start_date}</Text>
-        </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Start Date</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>{projectData?.start_date}</Text>
+          </View>
 
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Deadline</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>
-            {projectData?.deadline?.end_date
-              ? moment(projectData?.deadline?.end_date).format("YYYY-MM-DD")
-              : "-"}
-          </Text>
-        </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Deadline</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>
+              {projectData?.deadline?.end_date
+                ? moment(projectData?.deadline?.end_date).format("YYYY-MM-DD")
+                : "-"}
+            </Text>
+          </View>
 
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Description</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>{projectData?.description} </Text>
-        </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Description</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>{projectData?.description} </Text>
+          </View>
 
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Total Estimated Hours</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>
-            {projectData?.estimated_hours}
-          </Text>
-        </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Total Estimated Hours</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>
+              {projectData?.estimated_hours}
+            </Text>
+          </View>
 
-        <View style={[styles.fieldContainer]}>
-          <Text style={styles.fieldName}>Quotation Amount</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>
-            {
-              quotationsList[
-                quotationsList?.findIndex(
-                  (quote) => quote?.id == projectData?.quotes_id
-                )
-              ]?.cost
-            }
-          </Text>
-        </View>
+          <View style={[styles.fieldContainer]}>
+            <Text style={styles.fieldName}>Quotation Amount</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>
+              {
+                quotationsList[
+                  quotationsList?.findIndex(
+                    (quote) => quote?.id == projectData?.quotes_id
+                  )
+                ]?.cost
+              }
+            </Text>
+          </View>
 
-        <View style={[styles.fieldContainer]}>
-          <Text style={styles.fieldName}>Project Cost</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}>{projectData?.totalCost}</Text>
-        </View>
+          <View style={[styles.fieldContainer]}>
+            <Text style={styles.fieldName}>Project Cost</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fieldContent}>{projectData?.totalCost}</Text>
+          </View>
 
-        {/* <View style={styles.fieldContainer}>
+          {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Billing Type</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fieldContent}> {projectData.billing_type} </Text>
-        </View> 
+        </View> */}
 
+          {/* <TasksList tasks={route.params.tasks} navigation={navigation} /> */}
+        </View>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Tasks</Text>
           <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}> </Text>
-        </View>*/}
-      </View>
+        </View>
+        <AllTasks navigation={navigation} projectId={route?.params?.id} />
 
-      {/* <TasksList tasks={route.params.tasks} navigation={navigation} /> */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Invoices</Text>
+          <Text style={styles.span}>:</Text>
+        </View>
+        <InvoiceLayout navigation={navigation} projectId={route?.params?.id} />
 
-      <View style={styles.buttonsContainer}>
-        <Pressable
-          style={[styles.button, styles.buttonClose]}
-          // onPress={() => setIsCompanyEditOn(true)}
-        >
-          <Text
-            style={styles.textStyle}
-            onPress={() =>
-              navigation.navigate("Edit Project", { id: projectData.id })
-            }
+        <View style={styles.buttonsContainer}>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            // onPress={() => setIsCompanyEditOn(true)}
           >
-            Edit Project Details
-          </Text>
-        </Pressable>
-        <Pressable
-          style={styles.button}
-          // onPress={handleDeleteCompany}
-        >
-          <Text style={styles.textStyle}>Delete Project</Text>
-        </Pressable>
-      </View>
+            <Text
+              style={styles.textStyle}
+              onPress={() =>
+                navigation.navigate("Edit Project", { id: projectData.id })
+              }
+            >
+              Edit Project Details
+            </Text>
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            // onPress={handleDeleteCompany}
+          >
+            <Text style={styles.textStyle}>Delete Project</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
     </View>
   );
 };
