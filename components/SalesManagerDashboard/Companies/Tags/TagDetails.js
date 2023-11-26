@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { apiDeleteTag, apiGetPreFilledTagDetails } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
-import TasksList from "../Tasks/TaskList";
+import TasksList from "../Projects/Tasks/TaskList";
 
 const TagDetails = ({ navigation, route }) => {
   const [tagData, setTagData] = useState({});

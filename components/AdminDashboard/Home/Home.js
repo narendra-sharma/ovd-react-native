@@ -92,7 +92,7 @@ const Home = ({ navigation }) => {
 
   //get all data
   useFocusEffect(
-    useCallback(async () => {
+    useCallback(() => {
       let isActive = true;
 
       (async () => {

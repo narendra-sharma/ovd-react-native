@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
-import { apiDeleteTask, apiGetAllTasks } from "../../../../apis/tasks";
 import Toast from "react-native-root-toast";
+import { apiDeleteTask, apiGetAllTasks } from "../../../../../apis/tasks";
 
-const TasksList = ({ navigation, route, tagId = null }) => {
+const TasksList = ({ navigation, route, tagId = null, projectId = null }) => {
   const [taskList, setTasksList] = useState([]);
   const [deleteFlag, setDeleteFlag] = useState(false);
 
   console.log("tagId: ", tagId);
+  console.log("projectId: ", projectId);
 
   useFocusEffect(
     useCallback(() => {
@@ -24,10 +25,10 @@ const TasksList = ({ navigation, route, tagId = null }) => {
 
       const getAllTasks = async () => {
         if (tagId) {
-          const res = await apiGetAllTasks(tagId);
+          const res = await apiGetAllTasks(tagId, projectId);
           setTasksList(res?.data?.tasks);
         } else {
-          const res = await apiGetAllTasks();
+          const res = await apiGetAllTasks(tagId, projectId);
           setTasksList(res?.data?.tasks);
           console.log("tasks", res.data);
         }
