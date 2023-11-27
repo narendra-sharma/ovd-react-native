@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -12,7 +11,6 @@ import {
   DrawerItemList,
   createDrawerNavigator,
 } from "@react-navigation/drawer";
-import Home from "../Home/Home";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,21 +19,15 @@ import CompanyStackScreen from "../Companies/CompanyStackScreen";
 import ProfileStackScreen from "../Profile/ProfileStackScreen";
 import { useFocusEffect } from "@react-navigation/native";
 import ChangePassword from "../Settings/ChangePassword";
-import AccountsStackScreen from "../Accounts/AccountsStackScreen";
 import { ScrollView } from "react-native-gesture-handler";
 import ViewProjects from "../Companies/Projects/ViewProjects";
 import ViewQuotes from "../Companies/Quotes/ViewQuotes";
-import ConsultantManagerStack from "../Companies/Users/ConsultantManagers/ConsultantManagerStack";
 import ConsultantStack from "../Companies/Users/Consultants/ConsultantStack";
 import ContractorStack from "../Companies/Users/Contractors/ContractorStack";
 import CustomerStack from "../Companies/Users/Customers/CustomerStack";
-import EditQuote from "../Companies/Quotes/EditQuote";
-import TasksStackScreen from "../Companies/Tasks/TasksStackScreen";
 import TagsStackScreen from "../Companies/Tags/TagsStackScreen";
 import HomeStackScreen from "../Home/HomeStackScreen";
 import { useCustomActiveScreenStatus } from "../../../Contexts/ActiveScreenContext";
-import ViewInvoices from "../Companies/Invoices/ViewInvoices";
-import CommissionsStackScreen from "../../AdminDashboard/Companies/Commissions/CommissionsStackScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -86,19 +78,6 @@ const RightDrawer = ({ navigation }) => {
         }
       };
 
-      // switch (activeScreenName) {
-      //   case "Manage Companies":
-      //     setIsUsersSubMenuOpen(false);
-      //     return;
-      //   case "Accounts":
-      //     setIsCompaniesSubMenuOpen(false);
-      //     return;
-      //   default:
-      //     setIsCompaniesSubMenuOpen(false);
-      //     setIsUsersSubMenuOpen(false);
-      //     return;
-      // }
-
       getData();
       return () => {
         isActive = false;
@@ -107,22 +86,6 @@ const RightDrawer = ({ navigation }) => {
   );
 
   const { activeScreen, setActiveScreen } = useCustomActiveScreenStatus();
-  // console.log("active screen in drawer: ", activeScreen);
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const user = await AsyncStorage.getItem("profile");
-  //       const parsedUser = JSON.parse(user);
-  //       setUserData({ ...userData, ...parsedUser });
-  //       // console.log(userData);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-
-  //   getData();
-  // }, [navigation]);
 
   return (
     <Drawer.Navigator
@@ -194,7 +157,7 @@ const RightDrawer = ({ navigation }) => {
                 </Pressable>
 
                 {/* Accounts/Users Sub-Menu */}
-                <Pressable
+                {/* <Pressable
                   onPress={() => {
                     setIsUsersSubMenuOpen(!isUsersSubMenuOpen);
                     setIsCompaniesSubMenuOpen(false);
@@ -207,7 +170,7 @@ const RightDrawer = ({ navigation }) => {
                     size={30}
                   />
                   <Text style={styles.menuItemText}>
-                    Manage Users{" "}
+                    Users{" "}
                     {isUsersSubMenuOpen ? (
                       <Icon
                         style={{ marginLeft: 8 }}
@@ -222,40 +185,10 @@ const RightDrawer = ({ navigation }) => {
                       />
                     )}
                   </Text>
-                </Pressable>
-                {isUsersSubMenuOpen && (
+                </Pressable> */}
+                {/* {isUsersSubMenuOpen && (
                   <View>
                     <View>
-                      {/* Render sub-menu items */}
-                      <Pressable
-                        onPress={() => {
-                          props.navigation.navigate("Consultant Managers");
-                          setActiveScreen("Consultant Managers");
-                          // Handle sub-menu item click here
-                        }}
-                        style={[
-                          styles.subMenuItem,
-                          activeScreen == "Consultant Managers" &&
-                            styles.activeSubMenu,
-                        ]}
-                      >
-                        <Text style={styles.menuItemText}>
-                          Consultant Managers
-                        </Text>
-                      </Pressable>
-                      <Pressable
-                        onPress={() => {
-                          props.navigation.navigate("Consultants");
-                          setActiveScreen("Consultants");
-                          // Handle sub-menu item click here
-                        }}
-                        style={[
-                          styles.subMenuItem,
-                          activeScreen == "Consultants" && styles.activeSubMenu,
-                        ]}
-                      >
-                        <Text style={styles.menuItemText}>Consultants</Text>
-                      </Pressable>
                       <Pressable
                         onPress={() => {
                           props.navigation.navigate("Contractors");
@@ -284,7 +217,7 @@ const RightDrawer = ({ navigation }) => {
                       </Pressable>
                     </View>
                   </View>
-                )}
+                )} */}
 
                 {/* Custom Companies */}
                 <Pressable
@@ -306,7 +239,7 @@ const RightDrawer = ({ navigation }) => {
                 </Pressable>
 
                 {/* Custom Quotes Link */}
-                <Pressable
+                {/* <Pressable
                   onPress={() => {
                     props.navigation.navigate("Quotes");
                     setActiveScreen("Quotes");
@@ -321,9 +254,8 @@ const RightDrawer = ({ navigation }) => {
                     name="request-quote"
                     size={30}
                   />
-                  {/* <Icon name="home" size={30} /> */}
                   <Text style={styles.menuItemText}>All Quotes</Text>
-                </Pressable>
+                </Pressable> */}
 
                 {/* Custom Projects */}
                 <Pressable
@@ -344,27 +276,6 @@ const RightDrawer = ({ navigation }) => {
                   />
                   {/* <Icon name="home" size={30} /> */}
                   <Text style={styles.menuItemText}>All Projects</Text>
-                </Pressable>
-
-                {/* Custom Tasks */}
-                <Pressable
-                  onPress={() => {
-                    props.navigation.navigate("Tasks");
-                    setActiveScreen("Tasks");
-                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                  }}
-                  style={[
-                    styles.subMenuButton,
-                    activeScreen == "Tasks" && styles.activeSubMenu,
-                  ]}
-                >
-                  <MaterialIcons
-                    style={styles.drawerIcon}
-                    name="view-sidebar"
-                    size={30}
-                  />
-                  {/* <Icon name="home" size={30} /> */}
-                  <Text style={styles.menuItemText}>All Tasks</Text>
                 </Pressable>
 
                 {/* Custom Tags */}
@@ -389,7 +300,7 @@ const RightDrawer = ({ navigation }) => {
                 </Pressable>
 
                 {/* Custom Commissions */}
-                <Pressable
+                {/* <Pressable
                   onPress={() => {
                     props.navigation.navigate("All Commissions");
                     setActiveScreen("All Commissions");
@@ -405,30 +316,8 @@ const RightDrawer = ({ navigation }) => {
                     name="view-sidebar"
                     size={30}
                   />
-                  {/* <Icon name="home" size={30} /> */}
                   <Text style={styles.menuItemText}>All Commissions</Text>
-                </Pressable>
-
-                {/* Custom Invoices */}
-                <Pressable
-                  onPress={() => {
-                    props.navigation.navigate("All Invoices");
-                    setActiveScreen("All Invoices");
-                    // setIsHomeSubMenuOpen(!isHomeSubMenuOpen); // Toggle the sub-menu when Home is pressed
-                  }}
-                  style={[
-                    styles.subMenuButton,
-                    activeScreen == "All Invoices" && styles.activeSubMenu,
-                  ]}
-                >
-                  <MaterialIcons
-                    style={styles.drawerIcon}
-                    name="view-sidebar"
-                    size={30}
-                  />
-                  {/* <Icon name="home" size={30} /> */}
-                  <Text style={styles.menuItemText}>All Invoices</Text>
-                </Pressable>
+                </Pressable> */}
 
                 {/* Custom Change Password */}
                 <Pressable
@@ -511,57 +400,6 @@ const RightDrawer = ({ navigation }) => {
         component={CompanyStackScreen}
       />
 
-      {/*All Accounts/Users Screens */}
-      <Drawer.Screen
-        options={{
-          drawerIcon: () => <Icon name="users" size={30} />,
-          title: "Accounts",
-          headerShown: false,
-          // drawerItemStyle: { display: "none" },
-        }}
-        name="Accounts"
-        component={AccountsStackScreen}
-      />
-
-      {/* Consultant Manager Screens */}
-      <Drawer.Screen
-        name="Consultant Managers"
-        component={ConsultantManagerStack}
-        options={({ navigation }) => ({
-          title: "Consultant Managers",
-          headerShown: false,
-        })}
-      />
-
-      {/* Consultants Screens */}
-      <Drawer.Screen
-        name="Consultants"
-        component={ConsultantStack}
-        options={({ navigation }) => ({
-          title: "Consultants",
-          headerShown: false,
-        })}
-      />
-
-      {/* Contractors Screens */}
-      <Drawer.Screen
-        name="Contractors"
-        component={ContractorStack}
-        options={({ navigation }) => ({
-          title: "Contractors",
-          headerShown: false,
-        })}
-      />
-
-      {/* Customers Screens */}
-      <Drawer.Screen
-        name="Customers"
-        component={CustomerStack}
-        options={({ navigation }) => ({
-          title: "Customers",
-          headerShown: false,
-        })}
-      />
 
       {/* Profile Stack */}
       <Drawer.Screen
@@ -574,25 +412,6 @@ const RightDrawer = ({ navigation }) => {
         component={ProfileStackScreen}
       />
 
-      {/* Quotes Screens */}
-      <Drawer.Screen
-        name="Quotes"
-        component={ViewQuotes}
-        options={({ navigation }) => ({
-          title: "All Quotes",
-          headerShown: false,
-        })}
-      />
-
-      {/* <Drawer.Screen
-        name="Edit Quote"
-        component={EditQuote}
-        options={({ navigation }) => ({
-          title: "Edit Quote",
-          // headerShown: false,
-        })}
-      /> */}
-
       {/* Project Screens */}
       <Drawer.Screen
         name="Projects"
@@ -600,16 +419,6 @@ const RightDrawer = ({ navigation }) => {
         initialParams={{ homeFlag: false }}
         options={({ navigation }) => ({
           title: "My Projects",
-          headerShown: false,
-        })}
-      />
-
-      {/* Task Screens */}
-      <Drawer.Screen
-        name="Tasks"
-        component={TasksStackScreen}
-        options={({ navigation }) => ({
-          title: "My Tasks",
           headerShown: false,
         })}
       />
@@ -624,26 +433,6 @@ const RightDrawer = ({ navigation }) => {
         })}
       />
 
-      {/* Commissions Screens */}
-      <Drawer.Screen
-        name="All Commissions"
-        component={CommissionsStackScreen}
-        options={({ navigation }) => ({
-          title: "Commissions",
-          headerShown: false,
-        })}
-      />
-
-      {/* Invoices Screens */}
-      <Drawer.Screen
-        name="All Invoices"
-        component={ViewInvoices}
-        options={({ navigation }) => ({
-          title: "Invoices",
-          headerShown: false,
-        })}
-      />
-
       {/* Change Password */}
       <Drawer.Screen
         options={({ navigation }) => ({
@@ -654,16 +443,6 @@ const RightDrawer = ({ navigation }) => {
         name="Change Password"
         component={ChangePassword}
       />
-      {/* <Drawer.Screen
-        options={{
-          drawerIcon: () => <Icon name="user" size={30} />,
-          title: isEditOn ? "Edit Profile Details" : "Profile",
-        }}
-        name="Profile"
-        component={() => (
-          <Profile isEditOn={isEditOn} setIsEditOn={setIsEditOn} />
-        )}
-      /> */}
     </Drawer.Navigator>
   );
 };

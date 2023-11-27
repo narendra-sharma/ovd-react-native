@@ -75,9 +75,10 @@ const AddTag = ({ navigation }) => {
   const handleSubmit = async () => {
     if (
       validateTagName(formData.name) &&
-      validateDescription(formData.description) &&
-      validateCost(formData.total_cost) &&
-      validateEndDate(formData.deadline)
+      validateDescription(formData.description) 
+      // &&
+      // validateCost(formData.total_cost) &&
+      // validateEndDate(formData.deadline)
     ) {
       try {
         const res = await apiAddNewTag({ ...formData, status: 1 });
@@ -104,12 +105,32 @@ const AddTag = ({ navigation }) => {
         console.log(res);
       } catch (error) {
         console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
       }
     } else {
       validateTagName(formData.name);
       validateDescription(formData.description);
-      validateCost(formData.total_cost);
-      validateEndDate(formData.deadline);
+      // validateCost(formData.total_cost);
+      // validateEndDate(formData.deadline);
     }
   };
 

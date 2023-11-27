@@ -55,18 +55,20 @@ const ConsultantDetails = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
-      <View style={{width: "90%", marginHorizontal: "auto"}}>
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
+    >
+      <View style={{ width: "90%", marginHorizontal: "auto" }}>
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Name</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.name} </Text>
         </View>
-        <View style={styles.fieldContainer}>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Username</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.username} </Text>
-        </View>
+        </View> */}
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Email</Text>
           <Text style={styles.span}>:</Text>
@@ -87,7 +89,7 @@ const ConsultantDetails = ({ navigation, route }) => {
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.address} </Text>
         </View>
-        <View style={styles.fieldContainer}>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Country</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.country} </Text>
@@ -96,13 +98,14 @@ const ConsultantDetails = ({ navigation, route }) => {
           <Text style={styles.fieldName}>State / UT</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.state} </Text>
-        </View>
+        </View> */}
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Zip Code</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.zip_code} </Text>
         </View>
       </View>
+
       <View style={styles.buttonsContainer}>
         <Pressable
           style={[styles.button, styles.buttonClose]}
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
   fielContent: {
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   container: {

@@ -12,7 +12,6 @@ import {
 import { mockData } from "../MOCK_DATA";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import ProjectsList from "./ProjectsList";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import EditProject from "./EditProject";
@@ -20,6 +19,13 @@ import AddProject from "./AddProject";
 import ProjectDetail from "./ProjectDetail";
 import { useIsFocused } from "@react-navigation/native";
 import { useCustomActiveScreenStatus } from "../../../../Contexts/ActiveScreenContext";
+import AllTasks from "./Tasks/AllTasks";
+import EditTask from "./Tasks/EditTask";
+import AddTask from "./Tasks/AddTask";
+import TaskDetail from "./Tasks/TaskDetail";
+import EditInvoice from "./Invoices/EditInvoice";
+import AddInvoice from "./Invoices/AddInvoice";
+import InvoiceDetail from "./Invoices/InvoiceDetail";
 
 const initialFormData = {
   companyName: "",
@@ -78,6 +84,26 @@ const ViewProjects = ({ navigation }) => {
       <Stack.Screen name="Edit Project" component={EditProject} />
       <Stack.Screen name="Add Project" component={AddProject} />
       <Stack.Screen name="Project Details" component={ProjectDetail} />
+      <Stack.Screen name="Edit Invoice" component={EditInvoice} />
+      <Stack.Screen name="Add Invoice" component={AddInvoice} />
+      <Stack.Screen name="Invoice Details" component={InvoiceDetail} />
+      {/* <Stack.Screen
+        name="My Tasks"
+        component={AllTasks}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <MaterialIcons
+              onPress={() => navigation.toggleDrawer()}
+              name="menu"
+              size={25}
+              style={{ marginRight: 30 }}
+            />
+          ),
+        })}
+      /> */}
+      <Stack.Screen name="Edit Task" component={EditTask} />
+      <Stack.Screen name="Add Task" component={AddTask} />
+      <Stack.Screen name="Task Details" component={TaskDetail} />
     </Stack.Navigator>
   );
 };

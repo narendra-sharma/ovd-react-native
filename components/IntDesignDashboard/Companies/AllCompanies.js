@@ -98,7 +98,7 @@ const AllCompanies = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Company");
@@ -108,7 +108,7 @@ const AllCompanies = ({ navigation }) => {
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> Add New
         </Text>
-      </Pressable>
+      </Pressable> */}
 
       <FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
@@ -128,7 +128,7 @@ const AllCompanies = ({ navigation }) => {
               </Pressable>
 
               <View style={styles.iconsContainer}>
-                <TouchableNativeFeedback
+                {/* <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
                     navigation.navigate("Edit Company Details", {
@@ -151,7 +151,7 @@ const AllCompanies = ({ navigation }) => {
                       />
                     </Text>
                   </View>
-                </TouchableNativeFeedback>
+                </TouchableNativeFeedback> */}
 
                 <TouchableNativeFeedback
                   onPress={() => {

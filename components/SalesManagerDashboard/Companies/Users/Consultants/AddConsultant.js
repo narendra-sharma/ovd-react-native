@@ -14,6 +14,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
 import { apiGetAllUsers } from "../../../../../apis/companies";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CONSULTANT_USER_TYPE = 4;
 
@@ -48,6 +49,7 @@ const AddConsultant = ({ navigation }) => {
   const [zipcodeError, setZipcodeError] = useState(null);
   const [responseError, setResponseError] = useState(null);
   const [cmError, setCmError] = useState(null);
+  const [commissionError, setCommissionError] = useState(null);
 
   const [consultantManagerList, setConsultantManagerList] = useState([]);
 
@@ -60,19 +62,35 @@ const AddConsultant = ({ navigation }) => {
         (user) => user.user_type == 3
       );
 
-      const tempConsultantManager = consultantManager.map((manager) => {
-        return { label: manager.name, value: manager.id };
-      });
+      // const tempConsultantManager = consultantManager.map((manager) => {
+      //   return { label: manager.name, value: manager.id };
+      // });
 
-      setConsultantManagerList([...tempConsultantManager]);
+      // setConsultantManagerList([...tempConsultantManager]);
+
+      
+        (async() => {
+          const user = await AsyncStorage.getItem("profile")
+          setFormData({...formData, parent_id: JSON.parse(user).id })
+        })();
+      
     };
     getAllUsers();
   }, []);
+  
 
   //validation functions
   const validateName = (name) => {
     if (name == "") {
       setNameError("Name is required*");
+      return false;
+    }
+    return true;
+  };
+
+  const validateCommission = (commission) => {
+    if (commission == "" || commission == null) {
+      setCommissionError("Commision is required*");
       return false;
     }
     return true;
@@ -176,13 +194,14 @@ const AddConsultant = ({ navigation }) => {
   const handleSubmit = async () => {
     if (
       validateName(formData.name) &&
-      validateUsername(formData.username) &&
-      validateOrg(formData.org) &&
+      // validateUsername(formData.username) &&
+      // validateOrg(formData.org) &&
+      validateCommission(formData.commission) &&
       validatePhone(formData.phone_number) &&
-      validateCm(formData.parent_id) &&
+      // validateCm(formData.parent_id) &&
       validateAddress(formData.address) &&
-      validateCountry(formData.country) &&
-      validateState(formData.state) &&
+      // validateCountry(formData.country) &&
+      // validateState(formData.state) &&
       validateZipcode(formData.zip_code) &&
       validateEmail(formData.email)
     ) {
@@ -217,7 +236,20 @@ const AddConsultant = ({ navigation }) => {
           });
         }
       } catch (error) {
-        Toast.show("Cannot Add New Consultant", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -225,20 +257,20 @@ const AddConsultant = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
       // setFormData(initialFormData);
     } else {
-      validateUsername(formData.username);
+      // validateUsername(formData.username);
       validateName(formData.name);
-      validateOrg(formData.org);
+      // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
-      validateCountry(formData.country);
-      validateState(formData.state);
+      // validateCountry(formData.country);
+      // validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
       validateCm(formData.parent_id);
+      validateCommission(formData.commission);
     }
   };
 
@@ -263,7 +295,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          {/* <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -276,7 +308,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -308,7 +340,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -318,7 +350,36 @@ const AddConsultant = ({ navigation }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
+
+          <Text style={styles.fieldName}>Commision: </Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={[
+              { label: "30%", value: 30 },
+              { label: "40%", value: 40 },
+              { label: "50%", value: 50 },
+            ]}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Commission"
+            value={formData.commission}
+            onChange={(item) => {
+              setFormData({
+                ...formData,
+                commission: item.value,
+              });
+              setCommissionError(null);
+            }}
+          />
+          {commissionError ? (
+            <Text style={styles.errorText}>{commissionError}</Text>
+          ) : null}
 
           <Text style={styles.fieldName}>Organisation:</Text>
           <TextInput
@@ -428,7 +489,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -488,7 +549,7 @@ const AddConsultant = ({ navigation }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput

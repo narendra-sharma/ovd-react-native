@@ -10,18 +10,15 @@ import {
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { Dropdown } from "react-native-element-dropdown";
-import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
-import { apiGetAllUsers } from "../../../../../apis/companies";
 
 const CUSTOMER_USER_TYPE = 6;
 
 const initialFormData = {
   name: "",
-  username: "",
+  // username: "",
   email: "",
-  parent_id: "",
+  parent_id: 2,
   org: "",
   phone_number: "",
   address: "",
@@ -48,6 +45,13 @@ const AddCustomer = ({ navigation }) => {
   const [zipcodeError, setZipcodeError] = useState(null);
 
   const [responseError, setResponseError] = useState(null);
+
+  useEffect(() => {
+    (async() => {
+      const user = await AsyncStorage.getItem("profile")
+      setFormData({...formData, parent_id: JSON.parse(user).id })
+    })();
+  }, [])
 
   //validation functions
   const validateName = (name) => {
@@ -148,12 +152,12 @@ const AddCustomer = ({ navigation }) => {
   const handleSubmit = async () => {
     if (
       validateName(formData.name) &&
-      validateUsername(formData.username) &&
-      validateOrg(formData.org) &&
+      // validateUsername(formData.username) &&
+      // validateOrg(formData.org) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
-      validateCountry(formData.country) &&
-      validateState(formData.state) &&
+      // validateCountry(formData.country) &&
+      // validateState(formData.state) &&
       validateZipcode(formData.zip_code) &&
       validateEmail(formData.email)
     ) {
@@ -188,7 +192,20 @@ const AddCustomer = ({ navigation }) => {
           });
         }
       } catch (error) {
-        Toast.show("Cannot Add New Customer", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -196,17 +213,16 @@ const AddCustomer = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
       // setFormData(initialFormData);
     } else {
-      validateUsername(formData.username);
+      // validateUsername(formData.username);
       validateName(formData.name);
-      validateOrg(formData.org);
+      // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
-      validateCountry(formData.country);
-      validateState(formData.state);
+      // validateCountry(formData.country);
+      // validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
     }
@@ -233,7 +249,7 @@ const AddCustomer = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          {/* <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -246,7 +262,7 @@ const AddCustomer = ({ navigation }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -386,7 +402,7 @@ const AddCustomer = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -446,7 +462,7 @@ const AddCustomer = ({ navigation }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput

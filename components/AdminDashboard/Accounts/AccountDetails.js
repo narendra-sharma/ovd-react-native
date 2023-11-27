@@ -90,11 +90,11 @@ const AccountDetails = ({ navigation, route }) => {
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}> {userData.address} </Text>
           </View>
-          <View style={styles.fieldContainer}>
+          {/* <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>State/UT</Text>
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}> {userData.state} </Text>
-          </View>
+          </View> */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Country</Text>
             <Text style={styles.span}>:</Text>

@@ -46,6 +46,7 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <ScrollView>
+        <Text> Contractor / Supplier Staff Panel </Text>
         {/******************* CARDS *******************/}
         <View style={styles.boxesContainer}>
           <TouchableOpacity

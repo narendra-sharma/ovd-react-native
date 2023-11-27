@@ -1,42 +1,51 @@
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  Modal,
-  Alert,
-  TextInput,
-} from "react-native";
+import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import AllConsultantManagers from "./AllConsultantManagers";
-import AddConsultantManager from "./AddConsultantManager";
-import EditConsultantManager from "./EditConsultantManager";
-import ConsultantManagerDetails from "./ConsultantManagerDetails";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import EditInvoice from "./EditInvoice";
+import AddInvoice from "./AddInvoice";
+import InvoiceDetail from "./InvoiceDetail";
+import InvoiceList from "./InvoiceList";
 import { useIsFocused } from "@react-navigation/native";
-import { useCustomActiveScreenStatus } from "../../../../../Contexts/ActiveScreenContext";
 
 const Stack = createNativeStackNavigator();
 
-const ConsultantManagerStack = ({ navigation }) => {
+const InvoiceLayout = ({ navigation, projectId }) => {
+  return (
+    <View style={styles.container}>
+      <InvoiceList navigation={navigation} projectId={projectId} />
+      <Pressable
+        style={[styles.button, styles.addButton]}
+        onPress={() => {
+          navigation.navigate("Add Invoice", { id: projectId });
+        }}
+      >
+        <Text style={styles.addText}>
+          <Icon name="plus-circle" /> New Invoice
+        </Text>
+      </Pressable>
+    </View>
+  );
+};
+
+export default InvoiceLayout;
+
+const ViewInvoices = ({ navigation }) => {
   const isFocused = useIsFocused();
   const { setActiveScreen } = useCustomActiveScreenStatus();
 
   useEffect(() => {
     if (isFocused) {
-      setActiveScreen("Consultant Managers");
+      setActiveScreen("All Invoices");
     }
   }, []);
 
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="All Consultant Managers"
-        component={AllConsultantManagers}
+        name="My Invoices"
+        component={InvoiceLayout}
         options={({ navigation }) => ({
           headerLeft: () => (
             <MaterialIcons
@@ -48,23 +57,14 @@ const ConsultantManagerStack = ({ navigation }) => {
           ),
         })}
       />
-      <Stack.Screen
-        name="Consultant Manager Details"
-        component={ConsultantManagerDetails}
-      />
-      <Stack.Screen
-        name="Add Consultant Manager"
-        component={AddConsultantManager}
-      />
-      <Stack.Screen
-        name="Edit Consultant Manager"
-        component={EditConsultantManager}
-      />
+      <Stack.Screen name="Edit Invoice" component={EditInvoice} />
+      <Stack.Screen name="Add Invoice" component={AddInvoice} />
+      <Stack.Screen name="Invoice Details" component={InvoiceDetail} />
     </Stack.Navigator>
   );
 };
 
-export default ConsultantManagerStack;
+// export default ViewInvoices;
 
 const styles = StyleSheet.create({
   container: {
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 5,
     width: "50%",

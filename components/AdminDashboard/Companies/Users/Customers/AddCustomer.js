@@ -14,6 +14,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
 import { apiGetAllUsers } from "../../../../../apis/companies";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CUSTOMER_USER_TYPE = 6;
 
@@ -21,7 +22,7 @@ const initialFormData = {
   name: "",
   // username: "",
   email: "",
-  parent_id: "",
+  parent_id: 1,
   org: "",
   phone_number: "",
   address: "",
@@ -48,6 +49,13 @@ const AddCustomer = ({ navigation }) => {
   const [zipcodeError, setZipcodeError] = useState(null);
 
   const [responseError, setResponseError] = useState(null);
+
+  useEffect(() => {
+    (async() => {
+      const user = await AsyncStorage.getItem("profile")
+      setFormData({...formData, parent_id: JSON.parse(user).id })
+    })();
+  }, [])
 
   //validation functions
   const validateName = (name) => {

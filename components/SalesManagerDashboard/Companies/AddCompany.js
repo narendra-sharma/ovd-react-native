@@ -22,7 +22,7 @@ import { apiGetProjectsDropdownData } from "../../../apis/projects";
 
 const initialFormData = {
   companyName: "",
-  vatNumber: "",
+  // vatNumber: "",
   email: "",
   phoneNo: "",
   contractor: [],
@@ -244,15 +244,15 @@ const AddCompany = ({ navigation }) => {
     if (
       validateCompanyName(newCompanyData.companyName) &&
       validateAddress(newCompanyData.address) &&
-      validateVat(newCompanyData.vatNumber) &&
+      // validateVat(newCompanyData.vatNumber) &&
       // validateEmail(newCompanyData.email) &&
       // validatePhone(newCompanyData.phoneNo) &&
       // validateCm(newCompanyData.consultantManager) &&
       // validateConsultant(newCompanyData.consultant) &&
       // validateContractor(newCompanyData.contractor) &&
       validateCustomer(newCompanyData.customer_id) &&
-      validateCountry(newCompanyData.country) &&
-      validateState(newCompanyData.state) &&
+      // validateCountry(newCompanyData.country) &&
+      // validateState(newCompanyData.state) &&
       validateZipcode(newCompanyData.zipcode)
     ) {
       try {
@@ -261,7 +261,7 @@ const AddCompany = ({ navigation }) => {
           name: newCompanyData.companyName,
           address: newCompanyData.address,
           status: 1,
-          vat_number: newCompanyData.vatNumber,
+          // vat_number: newCompanyData.vatNumber,
           // consultant_manager: newCompanyData.consultantManager,
         });
         console.log("response: ");
@@ -287,7 +287,20 @@ const AddCompany = ({ navigation }) => {
           });
         }
       } catch (error) {
-        Toast.show("Cannot Add New Company", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -295,20 +308,19 @@ const AddCompany = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
       // setNewCompanyData(initialFormData);
     } else {
       validateCompanyName(newCompanyData.companyName);
       validateAddress(newCompanyData.address);
-      validateVat(newCompanyData.vatNumber);
+      // validateVat(newCompanyData.vatNumber);
       // validateCm(newCompanyData.consultantManager);
       // validateConsultant(newCompanyData.consultant);
       // validateContractor(newCompanyData.contractor);
       validateCustomer(newCompanyData.customer_id);
-      validateCountry(newCompanyData.country);
+      // validateCountry(newCompanyData.country);
+      // validateState(newCompanyData.state);
       validateZipcode(newCompanyData.zipcode);
-      validateState(newCompanyData.state);
       // validateEmail(newCompanyData.email);
       // validatePhone(newCompanyData.phoneNo);
     }
@@ -335,7 +347,7 @@ const AddCompany = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>VAT Number:</Text>
+          {/*<Text style={styles.fieldName}>VAT Number:</Text>
           <TextInput
             style={styles.input}
             name="vat"
@@ -348,7 +360,7 @@ const AddCompany = ({ navigation }) => {
           />
           {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
 
-          {/* <Text style={styles.fieldName}>Email:</Text>
+           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
             name="email"
@@ -529,7 +541,7 @@ const AddCompany = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -589,7 +601,7 @@ const AddCompany = ({ navigation }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
@@ -684,7 +696,6 @@ const placesStyle = StyleSheet.create({
     color: "black",
     borderColor: "gray",
     maxWidth: "100%",
-    height: "20%",
   },
   separator: {
     flex: 1,

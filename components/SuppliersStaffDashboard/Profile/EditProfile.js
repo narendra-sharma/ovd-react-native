@@ -13,8 +13,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { apiGetProfileDetails, apiUpdateProfile } from "../../../apis/auth";
-import { Country, State, City } from "country-state-city";
-import { Dropdown } from "react-native-element-dropdown";
 
 // import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
@@ -145,11 +143,11 @@ const EditProfile = ({ navigation }) => {
     if (
       validateName(userData.name) &&
       validateUsername(userData.username) &&
-      validateOrg(userData.org) &&
+      // validateOrg(userData.org) &&
       validatePhone(userData.phone_number) &&
       validateAddress(userData.address) &&
-      validateCountry(userData.country) &&
-      validateState(userData.state) &&
+      // validateCountry(userData.country) &&
+      // validateState(userData.state) &&
       validateZipcode(userData.zip_code)
     ) {
       try {
@@ -189,7 +187,20 @@ const EditProfile = ({ navigation }) => {
         }
         //   console.log(res.data);
       } catch (error) {
-        Toast.show("Cannot update profile", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -197,16 +208,15 @@ const EditProfile = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
     } else {
       validateUsername(userData.username);
       validateName(userData.name);
-      validateOrg(userData.org);
+      // validateOrg(userData.org);
       validatePhone(userData.phone_number);
       validateAddress(userData.address);
-      validateCountry(userData.country);
-      validateState(userData.state);
+      // validateCountry(userData.country);
+      // validateState(userData.state);
       validateZipcode(userData.zip_code);
     }
   };
@@ -260,7 +270,8 @@ const EditProfile = ({ navigation }) => {
             placeholder="Name"
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-          <Text style={styles.fieldName}>Username:</Text>
+
+          {/* <Text style={styles.fieldName}>Username:</Text>
           <TextInput
             style={styles.input}
             name="name"
@@ -273,11 +284,13 @@ const EditProfile = ({ navigation }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
+
           <Text style={styles.fieldName}>Organization:</Text>
           <TextInput
             style={styles.input}
             name="organization"
+            placeholder="Organisation"
             value={userData.org}
             onChangeText={(text) => {
               setUserData({ ...userData, org: text });
@@ -289,6 +302,7 @@ const EditProfile = ({ navigation }) => {
           <TextInput
             style={styles.input}
             name="phonenumber"
+            placeholder="Phone Number"
             value={userData.phone_number}
             onChangeText={(text) => {
               setUserData({ ...userData, phone_number: text });
@@ -407,7 +421,7 @@ const EditProfile = ({ navigation }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
             placeholderStyle={styles.placeholderStyle}
@@ -467,7 +481,7 @@ const EditProfile = ({ navigation }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput
