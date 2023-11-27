@@ -48,7 +48,7 @@ const EditAccount = () => {
         phonenumber: userData.phone_number,
         address: userData.address,
         org: userData.org,
-        state: userData.state,
+        // state: userData.state,
         country: userData.country,
         country_code: userData.country_code,
         latitude: userData.lat,
@@ -259,7 +259,7 @@ const EditAccount = () => {
                 setUserData({ ...userData, country: text })
               }
             /> */}
-          <Text>State/UT: </Text>
+          {/* <Text>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -281,7 +281,7 @@ const EditAccount = () => {
             onChange={(item) => {
               setUserData({ ...userData, state: item.label });
             }}
-          />
+          /> */}
           {/* <TextInput
               style={styles.input}
               name="state"

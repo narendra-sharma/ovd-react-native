@@ -538,20 +538,7 @@ const EditInvoice = ({ navigation, route }) => {
           });
         }
       } catch (error) {
-        console.log(error);
-        console.log("errors: ", error?.response?.data);
-
-        let msg = "";
-
-        Object.keys(error?.response?.data?.errors).map(
-          (key) => (msg += error?.response?.data?.errors[key] + " ")
-        );
-
-        if (msg == "") {
-          msg += "Server Error";
-        }
-
-        Toast.show(msg, {
+        Toast.show("Error in while editing quote", {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -559,6 +546,7 @@ const EditInvoice = ({ navigation, route }) => {
           hideOnPress: true,
           delay: 0,
         });
+        console.log(error);
       }
       // setFormData(initialFormData);
     } else {

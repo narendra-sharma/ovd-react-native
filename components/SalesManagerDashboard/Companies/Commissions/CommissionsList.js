@@ -14,8 +14,8 @@ const CommissionsList = ({ navigation }) => {
       (async () => {
         try {
           const res = await apiGetAllCommissions();
-          console.log("commissions: ", res.data.data);
-          setCommissionsList([...res.data.data]);
+          console.log("commissions: ", res.data);
+          setCommissionsList([...res?.data?.data]);
         } catch (error) {
           console.log(error);
         }
@@ -40,7 +40,7 @@ const CommissionsList = ({ navigation }) => {
               style={styles.listItem}
             >
               <Text style={styles.item}>{item.project_name}</Text>
-              <View style={styles.iconsContainer}>
+              {/* <View style={styles.iconsContainer}>
                 <Icon
                   onPress={() => navigation.navigate("Edit Commission", item)}
                   name="pen"
@@ -53,7 +53,7 @@ const CommissionsList = ({ navigation }) => {
                   size={22}
                   color="#444"
                 />
-              </View>
+              </View> */}
             </Pressable>
           </>
         )}

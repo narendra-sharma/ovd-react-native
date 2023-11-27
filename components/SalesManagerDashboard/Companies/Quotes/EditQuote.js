@@ -21,6 +21,7 @@ import {
   apiGetConsultantsForQuotes,
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialFormData = {
   name: "",
@@ -243,11 +244,17 @@ const EditQuote = ({ navigation, route }) => {
       setItemsList([...res?.data?.quotes?.quotes_items]);
     };
     getAllData();
+
+    (async() => {
+      const user = await AsyncStorage.getItem("profile")
+      setFormData({...formData, consultant_manager: JSON.parse(user).id })
+    })();
   }, []);
 
   useEffect(() => {
     const getConsultantData = async () => {
-      const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
+      const user = await AsyncStorage.getItem("profile")
+      const res = await apiGetConsultantsForQuotes(JSON.parse(user).id);
       // console.log("consultants", res.data);
 
       const tempConsultants = res.data.data.map((consultant) => {
@@ -634,7 +641,7 @@ const EditQuote = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -644,7 +651,7 @@ const EditQuote = ({ navigation, route }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
 
           <Text style={styles.fieldName}>Assign Consultant:</Text>
           <DropdownMenu

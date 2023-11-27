@@ -259,7 +259,7 @@ const EditAccount = () => {
                 setUserData({ ...userData, country: text })
               }
             /> */}
-          <Text>State/UT: </Text>
+          {/* <Text>State/UT: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -281,7 +281,7 @@ const EditAccount = () => {
             onChange={(item) => {
               setUserData({ ...userData, state: item.label });
             }}
-          />
+          /> */}
           {/* <TextInput
               style={styles.input}
               name="state"

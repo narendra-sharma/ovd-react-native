@@ -142,7 +142,7 @@ const AuthScreen = ({ navigation }) => {
         // setProfile(JSON.stringify(res.data.users));
         return;
 
-      case 18:
+      case 5:
         navigation.navigate("Supplier Staff Dashboard");
         return;
 

@@ -19,6 +19,7 @@ import {
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialFormData = {
   name: "",
@@ -232,7 +233,7 @@ const AddQuote = ({ navigation }) => {
   useEffect(() => {
     const getAllData = async () => {
       const res = await apiGetCreateQuoteDropdownData();
-      // console.log("dropdown api", res.data);
+      console.log("dropdown api", res.data);
       const tempCompanies = res.data.company.map((company) => {
         return { label: company.name, value: company.id };
       });
@@ -247,6 +248,11 @@ const AddQuote = ({ navigation }) => {
       //   setProjectList([...]);
     };
     getAllData();
+
+    (async() => {
+      const user = await AsyncStorage.getItem("profile")
+      setFormData({...formData, consultant_manager: JSON.parse(user).id })
+    })();
   }, []);
 
   useEffect(() => {
@@ -547,7 +553,20 @@ const AddQuote = ({ navigation }) => {
           });
         }
       } catch (error) {
-        Toast.show("An error has occurred", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -555,7 +574,6 @@ const AddQuote = ({ navigation }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
     } else {
       validateCompanyName(formData.company);
@@ -634,7 +652,7 @@ const AddQuote = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -644,7 +662,7 @@ const AddQuote = ({ navigation }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
 
           <Text style={styles.fieldName}>Assign Consultant:</Text>
           <DropdownMenu

@@ -31,7 +31,7 @@ const AllCustomers = ({ navigation }) => {
 
       const getCustomers = async () => {
         const res = await apiGetUsersFromUsers();
-        console.log(res.data);
+        console.log("customers listing: ", res.data);
         // console.log(res.data.data);
 
         setCustomersList([...res.data.customers]);

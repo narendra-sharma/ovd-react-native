@@ -64,11 +64,11 @@ const ContractorDetails = ({ navigation, route }) => {
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.name} </Text>
         </View>
-        <View style={styles.fieldContainer}>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Username</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.username} </Text>
-        </View>
+        </View> */}
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Email</Text>
           <Text style={styles.span}>:</Text>
@@ -89,7 +89,7 @@ const ContractorDetails = ({ navigation, route }) => {
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.address} </Text>
         </View>
-        <View style={styles.fieldContainer}>
+        {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Country</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.country} </Text>
@@ -98,7 +98,7 @@ const ContractorDetails = ({ navigation, route }) => {
           <Text style={styles.fieldName}>State / UT</Text>
           <Text style={styles.span}>:</Text>
           <Text style={styles.fielContent}> {userData.state} </Text>
-        </View>
+        </View> */}
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Zip Code</Text>
           <Text style={styles.span}>:</Text>

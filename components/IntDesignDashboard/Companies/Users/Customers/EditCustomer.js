@@ -162,12 +162,12 @@ const EditCustomer = ({ navigation, route }) => {
   const handleSubmit = async () => {
     if (
       validateName(formData.name) &&
-      validateUsername(formData.username) &&
-      validateOrg(formData.org) &&
+      // validateUsername(formData.username) &&
+      // validateOrg(formData.org) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
-      validateCountry(formData.country) &&
-      validateState(formData.state) &&
+      // validateCountry(formData.country) &&
+      // validateState(formData.state) &&
       validateZipcode(formData.zip_code) &&
       validateEmail(formData.email)
     ) {
@@ -197,7 +197,20 @@ const EditCustomer = ({ navigation, route }) => {
           });
         }
       } catch (error) {
-        Toast.show("Cannot Update User Details", {
+        console.log(error);
+        console.log("errors: ", error?.response?.data);
+
+        let msg = "";
+
+        Object.keys(error?.response?.data?.errors).map(
+          (key) => (msg += error?.response?.data?.errors[key] + " ")
+        );
+
+        if (msg == "") {
+          msg += "Server Error";
+        }
+
+        Toast.show(msg, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -205,17 +218,16 @@ const EditCustomer = ({ navigation, route }) => {
           hideOnPress: true,
           delay: 0,
         });
-        console.log(error);
       }
       // setFormData(initialFormData);
     } else {
-      validateUsername(formData.username);
+      // validateUsername(formData.username);
       validateName(formData.name);
-      validateOrg(formData.org);
+      // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
-      validateCountry(formData.country);
-      validateState(formData.state);
+      // validateCountry(formData.country);
+      // validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
     }
@@ -242,7 +254,7 @@ const EditCustomer = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Username: </Text>
+          {/* <Text style={styles.fieldName}>Username: </Text>
           <TextInput
             style={styles.input}
             name="username"
@@ -255,7 +267,7 @@ const EditCustomer = ({ navigation, route }) => {
           />
           {usernameError ? (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
@@ -397,7 +409,7 @@ const EditCustomer = ({ navigation, route }) => {
             <Text style={styles.errorText}>{addressError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Country: </Text>
+          {/* <Text style={styles.fieldName}>Country: </Text>
           <Dropdown
             style={[styles.dropdown]}
             placeholderStyle={styles.placeholderStyle}
@@ -457,7 +469,7 @@ const EditCustomer = ({ navigation, route }) => {
           />
           {stateError ? (
             <Text style={styles.errorText}>{stateError}</Text>
-          ) : null}
+          ) : null} */}
 
           <Text style={styles.fieldName}>Zip Code: </Text>
           <TextInput

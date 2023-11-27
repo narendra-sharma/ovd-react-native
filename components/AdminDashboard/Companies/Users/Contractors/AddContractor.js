@@ -49,6 +49,13 @@ const AddContractor = ({ navigation }) => {
 
   const [responseError, setResponseError] = useState(null);
 
+  useEffect(() => {
+    (async() => {
+      const user = await AsyncStorage.getItem("profile")
+      setFormData({...formData, parent_id: JSON.parse(user).id })
+    })();
+  }, [])
+
   //validation functions
   const validateName = (name) => {
     if (name == "") {
