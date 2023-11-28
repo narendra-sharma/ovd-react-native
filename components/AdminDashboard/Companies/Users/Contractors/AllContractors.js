@@ -7,10 +7,11 @@ import {
   View,
   Alert,
   TouchableNativeFeedback,
+  ActivityIndicator,
 } from "react-native";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteUser, apiGetUsersFromUsers } from "../../../../../apis/users";
 
@@ -24,17 +25,27 @@ const AllContractors = ({ navigation }) => {
   const [rippleColor, setRippleColor] = useState(randomHexColor());
   const [rippleRadius, setRippleRadius] = useState(10);
   const [rippleOverflow, setRippleOverflow] = useState(true);
-
+  const [allList, setAllList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const getContractors = async () => {
+        setIsLoading(true);
+        try{
         const res = await apiGetUsersFromUsers();
         console.log(res.data);
         // console.log(res.data.data);
 
         setContractorList([...res.data.contratrors]);
+        setAllList([...res.data.contratrors]);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
       };
 
       getContractors();
@@ -75,7 +86,15 @@ const AllContractors = ({ navigation }) => {
       { text: "OK", onPress: () => deleteUser() },
     ]);
   };
-
+  const handleSearch = (text) => {
+    let filteredData = [...allList]
+    if (text && text.length > 0) {
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      );
+    }
+    setContractorList([...filteredData]);
+  };
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable
@@ -89,8 +108,52 @@ const AllContractors = ({ navigation }) => {
           <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
-
-      <FlatList
+{/* SEARCHBOX CONTAINER */}
+<View style={styles.searchboxContainer}>
+        <Icon
+          style={{
+            marginHorizontal: 6,
+            // borderRightWidth: 1,
+            // borderRightColor: "#d9d9d9",
+          }}
+          color="#d9d9d9"
+          name="search"
+          size={20}
+        />
+        <TextInput
+          name="search"
+          placeholder="Search"
+          onChangeText={(text) => {
+            handleSearch(text);
+            setSearchTerm(text);
+          }}
+          style={{
+            width: "90%",
+            height: "100%",
+            // backgroundColor: "pink",
+            padding: 8,
+          }}
+          value={searchTerm}
+        />
+        {/* {searchTerm && searchTerm.length > 0 && (
+        <TouchableOpacity 
+          onPress={()=>{
+            handleSearch("");
+            setSearchTerm("");
+          }} 
+          style={{ padding: 8 }}
+        >
+          <Icon
+            name="window-close" // Replace with the actual icon name for a close or clear icon
+            size={20}
+            color="#000000"
+          />
+        </TouchableOpacity>
+      )} */}
+      </View>
+      {isLoading ? (
+        <ActivityIndicator color="#B76E79" size="large" style={{marginBottom:'80%',marginTop:"50%" }}/>
+      ) : (contractorList.length>0)?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
         data={contractorList}
@@ -154,7 +217,9 @@ const AllContractors = ({ navigation }) => {
             </Pressable>
           </>
         )}
-      />
+      />: (
+        <Text style={{ fontWeight: "bold",marginBottom:'100%',marginTop:"40%" }}>No Contractors Available!</Text>
+      )}
       {/* <Signature /> */}
     </ScrollView>
   );
@@ -233,5 +298,18 @@ const styles = StyleSheet.create({
 
   addText: {
     color: "#fff",
+  },
+  searchboxContainer: {
+    backgroundColor: "#EDEDED",
+    marginBottom: 16,
+    width: "96%",
+    display: "flex",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 4,
+    padding: 4,
   },
 });
