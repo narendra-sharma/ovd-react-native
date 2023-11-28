@@ -414,7 +414,7 @@ const RightDrawer = ({ navigation }) => {
           drawerIcon: () => (
             <MaterialIcons
               style={styles.drawerIcon}
-              name="settings"
+              name="account-tree"
               size={30}
             />
           ),

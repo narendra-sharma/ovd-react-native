@@ -14,7 +14,7 @@ import { mockProjects } from "./MockProjects";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import {
-  apiChangeProjectStatus,
+  apiChangeProjectApprovalStatus,
   apiDeleteProject,
   apiGetAllProjects,
 } from "../../../../apis/projects";
@@ -32,7 +32,7 @@ const ProjectsList = ({ navigation, companyId }) => {
 
       const getAllProjects = async () => {
         const res = await apiGetAllProjects();
-        // console.log("projects", res.data.projects);
+        console.log("projects", res.data.projects);
         //listing of quotes for a specific company
         if (companyId) {
           const projects = res.data.projects.filter(
@@ -84,23 +84,24 @@ const ProjectsList = ({ navigation, companyId }) => {
   };
 
   //handle open modal
-  const handleClicked = (name, id, status) => {
+  const handleClicked = (name, id, approved_by_customer) => {
     setModalVisible(true);
     // console.log(status);
     setFormData({
       name: name,
       id: id,
-      status: status,
+      approved_by_customer: approved_by_customer,
     });
   };
 
   //handle change project status API
   const changeProjectStatus = async () => {
     try {
-      const res = await apiChangeProjectStatus(formData, formData.id);
+      const res = await apiChangeProjectApprovalStatus(formData, formData.id);
       console.log(res.data);
       setDeteleFlag((prev) => !prev);
-      if (res?.data?.message == "Status changed successfully.") {
+      if (res?.data?.message == "Status changed") {
+        setModalVisible(false);
         Toast.show("Project Status Changed Successfully", {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
@@ -109,7 +110,6 @@ const ProjectsList = ({ navigation, companyId }) => {
           hideOnPress: true,
           delay: 0,
         });
-        setModalVisible(false);
       }
     } catch (error) {
       console.log(error);
@@ -199,7 +199,7 @@ const ProjectsList = ({ navigation, companyId }) => {
                     },
                   ]}
                 >
-                  STATUS
+                  APPROVE / DISAPPROVE
                 </Text>
                 {/* <TouchableOpacity
                   onPress={() => {
@@ -211,7 +211,7 @@ const ProjectsList = ({ navigation, companyId }) => {
                 </TouchableOpacity> */}
               </View>
 
-              <View>
+              {/* <View>
                 <Text
                   style={[
                     styles.item,
@@ -239,7 +239,7 @@ const ProjectsList = ({ navigation, companyId }) => {
                 >
                   DELETE
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
         }
@@ -255,25 +255,21 @@ const ProjectsList = ({ navigation, companyId }) => {
               }}
               style={styles.listItem}
             >
-              <Text style={styles.item}>{item.project_name}</Text>
+              <Text style={styles.item}>
+                {item.project_name}
+                {"\n"}
+                {item.approved_by_customer == 1 ? "Approved" : "Not Approved"}
+              </Text>
               <View style={styles.iconsContainer}>
                 <Icon
                   onPress={() =>
-                    handleClicked(item.project_name, item.id, item.status)
+                    handleClicked(
+                      item.project_name,
+                      item.id,
+                      item.approved_by_customer
+                    )
                   }
                   name="check-square"
-                  size={22}
-                  color="#444"
-                />
-                <Icon
-                  onPress={() => navigation.navigate("Edit Project", item)}
-                  name="pen"
-                  size={22}
-                  color="#444"
-                />
-                <Icon
-                  onPress={() => handleDelete(item.project_name, item.id)}
-                  name="trash-alt"
                   size={22}
                   color="#444"
                 />
@@ -302,7 +298,7 @@ const ProjectsList = ({ navigation, companyId }) => {
                 textDecorationLine: "underline",
               }}
             >
-              Change {formData.name}'s Status
+              Approve / Disapprove {formData.name}
             </Text>
 
             <Text style={styles.fieldName}>Project Status: </Text>
@@ -313,19 +309,18 @@ const ProjectsList = ({ navigation, companyId }) => {
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
               data={[
-                { label: "New", value: 1 },
-                { label: "In Progress", value: 2 },
-                { label: "Done", value: 3 },
+                { label: "Approve", value: 1 },
+                { label: "Disapprove", value: 0 },
               ]}
               maxHeight={300}
               labelField="label"
               valueField="value"
               placeholder="Select Status"
-              value={formData.status}
+              value={formData.approved_by_customer}
               onChange={(item) => {
                 setFormData({
                   ...formData,
-                  status: item.value,
+                  approved_by_customer: item.value,
                 });
               }}
             />

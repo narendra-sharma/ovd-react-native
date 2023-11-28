@@ -673,17 +673,17 @@ const DropdownMenu = ({
 
 const placesStyle = StyleSheet.create({
   textInputContainer: {
-    // backgroundColor: "rgba(0,0,0,0)",
     borderTopWidth: 0,
     borderBottomWidth: 0,
     // maxWidth: "100%",
     // minWidth: "90%",
-    borderColor: "gray",
     width: "100%",
+    borderColor: "gray",
+    // borderRadius: 5,
   },
   textInput: {
     backgroundColor: "transparent",
-    height: 44,
+    height: 45,
     color: "#5d5d5d",
     fontSize: 16,
     borderWidth: 0.5,

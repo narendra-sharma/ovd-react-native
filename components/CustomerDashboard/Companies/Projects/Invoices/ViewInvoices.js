@@ -15,7 +15,7 @@ const InvoiceLayout = ({ navigation, projectId }) => {
   return (
     <View style={styles.container}>
       <InvoiceList navigation={navigation} projectId={projectId} />
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Invoice", { id: projectId });
@@ -24,7 +24,7 @@ const InvoiceLayout = ({ navigation, projectId }) => {
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> New Invoice
         </Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 };
