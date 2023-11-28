@@ -10,6 +10,7 @@ import {
   Linking,
   ActivityIndicator
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import { MockQuotes } from "./MockQuotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -52,8 +53,10 @@ const QuotesList = ({ navigation, companyId }) => {
           setAllList([...quotes]);
         } else {
           //listing all quotes
-          setQuotesList(res.data.quotations);
+          setQuotesList([...res.data.quotations]);
           setAllList([...res.data.quotations]);
+        }
+          setIsLoading(false);
         }
         setIsLoading(false);
       } catch (error) {
@@ -140,16 +143,17 @@ const QuotesList = ({ navigation, companyId }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((quote) =>
-      quote?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setQuotesList([...filteredData]);
   };
   return (
     <View style={styles.container}>
-       {/* SEARCHBOX CONTAINER */}
-       <View style={styles.searchboxContainer}>
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
+
         <Icon
           style={{
             marginHorizontal: 6,
@@ -193,9 +197,9 @@ const QuotesList = ({ navigation, companyId }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (quotesList.length>0)?<FlatList
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (quotesList.length>0) ? <FlatList
         // style={{ height: 100 }}
         data={quotesList}
         renderItem={({ item }) => (
@@ -354,7 +358,7 @@ const styles = StyleSheet.create({
   addText: {
     color: "#fff",
   },
-
+  
   searchboxContainer: {
     backgroundColor: "#EDEDED",
     marginBottom: 16,

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -40,8 +41,8 @@ const AllCompanies = ({ navigation }) => {
           setCompaniesList([...res.data.data]);
           setAllList([...res.data.data]);
           setIsLoading(false);
-        } catch (err) {
-          console.log(err);
+        } catch (error) {
+          console.log(error);
           setIsLoading(false);
         }
       };
@@ -105,8 +106,8 @@ const AllCompanies = ({ navigation }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((user) =>
-        user?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setCompaniesList([...filteredData]);
@@ -124,6 +125,7 @@ const AllCompanies = ({ navigation }) => {
           <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
+
       {/* SEARCHBOX CONTAINER */}
       <View style={styles.searchboxContainer}>
         <Icon
@@ -167,12 +169,11 @@ const AllCompanies = ({ navigation }) => {
         </TouchableOpacity>
       )} */}
       </View>
-      {/* SCROLLABLE LIST */}
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (companiesList.length>0)?<FlatList
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (companiesList.length>0) ?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
         data={companiesList}
@@ -239,7 +240,7 @@ const AllCompanies = ({ navigation }) => {
       />: (
         <View style={styles.container}>
           <Text style={{ fontWeight: "bold"}}>No Companies Available!</Text>
-          </View>
+        </View>
       )}
       {/* <Signature /> */}
     </ScrollView>

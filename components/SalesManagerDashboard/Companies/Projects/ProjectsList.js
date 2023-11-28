@@ -44,11 +44,11 @@ const ProjectsList = ({ navigation, companyId }) => {
           const projects = res.data.projects.filter(
             (project) => project.company_id == companyId
           );
-          setProjectsList(projects);
-          setAllList([...projects]);
+          setProjectsList([...projects]);
+          setAllList([...projects])
         } else {
           //listing all projects
-          setProjectsList(res.data.projects);
+          setProjectsList([...res.data.projects]);
           setAllList([...res.data.projects]);
         }
         setIsLoading(false);

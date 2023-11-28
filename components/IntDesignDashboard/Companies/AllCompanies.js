@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -105,8 +106,8 @@ const AllCompanies = ({ navigation }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((user) =>
-        user?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setCompaniesList([...filteredData]);

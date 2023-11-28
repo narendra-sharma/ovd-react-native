@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import { mockProjects } from "./MockProjects";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -44,14 +45,14 @@ const ProjectsList = ({ navigation, companyId }) => {
           const projects = res.data.projects.filter(
             (project) => project.company_id == companyId
           );
-          setProjectsList(projects);
+          setProjectsList([...projects]);
           setAllList([...projects]);
         } else {
           //listing all projects
-          setProjectsList(res.data.projects);
+          setProjectsList([...res.data.projects]);
           setAllList([...res.data.projects]);
         }
-        setIsLoading(false);
+          setIsLoading(false);
         } catch (error) {
           console.log(error);
           setIsLoading(false);
@@ -151,8 +152,8 @@ const ProjectsList = ({ navigation, companyId }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((proj) =>
-      proj?.project_name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((item) =>
+      item?.project_name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setProjectsList([...filteredData]);
@@ -204,9 +205,9 @@ const ProjectsList = ({ navigation, companyId }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (projectsList.length>0)?<FlatList
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (projectsList.length>0) ? <FlatList
         ListHeaderComponent={
           <View
             style={[

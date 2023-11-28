@@ -9,8 +9,9 @@ import {
   TouchableNativeFeedback,
   Modal,
   TouchableOpacity,
-  ActivityIndicator,
+  ActivityIndicator 
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
@@ -45,18 +46,18 @@ const AllConsultants = ({ navigation }) => {
 
       const getAllConsultants = async () => {
         setIsLoading(true);
-        try{
-        const res = await apiGetUsersFromUsers();
-        console.log(res.data);
-        // console.log(res.data.data);
+        try {
+          const res = await apiGetUsersFromUsers();
+          console.log(res.data);
+          // console.log(res.data.data);
 
-        setConsultantList([...res.data.consultants]);
-        setAllList([...res.data.consultants]);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
+          setConsultantList([...res.data.consultants]);
+          setAllList([...res.data.consultants]);
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getAllConsultants();
@@ -149,8 +150,9 @@ const AllConsultants = ({ navigation }) => {
           <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
-{/* SEARCHBOX CONTAINER */}
-<View style={styles.searchboxContainer}>
+
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
         <Icon
           style={{
             marginHorizontal: 6,
@@ -194,9 +196,9 @@ const AllConsultants = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (consultantList.length>0)?<FlatList
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (consultantList.length>0) ?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
         data={consultantList}
@@ -282,7 +284,7 @@ const AllConsultants = ({ navigation }) => {
       />: (
         <View style={styles.container}>
           <Text style={{ fontWeight: "bold"}}>No Consultants Available!</Text>
-        </View>  
+        </View>
       )}
 
       {/* Change consultant's role modal */}

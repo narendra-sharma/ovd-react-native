@@ -7,8 +7,9 @@ import {
   View,
   Alert,
   TouchableNativeFeedback,
-  ActivityIndicator,
+  ActivityIndicator 
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -34,18 +35,18 @@ const AllContractors = ({ navigation }) => {
 
       const getContractors = async () => {
         setIsLoading(true);
-        try{
+        try {
         const res = await apiGetUsersFromUsers();
         console.log(res.data);
         // console.log(res.data.data);
 
         setContractorList([...res.data.contratrors]);
         setAllList([...res.data.contratrors]);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getContractors();
@@ -108,8 +109,9 @@ const AllContractors = ({ navigation }) => {
           <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
-{/* SEARCHBOX CONTAINER */}
-<View style={styles.searchboxContainer}>
+
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
         <Icon
           style={{
             marginHorizontal: 6,
@@ -153,9 +155,9 @@ const AllContractors = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (contractorList.length>0)?<FlatList
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (contractorList.length>0) ?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
         data={contractorList}
@@ -222,7 +224,7 @@ const AllContractors = ({ navigation }) => {
       />: (
         <View style={styles.container}>
           <Text style={{ fontWeight: "bold"}}>No Contractors Available!</Text>
-        </View>  
+        </View>
       )}
       {/* <Signature /> */}
     </ScrollView>

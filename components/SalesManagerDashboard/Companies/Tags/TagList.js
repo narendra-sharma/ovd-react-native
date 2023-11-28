@@ -31,8 +31,8 @@ const TagsList = ({ navigation }) => {
         const res = await apiGetAllTags();
         console.log("tags", res.data);
 
-        setTagsList(res.data.tags);
-        setAllList(res.data.tags);
+        setTagsList([...res.data.tags]);
+        setAllList([...res.data.tags])
         setIsLoading(false);
       } catch (error) {
         console.log(error);

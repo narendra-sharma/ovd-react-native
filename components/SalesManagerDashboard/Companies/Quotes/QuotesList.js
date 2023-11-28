@@ -49,10 +49,10 @@ const QuotesList = ({ navigation, companyId }) => {
             (quote) => quote.company_id == companyId
           );
           setQuotesList([...quotes]);
-          setAllList([...quotes]);
+          setAllList([...quotes])
         } else {
           //listing all quotes
-          setQuotesList(res.data.quotations);
+          setQuotesList([...res.data.quotations]);
           setAllList([...res.data.quotations]);
         }
         setIsLoading(false);

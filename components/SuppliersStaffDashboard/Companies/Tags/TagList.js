@@ -6,8 +6,9 @@ import {
   View,
   Pressable,
   Alert,
-  ActivityIndicator
+  ActivityIndicator 
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteTag, apiGetAllTags } from "../../../../apis/tags";
@@ -27,17 +28,17 @@ const TagsList = ({ navigation }) => {
 
       const getAllTasks = async () => {
         setIsLoading(true);
-        try{
+        try {
         const res = await apiGetAllTags();
         console.log("tags", res.data);
 
-        setTagsList(res.data.tags);
-        setAllList(res.data.tags);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
+        setTagsList([...res.data.tags]);
+        setAllList([...res.data.tags]);
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getAllTasks();
@@ -80,8 +81,8 @@ const TagsList = ({ navigation }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((tag) =>
-      tag?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setTagsList([...filteredData]);
@@ -133,9 +134,9 @@ const TagsList = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (tagsList.length>0)?<FlatList
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (tagsList.length>0) ? <FlatList
         // data={tagsList.sort(sortTasks)}
         data={tagsList}
         renderItem={({ item }) => (

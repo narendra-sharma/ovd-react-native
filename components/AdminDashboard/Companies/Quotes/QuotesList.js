@@ -52,7 +52,7 @@ const QuotesList = ({ navigation, companyId }) => {
           setAllList([...quotes]);
         } else {
           //listing all quotes
-          setQuotesList(res.data.quotations);
+          setQuotesList([...res.data.quotations]);
           setAllList([...res.data.quotations]);
         }
         setIsLoading(false);

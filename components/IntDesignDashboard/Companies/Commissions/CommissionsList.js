@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, Pressable, ActivityIndicator } from "react-native";
+import { FlatList, StyleSheet, Text, View, Pressable , ActivityIndicator } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { apiGetAllCommissions } from "../../../../apis/commisions";
 import { TextInput } from "react-native-gesture-handler";
@@ -34,8 +34,8 @@ const CommissionsList = ({ navigation }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((proj) =>
-      proj?.project_name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((item) =>
+      item?.project_name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setCommissionsList([...filteredData]);
@@ -87,8 +87,8 @@ const CommissionsList = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
       ) : (commissionsList.length>0) ? <FlatList
         // style={{ height: 100 }}
         data={commissionsList}

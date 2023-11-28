@@ -7,8 +7,9 @@ import {
   View,
   Alert,
   TouchableNativeFeedback,
-  ActivityIndicator,
+  ActivityIndicator 
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -34,18 +35,18 @@ const AllCustomers = ({ navigation }) => {
 
       const getCustomers = async () => {
         setIsLoading(true);
-        try{
+        try {
         const res = await apiGetUsersFromUsers();
         console.log(res.data);
         // console.log(res.data.data);
 
         setCustomersList([...res.data.customers]);
         setAllList([...res.data.customers]);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getCustomers();
@@ -109,8 +110,9 @@ const AllCustomers = ({ navigation }) => {
           <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
-{/* SEARCHBOX CONTAINER */}
-<View style={styles.searchboxContainer}>
+
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
         <Icon
           style={{
             marginHorizontal: 6,
@@ -154,9 +156,9 @@ const AllCustomers = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (customersList.length>0)?<FlatList
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (customersList.length>0) ?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
         data={customersList}
