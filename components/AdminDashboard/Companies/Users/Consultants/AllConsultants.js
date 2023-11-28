@@ -193,7 +193,9 @@ const AllConsultants = ({ navigation }) => {
       )} */}
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#B76E79" size="large" style={{marginBottom:'80%',marginTop:"50%" }}/>
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
       ) : (consultantList.length>0)?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
@@ -278,7 +280,9 @@ const AllConsultants = ({ navigation }) => {
           </>
         )}
       />: (
-        <Text style={{ fontWeight: "bold",marginBottom:'100%',marginTop:"40%" }}>No Consultants Available!</Text>
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Consultants Available!</Text>
+        </View>  
       )}
 
       {/* Change consultant's role modal */}

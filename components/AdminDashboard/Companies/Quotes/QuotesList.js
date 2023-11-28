@@ -192,7 +192,9 @@ const QuotesList = ({ navigation, companyId }) => {
       )} */}
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#B76E79" size="large" style={{marginBottom:'80%',marginTop:"50%" }}/>
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
       ) : (quotesList.length>0)?<FlatList
         // style={{ height: 100 }}
         data={quotesList}
@@ -280,7 +282,9 @@ const QuotesList = ({ navigation, companyId }) => {
           </>
         )}
       />: (
-        <Text style={{ fontWeight: "bold",marginBottom:'100%',marginTop:"40%" }}>No Quotes Available!</Text>
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Quotes Available!</Text>
+        </View>
       )}
       {/* <Text>{JSON.stringify(tempState)}</Text> */}
     </View>

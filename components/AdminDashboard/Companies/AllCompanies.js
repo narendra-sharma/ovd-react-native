@@ -169,7 +169,9 @@ const AllCompanies = ({ navigation }) => {
       </View>
       {/* SCROLLABLE LIST */}
       {isLoading ? (
-        <ActivityIndicator color="#B76E79" size="large" style={{marginBottom:'80%',marginTop:"50%" }}/>
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
       ) : (companiesList.length>0)?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
@@ -235,7 +237,9 @@ const AllCompanies = ({ navigation }) => {
           </>
         )}
       />: (
-        <Text style={{ fontWeight: "bold",marginBottom:'100%',marginTop:"40%" }}>No Companies Available!</Text>
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Companies Available!</Text>
+          </View>
       )}
       {/* <Signature /> */}
     </ScrollView>

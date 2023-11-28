@@ -203,7 +203,9 @@ const ProjectsList = ({ navigation, companyId }) => {
       )} */}
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#B76E79" size="large" style={{marginBottom:'80%',marginTop:"50%" }}/>
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
       ) : (projectsList.length>0)?<FlatList
         ListHeaderComponent={
           <View
@@ -348,7 +350,9 @@ const ProjectsList = ({ navigation, companyId }) => {
           </>
         )}
       />: (
-        <Text style={{ fontWeight: "bold",marginBottom:'100%',marginTop:"40%" }}>No Projects Available!</Text>
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Projects Available!</Text>
+        </View>
       )}
 
       {/* Change consultant's role modal */}

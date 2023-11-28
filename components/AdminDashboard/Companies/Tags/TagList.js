@@ -132,7 +132,9 @@ const TagsList = ({ navigation }) => {
       )} */}
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#B76E79" size="large" style={{marginBottom:'80%',marginTop:"50%" }}/>
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
       ) : (tagsList.length>0)?<FlatList
         // data={tagsList.sort(sortTasks)}
         data={tagsList}
@@ -178,7 +180,9 @@ const TagsList = ({ navigation }) => {
           </Pressable>
         )}
       />: (
-        <Text style={{ fontWeight: "bold",marginBottom:'100%',marginTop:"40%" }}>No Tags Available!</Text>
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Tags Available!</Text>
+        </View>
       )}
     </View>
   );
