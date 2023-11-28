@@ -21,6 +21,7 @@ import {
   apiGetConsultantsForQuotes,
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialFormData = {
   name: "",
@@ -243,11 +244,17 @@ const EditQuote = ({ navigation, route }) => {
       setItemsList([...res?.data?.quotes?.quotes_items]);
     };
     getAllData();
+
+    (async () => {
+      const user = await AsyncStorage.getItem("profile");
+      setFormData({ ...formData, consultant_manager: JSON.parse(user).id });
+    })();
   }, []);
 
   useEffect(() => {
     const getConsultantData = async () => {
-      const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
+      const user = await AsyncStorage.getItem("profile");
+      const res = await apiGetConsultantsForQuotes(JSON.parse(user).id);
       // console.log("consultants", res.data);
 
       const tempConsultants = res.data.data.map((consultant) => {
@@ -406,68 +413,59 @@ const EditQuote = ({ navigation, route }) => {
 
     itemsList.map((item, idx) => {
       if (
-        (item.item_name != "" || item.item_name != null) &&
-        (item.description != "" || item.description) &&
-        (item.quantity != "" || item.quantity) &&
-        (item.cost != "" || item.cost) &&
-        (item.tax != "" || item.tax) &&
-        (item.itemTotalCost != "" || item.itemTotalCost) &&
+        item.item_name != "" &&
+        item.item_description != "" &&
+        item.quantity != "" &&
+        item.cost != "" &&
+        item.tax != "" &&
+        item.itemTotalCost != "" &&
         reg.test(item.quantity) == true &&
         reg.test(item.cost) == true &&
         reg.test(item.tax) == true
       ) {
         console.log("no errors apparently");
         temp.push({});
-        flag = true;
       } else {
         let obj = {};
         if (item.item_name == "") {
           obj.item_name = "Name is required*";
-          flag = false;
         }
 
-        if (item.description == "") {
-          obj.description = "Description is required*";
-          flag = false;
+        if (item.item_description == "") {
+          obj.item_description = "Description is required*";
         }
 
         if (item.quantity == "") {
           obj.quantity = "Quantity is required*";
-          flag = false;
         } else {
           if (reg.test(item.quantity) == false) {
             obj.quantity = "Only number values are allowed";
-            flag = false;
           }
         }
 
         if (item.cost == "") {
           obj.cost = "Cost per quantity is required*";
-          flag = false;
         } else {
           if (reg.test(item.cost) == false) {
             obj.cost = "Only number values are allowed";
-            flag = false;
           }
         }
 
         if (item.tax == "") {
           obj.tax = "Tax is required*";
-          flag = false;
         } else {
           if (reg.test(item.tax) == false) {
             obj.tax = "Only number values are allowed";
-            flag = false;
           }
         }
 
         temp.push(obj);
+        flag = false;
       }
     });
 
     setItemsValidations([...temp]);
     console.log("items validations: ", temp);
-    console.log("flag", flag);
 
     return flag;
   };
@@ -643,7 +641,7 @@ const EditQuote = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -653,7 +651,7 @@ const EditQuote = ({ navigation, route }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
 
           <Text style={styles.fieldName}>Assign Consultant:</Text>
           <DropdownMenu
