@@ -168,11 +168,19 @@ const QuoteDetail = ({ navigation, route }) => {
 
   return (
     <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "space-between", padding: 16 }}
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 16,
+      }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ justifyContent: "center", alignItems: 'center'}}
+        contentContainerStyle={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         keyboardShouldPersistTaps="always"
       >
         <View style={{ width: "95%", marginHorizontal: "auto" }}>
@@ -188,13 +196,13 @@ const QuoteDetail = ({ navigation, route }) => {
             <Text style={styles.fielContent}>{quoteData?.company?.name} </Text>
           </View>
 
-          <View style={styles.fieldContainer}>
+          {/* <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Customer</Text>
             <Text style={styles.span}>:</Text>
             <Text style={styles.fielContent}>
               {quoteData?.customer?.username}
             </Text>
-          </View>
+          </View> */}
 
           {/* <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Project</Text>
@@ -277,7 +285,7 @@ export default QuoteDetail;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    width: "100%"
+    width: "100%",
   },
 
   fieldContainer: {

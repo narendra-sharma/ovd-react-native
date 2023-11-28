@@ -316,7 +316,7 @@ const InvoiceDetail = ({ navigation, route }) => {
         </View>
       </ScrollView>
 
-      <View style={styles.buttonsContainer}>
+      {/* <View style={styles.buttonsContainer}>
         <Pressable
           style={[styles.button, styles.buttonClose]}
           onPress={() =>
@@ -331,7 +331,7 @@ const InvoiceDetail = ({ navigation, route }) => {
         >
           <Text style={styles.textStyle}>Delete</Text>
         </Pressable>
-      </View>
+      </View> */}
     </View>
   );
 };

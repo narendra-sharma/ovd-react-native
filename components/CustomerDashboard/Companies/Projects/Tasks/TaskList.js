@@ -140,7 +140,7 @@ const TasksList = ({ navigation, route, tagId = null, projectId = null }) => {
                 </Text>
               </View>
             </View>
-            <View style={styles.iconsContainer}>
+            {/* <View style={styles.iconsContainer}>
               <Icon
                 onPress={() => navigation.navigate("Edit Task", item)}
                 name="pen"
@@ -153,7 +153,7 @@ const TasksList = ({ navigation, route, tagId = null, projectId = null }) => {
                 size={22}
                 color="#444"
               />
-            </View>
+            </View> */}
           </Pressable>
         )}
       />

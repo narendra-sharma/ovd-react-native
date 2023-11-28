@@ -46,25 +46,6 @@ const InvoiceList = ({ navigation, companyId, projectId }) => {
     }, [deleteFlag])
   );
 
-  // useEffect(() => {
-  //   const getAllInvoices = async () => {
-  //     const res = await apiGetAllInvoices();
-  //     console.log(res.data.quotations);
-  //     //listing of quotes for a specific company
-  //     if (companyId) {
-  //       const quotes = res.data.quotations.filter(
-  //         (quote) => quote.company_id == companyId
-  //       );
-  //       setInvoicesList(quotes);
-  //     } else {
-  //       //listing all quotes
-  //       setInvoicesList(res.data.quotations);
-  //     }
-  //   };
-
-  //   getAllInvoices();
-  // }, []);
-
   //function to delete the quote
   const handleDelete = async (id) => {
     const deleteQuote = async () => {
@@ -155,8 +136,7 @@ const InvoiceList = ({ navigation, companyId, projectId }) => {
                 <Text style={styles.item}>{item.invoice_number}</Text>
               </Pressable>
 
-              <View style={styles.iconsContainer}>
-                {/* Edit the invoice */}
+              {/* <View style={styles.iconsContainer}>
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
@@ -177,7 +157,6 @@ const InvoiceList = ({ navigation, companyId, projectId }) => {
                   </View>
                 </TouchableNativeFeedback>
 
-                {/* Delete the invoice */}
                 <TouchableNativeFeedback
                   onPress={() => {
                     setRippleColor(randomHexColor());
@@ -195,7 +174,7 @@ const InvoiceList = ({ navigation, companyId, projectId }) => {
                     </Text>
                   </View>
                 </TouchableNativeFeedback>
-              </View>
+              </View> */}
             </Pressable>
           </>
         )}

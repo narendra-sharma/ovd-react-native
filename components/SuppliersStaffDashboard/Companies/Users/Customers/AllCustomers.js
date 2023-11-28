@@ -12,7 +12,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteUser, apiGetUsersFromUsers } from "../../../../../apis/users";
 
@@ -37,7 +37,7 @@ const AllCustomers = ({ navigation }) => {
         setIsLoading(true);
         try {
         const res = await apiGetUsersFromUsers();
-        console.log("customers listing: ", res.data);
+        console.log(res.data);
         // console.log(res.data.data);
 
         setCustomersList([...res.data.customers]);
@@ -306,6 +306,7 @@ const styles = StyleSheet.create({
   addText: {
     color: "#fff",
   },
+
   searchboxContainer: {
     backgroundColor: "#EDEDED",
     marginBottom: 16,

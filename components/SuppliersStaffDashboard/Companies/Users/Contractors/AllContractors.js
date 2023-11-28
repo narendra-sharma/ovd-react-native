@@ -12,7 +12,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteUser, apiGetUsersFromUsers } from "../../../../../apis/users";
 

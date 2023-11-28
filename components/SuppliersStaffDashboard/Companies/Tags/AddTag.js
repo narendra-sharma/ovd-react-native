@@ -75,7 +75,7 @@ const AddTag = ({ navigation }) => {
   const handleSubmit = async () => {
     if (
       validateTagName(formData.name) &&
-      validateDescription(formData.description) 
+      validateDescription(formData.description)
       // &&
       // validateCost(formData.total_cost) &&
       // validateEndDate(formData.deadline)

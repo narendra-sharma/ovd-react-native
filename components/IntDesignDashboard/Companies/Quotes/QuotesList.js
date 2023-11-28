@@ -7,8 +7,8 @@ import {
   Pressable,
   TouchableNativeFeedback,
   Alert,
-  Linking, 
-  ActivityIndicator 
+  Linking,
+  ActivityIndicator
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
@@ -20,6 +20,7 @@ import {
   apiGetAllQuotes,
 } from "../../../../apis/quotes";
 import { useFocusEffect } from "@react-navigation/native";
+import { TextInput } from "react-native-gesture-handler";
 
 const randomHexColor = () => {
   return "#b7d0d1";
@@ -40,7 +41,7 @@ const QuotesList = ({ navigation, companyId }) => {
 
       const getAllQuotes = async () => {
         setIsLoading(true);
-        try {
+        try{
         const res = await apiGetAllQuotes();
         // console.log(res.data.quotations);
         //listing of quotes for a specific company
@@ -56,10 +57,12 @@ const QuotesList = ({ navigation, companyId }) => {
           setAllList([...res.data.quotations]);
         }
           setIsLoading(false);
-        } catch (error) {
-          console.log(error);
-          setIsLoading(false);
         }
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
       };
 
       getAllQuotes();
@@ -150,6 +153,7 @@ const QuotesList = ({ navigation, companyId }) => {
     <View style={styles.container}>
       {/* SEARCHBOX CONTAINER */}
       <View style={styles.searchboxContainer}>
+
         <Icon
           style={{
             marginHorizontal: 6,
@@ -354,6 +358,7 @@ const styles = StyleSheet.create({
   addText: {
     color: "#fff",
   },
+  
   searchboxContainer: {
     backgroundColor: "#EDEDED",
     marginBottom: 16,

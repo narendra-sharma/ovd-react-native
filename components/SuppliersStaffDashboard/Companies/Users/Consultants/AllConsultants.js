@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   apiChangeConsultantRole,
@@ -47,12 +47,12 @@ const AllConsultants = ({ navigation }) => {
       const getAllConsultants = async () => {
         setIsLoading(true);
         try {
-        const res = await apiGetUsersFromUsers();
-        console.log(res.data);
-        // console.log(res.data.data);
+          const res = await apiGetUsersFromUsers();
+          console.log(res.data);
+          // console.log(res.data.data);
 
-        setConsultantList([...res.data.consultants]);
-        setAllList([...res.data.consultants]);
+          setConsultantList([...res.data.consultants]);
+          setAllList([...res.data.consultants]);
           setIsLoading(false);
         } catch (error) {
           console.log(error);

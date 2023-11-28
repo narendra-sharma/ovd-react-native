@@ -52,10 +52,10 @@ const ProjectsList = ({ navigation, companyId }) => {
           setAllList([...res.data.projects]);
         }
         setIsLoading(false);
-      }catch(error){
-        console.log(error);
-        setIsLoading(false);
-      }
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getAllProjects();
@@ -204,9 +204,9 @@ const ProjectsList = ({ navigation, companyId }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
-        </View>
-      ) : (projectsList.length>0) ?<FlatList
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
+      ) : (projectsList.length>0)?<FlatList
         ListHeaderComponent={
           <View
             style={[

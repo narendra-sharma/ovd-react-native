@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CommissionsList from "./CommissionsList";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const ViewCommissions = ({ navigation }) => {
   return (

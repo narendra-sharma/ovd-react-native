@@ -6,13 +6,14 @@ import {
   View,
   Pressable,
   Alert,
-  ActivityIndicator 
+  ActivityIndicator
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteTag, apiGetAllTags } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
+import { TextInput } from "react-native-gesture-handler";
 
 const TagsList = ({ navigation }) => {
   const [tagsList, setTagsList] = useState([]);
@@ -243,6 +244,7 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 12,
   },
+
   searchboxContainer: {
     backgroundColor: "#EDEDED",
     marginBottom: 16,

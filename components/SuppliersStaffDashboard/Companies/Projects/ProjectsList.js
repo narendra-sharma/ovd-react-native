@@ -21,6 +21,7 @@ import {
   apiGetAllProjects,
 } from "../../../../apis/projects";
 import { Dropdown } from "react-native-element-dropdown";
+import { TextInput } from "react-native-gesture-handler";
 
 const ProjectsList = ({ navigation, companyId }) => {
   const [projectsList, setProjectsList] = useState([]);

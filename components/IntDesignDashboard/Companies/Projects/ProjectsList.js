@@ -7,8 +7,8 @@ import {
   Pressable,
   Alert,
   Modal,
-  TouchableOpacity, 
-  ActivityIndicator 
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
@@ -21,6 +21,7 @@ import {
   apiGetAllProjects,
 } from "../../../../apis/projects";
 import { Dropdown } from "react-native-element-dropdown";
+import { TextInput } from "react-native-gesture-handler";
 
 const ProjectsList = ({ navigation, companyId }) => {
   const [projectsList, setProjectsList] = useState([]);
@@ -36,7 +37,7 @@ const ProjectsList = ({ navigation, companyId }) => {
 
       const getAllProjects = async () => {
         setIsLoading(true);
-        try {
+        try{
         const res = await apiGetAllProjects();
         // console.log("projects", res.data.projects);
         //listing of quotes for a specific company

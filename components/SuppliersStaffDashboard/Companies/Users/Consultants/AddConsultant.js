@@ -14,7 +14,6 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
 import { apiGetAllUsers } from "../../../../../apis/companies";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CONSULTANT_USER_TYPE = 4;
 
@@ -62,11 +61,11 @@ const AddConsultant = ({ navigation }) => {
         (user) => user.user_type == 3
       );
 
-      // const tempConsultantManager = consultantManager.map((manager) => {
-      //   return { label: manager.name, value: manager.id };
-      // });
+      const tempConsultantManager = consultantManager.map((manager) => {
+        return { label: manager.name, value: manager.id };
+      });
 
-      // setConsultantManagerList([...tempConsultantManager]);
+      setConsultantManagerList([...tempConsultantManager]);
 
       
         (async() => {
@@ -198,7 +197,7 @@ const AddConsultant = ({ navigation }) => {
       // validateOrg(formData.org) &&
       validateCommission(formData.commission) &&
       validatePhone(formData.phone_number) &&
-      // validateCm(formData.parent_id) &&
+      validateCm(formData.parent_id) &&
       validateAddress(formData.address) &&
       // validateCountry(formData.country) &&
       // validateState(formData.state) &&
@@ -340,7 +339,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -350,7 +349,7 @@ const AddConsultant = ({ navigation }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
 
           <Text style={styles.fieldName}>Commision: </Text>
           <Dropdown

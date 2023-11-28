@@ -7,7 +7,10 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-import { apiGetPreFilledProjectDetails } from "../../../../apis/projects";
+import {
+  apiDeleteProject,
+  apiGetPreFilledProjectDetails,
+} from "../../../../apis/projects";
 import { useFocusEffect } from "@react-navigation/native";
 import moment from "moment";
 import AllTasks from "./Tasks/AllTasks";
@@ -30,6 +33,7 @@ const ProjectDetail = ({ navigation, route }) => {
       const getAllData = async () => {
         try {
           const res = await apiGetPreFilledProjectDetails(route.params.id);
+          console.log("res?.data?.project", res?.data?.project);
           setProjectData({
             ...res?.data?.project,
             totalCost: res?.data?.totalCost,
@@ -47,14 +51,34 @@ const ProjectDetail = ({ navigation, route }) => {
     }, [])
   );
 
-  // useEffect(() => {
-  //   setProjectData({
-  //     ...projectData,
-  //     company: company,
-  //     customer: customer,
-  //     consultant: consultant,
-  //   });
-  // }, [company, customer, consultant]);
+  const handleDelete = async (name, id) => {
+    const deleteProject = async () => {
+      try {
+        const res = await apiDeleteProject(id);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          Toast.show("Project Deleted Successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => deleteProject() },
+    ]);
+  };
 
   return (
     <View
@@ -141,22 +165,14 @@ const ProjectDetail = ({ navigation, route }) => {
           <View style={[styles.fieldContainer]}>
             <Text style={styles.fieldName}>Quotation Amount</Text>
             <Text style={styles.span}>:</Text>
-            <Text style={styles.fieldContent}>
-              {
-                quotationsList[
-                  quotationsList?.findIndex(
-                    (quote) => quote?.id == projectData?.quotes_id
-                  )
-                ]?.cost
-              }
-            </Text>
+            <Text style={styles.fieldContent}>{projectData?.totalCost}</Text>
           </View>
 
-          <View style={[styles.fieldContainer]}>
+          {/* <View style={[styles.fieldContainer]}>
             <Text style={styles.fieldName}>Project Cost</Text>
             <Text style={styles.span}>:</Text>
             <Text style={styles.fieldContent}>{projectData?.totalCost}</Text>
-          </View>
+          </View> */}
 
           {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Billing Type</Text>
@@ -170,7 +186,13 @@ const ProjectDetail = ({ navigation, route }) => {
           <Text style={styles.fieldName}>Tasks</Text>
           <Text style={styles.span}>:</Text>
         </View>
-        <AllTasks navigation={navigation} projectId={route?.params?.id} />
+        {projectData?.approved_by_customer == 1 ? (
+          <AllTasks navigation={navigation} projectId={route?.params?.id} />
+        ) : (
+          <Text style={styles.fieldContent}>
+            Project is not approved by customer.
+          </Text>
+        )}
 
         <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Invoices</Text>
@@ -194,7 +216,9 @@ const ProjectDetail = ({ navigation, route }) => {
           </Pressable>
           <Pressable
             style={styles.button}
-            // onPress={handleDeleteCompany}
+            onPress={() =>
+              handleDelete(projectData?.project_name, route?.params?.id)
+            }
           >
             <Text style={styles.textStyle}>Delete Project</Text>
           </Pressable>

@@ -20,6 +20,7 @@ import {
 } from "../../../../apis/quotes";
 import { useFocusEffect } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
+
 const randomHexColor = () => {
   return "#b7d0d1";
 };
@@ -55,7 +56,7 @@ const QuotesList = ({ navigation, companyId }) => {
           setAllList([...res.data.quotations]);
         }
         setIsLoading(false);
-      }catch(error){
+      } catch (error) {
         console.log(error);
         setIsLoading(false);
       }
@@ -139,16 +140,16 @@ const QuotesList = ({ navigation, companyId }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((proj) =>
-      proj?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((quote) =>
+      quote?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setQuotesList([...filteredData]);
   };
   return (
     <View style={styles.container}>
-      {/* SEARCHBOX CONTAINER */}
-      <View style={styles.searchboxContainer}>
+       {/* SEARCHBOX CONTAINER */}
+       <View style={styles.searchboxContainer}>
         <Icon
           style={{
             marginHorizontal: 6,
@@ -192,9 +193,9 @@ const QuotesList = ({ navigation, companyId }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
-        </View>
-      ) : (quotesList.length>0) ?<FlatList
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
+      ) : (quotesList.length>0)?<FlatList
         // style={{ height: 100 }}
         data={quotesList}
         renderItem={({ item }) => (
@@ -353,6 +354,7 @@ const styles = StyleSheet.create({
   addText: {
     color: "#fff",
   },
+
   searchboxContainer: {
     backgroundColor: "#EDEDED",
     marginBottom: 16,

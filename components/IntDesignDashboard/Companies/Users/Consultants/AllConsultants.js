@@ -9,11 +9,11 @@ import {
   TouchableNativeFeedback,
   Modal,
   TouchableOpacity,
-  ActivityIndicator 
+  ActivityIndicator,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   apiChangeConsultantRole,
@@ -150,7 +150,6 @@ const AllConsultants = ({ navigation }) => {
           <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
-
       {/* SEARCHBOX CONTAINER */}
       <View style={styles.searchboxContainer}>
         <Icon

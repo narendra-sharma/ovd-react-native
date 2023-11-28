@@ -7,15 +7,15 @@ import {
   View,
   Alert,
   TouchableNativeFeedback,
-  ActivityIndicator 
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
-
 const randomHexColor = () => {
   return "#b7d0d1";
 };
@@ -321,6 +321,7 @@ const styles = StyleSheet.create({
   addText: {
     color: "#fff",
   },
+
   searchboxContainer: {
     backgroundColor: "#EDEDED",
     marginBottom: 16,
@@ -334,4 +335,5 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 4,
   },
+
 });
