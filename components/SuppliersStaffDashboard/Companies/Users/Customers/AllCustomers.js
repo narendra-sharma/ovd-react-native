@@ -7,7 +7,9 @@ import {
   View,
   Alert,
   TouchableNativeFeedback,
+  ActivityIndicator 
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
@@ -24,17 +26,27 @@ const AllCustomers = ({ navigation }) => {
   const [rippleColor, setRippleColor] = useState(randomHexColor());
   const [rippleRadius, setRippleRadius] = useState(10);
   const [rippleOverflow, setRippleOverflow] = useState(true);
-
+  const [allList, setAllList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const getCustomers = async () => {
+        setIsLoading(true);
+        try {
         const res = await apiGetUsersFromUsers();
         console.log("customers listing: ", res.data);
         // console.log(res.data.data);
 
         setCustomersList([...res.data.customers]);
+        setAllList([...res.data.customers]);
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getCustomers();
@@ -76,7 +88,15 @@ const AllCustomers = ({ navigation }) => {
       { text: "OK", onPress: () => deleteUser() },
     ]);
   };
-
+  const handleSearch = (text) => {
+    let filteredData = [...allList]
+    if (text && text.length > 0) {
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      );
+    }
+    setCustomersList([...filteredData]);
+  };
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable
@@ -91,7 +111,54 @@ const AllCustomers = ({ navigation }) => {
         </Text>
       </Pressable>
 
-      <FlatList
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
+        <Icon
+          style={{
+            marginHorizontal: 6,
+            // borderRightWidth: 1,
+            // borderRightColor: "#d9d9d9",
+          }}
+          color="#d9d9d9"
+          name="search"
+          size={20}
+        />
+        <TextInput
+          name="search"
+          placeholder="Search"
+          onChangeText={(text) => {
+            handleSearch(text);
+            setSearchTerm(text);
+          }}
+          style={{
+            width: "90%",
+            height: "100%",
+            // backgroundColor: "pink",
+            padding: 8,
+          }}
+          value={searchTerm}
+        />
+        {/* {searchTerm && searchTerm.length > 0 && (
+        <TouchableOpacity 
+          onPress={()=>{
+            handleSearch("");
+            setSearchTerm("");
+          }} 
+          style={{ padding: 8 }}
+        >
+          <Icon
+            name="window-close" // Replace with the actual icon name for a close or clear icon
+            size={20}
+            color="#000000"
+          />
+        </TouchableOpacity>
+      )} */}
+      </View>
+      {isLoading ? (
+        <View style={styles.container}>
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (customersList.length>0) ?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
         data={customersList}
@@ -155,7 +222,11 @@ const AllCustomers = ({ navigation }) => {
             </Pressable>
           </>
         )}
-      />
+      />: (
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Customers Available!</Text>
+        </View>
+      )}
       {/* <Signature /> */}
     </ScrollView>
   );
@@ -234,5 +305,18 @@ const styles = StyleSheet.create({
 
   addText: {
     color: "#fff",
+  },
+  searchboxContainer: {
+    backgroundColor: "#EDEDED",
+    marginBottom: 16,
+    width: "96%",
+    display: "flex",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 4,
+    padding: 4,
   },
 });

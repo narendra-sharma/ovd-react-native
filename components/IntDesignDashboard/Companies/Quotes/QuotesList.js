@@ -7,8 +7,10 @@ import {
   Pressable,
   TouchableNativeFeedback,
   Alert,
-  Linking,
+  Linking, 
+  ActivityIndicator 
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import { MockQuotes } from "./MockQuotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -29,12 +31,16 @@ const QuotesList = ({ navigation, companyId }) => {
   const [rippleOverflow, setRippleOverflow] = useState(true);
   const [deleteFlag, setDeteleFlag] = useState(false);
   const [tempState, setTempState] = useState(null);
-
+  const [allList, setAllList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const getAllQuotes = async () => {
+        setIsLoading(true);
+        try {
         const res = await apiGetAllQuotes();
         // console.log(res.data.quotations);
         //listing of quotes for a specific company
@@ -42,10 +48,17 @@ const QuotesList = ({ navigation, companyId }) => {
           const quotes = res.data.quotations.filter(
             (quote) => quote.company_id == companyId
           );
-          setQuotesList(quotes);
+          setQuotesList([...quotes]);
+          setAllList([...quotes]);
         } else {
           //listing all quotes
-          setQuotesList(res.data.quotations);
+          setQuotesList([...res.data.quotations]);
+          setAllList([...res.data.quotations]);
+        }
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
         }
       };
 
@@ -124,10 +137,65 @@ const QuotesList = ({ navigation, companyId }) => {
       console.log(error);
     }
   };
-
+  const handleSearch = (text) => {
+    let filteredData = [...allList]
+    if (text && text.length > 0) {
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      );
+    }
+    setQuotesList([...filteredData]);
+  };
   return (
     <View style={styles.container}>
-      <FlatList
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
+        <Icon
+          style={{
+            marginHorizontal: 6,
+            // borderRightWidth: 1,
+            // borderRightColor: "#d9d9d9",
+          }}
+          color="#d9d9d9"
+          name="search"
+          size={20}
+        />
+        <TextInput
+          name="search"
+          placeholder="Search"
+          onChangeText={(text) => {
+            handleSearch(text);
+            setSearchTerm(text);
+          }}
+          style={{
+            width: "90%",
+            height: "100%",
+            // backgroundColor: "pink",
+            padding: 8,
+          }}
+          value={searchTerm}
+        />
+        {/* {searchTerm && searchTerm.length > 0 && (
+        <TouchableOpacity 
+          onPress={()=>{
+            handleSearch("");
+            setSearchTerm("");
+          }} 
+          style={{ padding: 8 }}
+        >
+          <Icon
+            name="window-close" // Replace with the actual icon name for a close or clear icon
+            size={20}
+            color="#000000"
+          />
+        </TouchableOpacity>
+      )} */}
+      </View>
+      {isLoading ? (
+        <View style={styles.container}>
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (quotesList.length>0) ? <FlatList
         // style={{ height: 100 }}
         data={quotesList}
         renderItem={({ item }) => (
@@ -213,7 +281,11 @@ const QuotesList = ({ navigation, companyId }) => {
             </Pressable>
           </>
         )}
-      />
+      />: (
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Quotes Available!</Text>
+        </View>
+      )}
       {/* <Text>{JSON.stringify(tempState)}</Text> */}
     </View>
   );
@@ -281,5 +353,18 @@ const styles = StyleSheet.create({
 
   addText: {
     color: "#fff",
+  },
+  searchboxContainer: {
+    backgroundColor: "#EDEDED",
+    marginBottom: 16,
+    width: "96%",
+    display: "flex",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 4,
+    padding: 4,
   },
 });

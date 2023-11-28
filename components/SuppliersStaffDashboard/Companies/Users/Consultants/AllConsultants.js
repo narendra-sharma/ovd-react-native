@@ -9,7 +9,9 @@ import {
   TouchableNativeFeedback,
   Modal,
   TouchableOpacity,
+  ActivityIndicator 
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
@@ -35,17 +37,27 @@ const AllConsultants = ({ navigation }) => {
   const [formData, setFormData] = useState({});
 
   const [commissionError, setCommissionError] = useState(null);
-
+  const [allList, setAllList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const getAllConsultants = async () => {
+        setIsLoading(true);
+        try {
         const res = await apiGetUsersFromUsers();
         console.log(res.data);
         // console.log(res.data.data);
 
         setConsultantList([...res.data.consultants]);
+        setAllList([...res.data.consultants]);
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getAllConsultants();
@@ -116,7 +128,15 @@ const AllConsultants = ({ navigation }) => {
       console.log(error);
     }
   };
-
+  const handleSearch = (text) => {
+    let filteredData = [...allList]
+    if (text && text.length > 0) {
+      filteredData = filteredData.filter((item) =>
+      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      );
+    }
+    setConsultantList([...filteredData]);
+  };
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable
@@ -131,7 +151,54 @@ const AllConsultants = ({ navigation }) => {
         </Text>
       </Pressable>
 
-      <FlatList
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
+        <Icon
+          style={{
+            marginHorizontal: 6,
+            // borderRightWidth: 1,
+            // borderRightColor: "#d9d9d9",
+          }}
+          color="#d9d9d9"
+          name="search"
+          size={20}
+        />
+        <TextInput
+          name="search"
+          placeholder="Search"
+          onChangeText={(text) => {
+            handleSearch(text);
+            setSearchTerm(text);
+          }}
+          style={{
+            width: "90%",
+            height: "100%",
+            // backgroundColor: "pink",
+            padding: 8,
+          }}
+          value={searchTerm}
+        />
+        {/* {searchTerm && searchTerm.length > 0 && (
+        <TouchableOpacity 
+          onPress={()=>{
+            handleSearch("");
+            setSearchTerm("");
+          }} 
+          style={{ padding: 8 }}
+        >
+          <Icon
+            name="window-close" // Replace with the actual icon name for a close or clear icon
+            size={20}
+            color="#000000"
+          />
+        </TouchableOpacity>
+      )} */}
+      </View>
+      {isLoading ? (
+        <View style={styles.container}>
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
+      ) : (consultantList.length>0) ?<FlatList
         contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
         // style={{ height: 100 }}
         data={consultantList}
@@ -214,7 +281,11 @@ const AllConsultants = ({ navigation }) => {
             </Pressable>
           </>
         )}
-      />
+      />: (
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Consultants Available!</Text>
+        </View>
+      )}
 
       {/* Change consultant's role modal */}
       <Modal
@@ -421,5 +492,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#1FAAE2",
     padding: 10,
     borderRadius: 4,
+  },
+  searchboxContainer: {
+    backgroundColor: "#EDEDED",
+    marginBottom: 16,
+    width: "96%",
+    display: "flex",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 4,
+    padding: 4,
   },
 });

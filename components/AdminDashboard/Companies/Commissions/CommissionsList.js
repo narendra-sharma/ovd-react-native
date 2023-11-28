@@ -87,8 +87,8 @@ const CommissionsList = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
+          <ActivityIndicator color="#B76E79" size="large"/>
+        </View>
       ) : (commissionsList.length>0) ? <FlatList
         // style={{ height: 100 }}
         data={commissionsList}
