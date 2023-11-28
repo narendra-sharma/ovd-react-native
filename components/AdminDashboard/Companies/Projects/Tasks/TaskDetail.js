@@ -291,20 +291,15 @@ const TaskDetail = ({ navigation, route }) => {
         <View style={styles.buttonsContainer}>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            // onPress={() => setIsCompanyEditOn(true)}
+            onPress={() =>
+              navigation.navigate("Edit Task", { id: taskData?.id })
+            }
           >
-            <Text
-              style={styles.textStyle}
-              onPress={() =>
-                navigation.navigate("Edit Project", { id: projectData.id })
-              }
-            >
-              Edit Task
-            </Text>
+            <Text style={styles.textStyle}>Edit Task</Text>
           </Pressable>
           <Pressable
             style={styles.button}
-            // onPress={handleDeleteCompany}
+            onPress={() => handleDelete(taskData?.name, route?.params?.id)}
           >
             <Text style={styles.textStyle}>Delete Task</Text>
           </Pressable>

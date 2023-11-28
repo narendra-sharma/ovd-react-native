@@ -406,59 +406,68 @@ const EditQuote = ({ navigation, route }) => {
 
     itemsList.map((item, idx) => {
       if (
-        item.item_name != "" &&
-        item.item_description != "" &&
-        item.quantity != "" &&
-        item.cost != "" &&
-        item.tax != "" &&
-        item.itemTotalCost != "" &&
+        (item.item_name != "" || item.item_name != null) &&
+        (item.description != "" || item.description) &&
+        (item.quantity != "" || item.quantity) &&
+        (item.cost != "" || item.cost) &&
+        (item.tax != "" || item.tax) &&
+        (item.itemTotalCost != "" || item.itemTotalCost) &&
         reg.test(item.quantity) == true &&
         reg.test(item.cost) == true &&
         reg.test(item.tax) == true
       ) {
         console.log("no errors apparently");
         temp.push({});
+        flag = true;
       } else {
         let obj = {};
         if (item.item_name == "") {
           obj.item_name = "Name is required*";
+          flag = false;
         }
 
-        if (item.item_description == "") {
-          obj.item_description = "Description is required*";
+        if (item.description == "") {
+          obj.description = "Description is required*";
+          flag = false;
         }
 
         if (item.quantity == "") {
           obj.quantity = "Quantity is required*";
+          flag = false;
         } else {
           if (reg.test(item.quantity) == false) {
             obj.quantity = "Only number values are allowed";
+            flag = false;
           }
         }
 
         if (item.cost == "") {
           obj.cost = "Cost per quantity is required*";
+          flag = false;
         } else {
           if (reg.test(item.cost) == false) {
             obj.cost = "Only number values are allowed";
+            flag = false;
           }
         }
 
         if (item.tax == "") {
           obj.tax = "Tax is required*";
+          flag = false;
         } else {
           if (reg.test(item.tax) == false) {
             obj.tax = "Only number values are allowed";
+            flag = false;
           }
         }
 
         temp.push(obj);
-        flag = false;
       }
     });
 
     setItemsValidations([...temp]);
     console.log("items validations: ", temp);
+    console.log("flag", flag);
 
     return flag;
   };

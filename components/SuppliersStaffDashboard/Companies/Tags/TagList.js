@@ -6,26 +6,38 @@ import {
   View,
   Pressable,
   Alert,
+  ActivityIndicator
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteTag, apiGetAllTags } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
+import { TextInput } from "react-native-gesture-handler";
 
 const TagsList = ({ navigation }) => {
   const [tagsList, setTagsList] = useState([]);
   const [deleteFlag, setDeleteFlag] = useState(false);
-
+  const [allList, setAllList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   // console.log(tagsList);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const getAllTasks = async () => {
+        setIsLoading(true);
+        try{
         const res = await apiGetAllTags();
         console.log("tags", res.data);
 
         setTagsList(res.data.tags);
+        setAllList(res.data.tags);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
       };
 
       getAllTasks();
@@ -65,10 +77,65 @@ const TagsList = ({ navigation }) => {
       { text: "OK", onPress: () => deleteTag() },
     ]);
   };
-
+  const handleSearch = (text) => {
+    let filteredData = [...allList]
+    if (text && text.length > 0) {
+      filteredData = filteredData.filter((tag) =>
+      tag?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      );
+    }
+    setTagsList([...filteredData]);
+  };
   return (
     <View style={styles.container}>
-      <FlatList
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
+        <Icon
+          style={{
+            marginHorizontal: 6,
+            // borderRightWidth: 1,
+            // borderRightColor: "#d9d9d9",
+          }}
+          color="#d9d9d9"
+          name="search"
+          size={20}
+        />
+        <TextInput
+          name="search"
+          placeholder="Search"
+          onChangeText={(text) => {
+            handleSearch(text);
+            setSearchTerm(text);
+          }}
+          style={{
+            width: "90%",
+            height: "100%",
+            // backgroundColor: "pink",
+            padding: 8,
+          }}
+          value={searchTerm}
+        />
+        {/* {searchTerm && searchTerm.length > 0 && (
+        <TouchableOpacity 
+          onPress={()=>{
+            handleSearch("");
+            setSearchTerm("");
+          }} 
+          style={{ padding: 8 }}
+        >
+          <Icon
+            name="window-close" // Replace with the actual icon name for a close or clear icon
+            size={20}
+            color="#000000"
+          />
+        </TouchableOpacity>
+      )} */}
+      </View>
+      {isLoading ? (
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
+      ) : (tagsList.length>0)?<FlatList
         // data={tagsList.sort(sortTasks)}
         data={tagsList}
         renderItem={({ item }) => (
@@ -112,7 +179,11 @@ const TagsList = ({ navigation }) => {
             </View>
           </Pressable>
         )}
-      />
+      />: (
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Tags Available!</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -171,5 +242,19 @@ const styles = StyleSheet.create({
 
   subText: {
     fontSize: 12,
+  },
+
+  searchboxContainer: {
+    backgroundColor: "#EDEDED",
+    marginBottom: 16,
+    width: "96%",
+    display: "flex",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 4,
+    padding: 4,
   },
 });

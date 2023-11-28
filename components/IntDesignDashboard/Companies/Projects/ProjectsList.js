@@ -8,6 +8,7 @@ import {
   Alert,
   Modal,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { mockProjects } from "./MockProjects";
@@ -19,18 +20,23 @@ import {
   apiGetAllProjects,
 } from "../../../../apis/projects";
 import { Dropdown } from "react-native-element-dropdown";
+import { TextInput } from "react-native-gesture-handler";
 
 const ProjectsList = ({ navigation, companyId }) => {
   const [projectsList, setProjectsList] = useState([]);
   const [deleteFlag, setDeteleFlag] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({});
-
+  const [allList, setAllList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const getAllProjects = async () => {
+        setIsLoading(true);
+        try{
         const res = await apiGetAllProjects();
         // console.log("projects", res.data.projects);
         //listing of quotes for a specific company
@@ -39,9 +45,16 @@ const ProjectsList = ({ navigation, companyId }) => {
             (project) => project.company_id == companyId
           );
           setProjectsList(projects);
+          setAllList([...projects]);
         } else {
           //listing all projects
           setProjectsList(res.data.projects);
+          setAllList([...res.data.projects]);
+        }
+        setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
         }
       };
 
@@ -135,10 +148,65 @@ const ProjectsList = ({ navigation, companyId }) => {
       });
     }
   };
-
+  const handleSearch = (text) => {
+    let filteredData = [...allList]
+    if (text && text.length > 0) {
+      filteredData = filteredData.filter((proj) =>
+      proj?.project_name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      );
+    }
+    setProjectsList([...filteredData]);
+  };
   return (
     <View style={styles.container}>
-      <FlatList
+      {/* SEARCHBOX CONTAINER */}
+      <View style={styles.searchboxContainer}>
+        <Icon
+          style={{
+            marginHorizontal: 6,
+            // borderRightWidth: 1,
+            // borderRightColor: "#d9d9d9",
+          }}
+          color="#d9d9d9"
+          name="search"
+          size={20}
+        />
+        <TextInput
+          name="search"
+          placeholder="Search"
+          onChangeText={(text) => {
+            handleSearch(text);
+            setSearchTerm(text);
+          }}
+          style={{
+            width: "90%",
+            height: "100%",
+            // backgroundColor: "pink",
+            padding: 8,
+          }}
+          value={searchTerm}
+        />
+        {/* {searchTerm && searchTerm.length > 0 && (
+        <TouchableOpacity 
+          onPress={()=>{
+            handleSearch("");
+            setSearchTerm("");
+          }} 
+          style={{ padding: 8 }}
+        >
+          <Icon
+            name="window-close" // Replace with the actual icon name for a close or clear icon
+            size={20}
+            color="#000000"
+          />
+        </TouchableOpacity>
+      )} */}
+      </View>
+      {isLoading ? (
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
+      ) : (projectsList.length>0)?<FlatList
         ListHeaderComponent={
           <View
             style={[
@@ -281,7 +349,11 @@ const ProjectsList = ({ navigation, companyId }) => {
             </Pressable>
           </>
         )}
-      />
+      />: (
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Projects Available!</Text>
+        </View>
+      )}
 
       {/* Change consultant's role modal */}
       <Modal
@@ -452,5 +524,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#1FAAE2",
     padding: 10,
     borderRadius: 4,
+  },
+  searchboxContainer: {
+    backgroundColor: "#EDEDED",
+    marginBottom: 16,
+    width: "96%",
+    display: "flex",
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 4,
+    padding: 4,
   },
 });

@@ -51,23 +51,23 @@ const EditCompanyDetails = ({ navigation, route }) => {
   const [zipcodeError, setZipcodeError] = useState(null);
   const [customersList, setCustomersList] = useState([]);
 
-  // useEffect(() => {
-  //   const tempCmObj = {
-  //     ...users[users.findIndex((obj) => obj.user_type == 3)],
-  //   };
-  //   setDefaultConsultantManager(tempCmObj.id);
+  useEffect(() => {
+    const tempCmObj = {
+      ...users[users.findIndex((obj) => obj.user_type == 3)],
+    };
+    setDefaultConsultantManager(tempCmObj.id);
 
-  //   const tempConsultObj = {
-  //     ...users[users.findIndex((obj) => obj.user_type == 4)],
-  //   };
-  //   setDeafultConsulatnt(tempConsultObj.id);
+    const tempConsultObj = {
+      ...users[users.findIndex((obj) => obj.user_type == 4)],
+    };
+    setDeafultConsulatnt(tempConsultObj.id);
 
-  //   const tempContractObj = {
-  //     ...users[users.findIndex((obj) => obj.user_type == 5)],
-  //   };
-  //   setDefaultContractor(tempContractObj.id);
-  //   console.log("c m: ", defaultConsultantManager);
-  // }, [users]);
+    const tempContractObj = {
+      ...users[users.findIndex((obj) => obj.user_type == 5)],
+    };
+    setDefaultContractor(tempContractObj.id);
+    console.log("c m: ", defaultConsultantManager);
+  }, [users]);
 
   useEffect(() => {
     const getCompanyDetails = async () => {
@@ -247,8 +247,8 @@ const EditCompanyDetails = ({ navigation, route }) => {
       // validateCm(companyData.consultantManager) &&
       // validateConsultant(companyData.consultant) &&
       // validateContractor(companyData.contractor) &&
-      validateCountry(companyData.country) &&
-      validateState(companyData.state) &&
+      // validateCountry(companyData.country) &&
+      // validateState(companyData.state) &&
       validateZipcode(companyData.zip_code)
     ) {
       try {
@@ -317,12 +317,12 @@ const EditCompanyDetails = ({ navigation, route }) => {
       validateAddress(companyData.address);
       // validateVat(companyData.vat_number);
       // validateEmail(companyData.email);
-      validateCm(companyData.consultantManager);
-      validateConsultant(companyData.consultant);
-      validateContractor(companyData.contractor);
-      validateCountry(companyData.country);
+      // validateCm(companyData.consultantManager);
+      // validateConsultant(companyData.consultant);
+      // validateContractor(companyData.contractor);
+      // validateCountry(companyData.country);
+      // validateState(companyData.state);
       validateZipcode(companyData.zip_code);
-      validateState(companyData.state);
       // validatePhone(companyData.phoneNo);
     }
   };
@@ -345,19 +345,6 @@ const EditCompanyDetails = ({ navigation, route }) => {
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
           {/*
-          <Text style={styles.fieldName}>VAT Number:</Text>
-          <TextInput
-            style={styles.input}
-            name="vat_number"
-            value={companyData.vat_number}
-            onChangeText={(text) => {
-              setCompanyData({ ...companyData, vat_number: text });
-              setVatError(null);
-            }}
-            placeholder="VAT Number"
-          />
-          {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
-           
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}

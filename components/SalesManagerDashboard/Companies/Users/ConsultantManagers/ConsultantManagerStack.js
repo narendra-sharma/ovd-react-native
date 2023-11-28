@@ -1,51 +1,41 @@
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View, Pressable } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Modal,
+  Alert,
+  TextInput,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import EditInvoice from "./EditInvoice";
-import AddInvoice from "./AddInvoice";
-import InvoiceDetail from "./InvoiceDetail";
-import InvoiceList from "./InvoiceList";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AllConsultantManagers from "./AllConsultantManagers";
+import AddConsultantManager from "./AddConsultantManager";
+import EditConsultantManager from "./EditConsultantManager";
+import ConsultantManagerDetails from "./ConsultantManagerDetails";
 import { useIsFocused } from "@react-navigation/native";
-import { useCustomActiveScreenStatus } from "../../../../Contexts/ActiveScreenContext";
+import { useCustomActiveScreenStatus } from "../../../../../Contexts/ActiveScreenContext";
 
 const Stack = createNativeStackNavigator();
 
-const InvoiceLayout = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Pressable
-        style={[styles.button, styles.addButton]}
-        onPress={() => {
-          navigation.navigate("Add Invoice");
-        }}
-      >
-        <Text style={styles.addText}>
-          <Icon name="plus-circle" /> New Invoice
-        </Text>
-      </Pressable>
-
-      <InvoiceList navigation={navigation} />
-    </View>
-  );
-};
-
-const ViewInvoices = ({ navigation }) => {
+const ConsultantManagerStack = ({ navigation }) => {
   const isFocused = useIsFocused();
   const { setActiveScreen } = useCustomActiveScreenStatus();
 
   useEffect(() => {
     if (isFocused) {
-      setActiveScreen("All Invoices");
+      setActiveScreen("Consultant Managers");
     }
   }, []);
 
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="My Invoices"
-        component={InvoiceLayout}
+        name="All Consultant Managers"
+        component={AllConsultantManagers}
         options={({ navigation }) => ({
           headerLeft: () => (
             <MaterialIcons
@@ -57,14 +47,23 @@ const ViewInvoices = ({ navigation }) => {
           ),
         })}
       />
-      <Stack.Screen name="Edit Invoice" component={EditInvoice} />
-      <Stack.Screen name="Add Invoice" component={AddInvoice} />
-      <Stack.Screen name="Invoice Details" component={InvoiceDetail} />
+      <Stack.Screen
+        name="Consultant Manager Details"
+        component={ConsultantManagerDetails}
+      />
+      <Stack.Screen
+        name="Add Consultant Manager"
+        component={AddConsultantManager}
+      />
+      <Stack.Screen
+        name="Edit Consultant Manager"
+        component={EditConsultantManager}
+      />
     </Stack.Navigator>
   );
 };
 
-export default ViewInvoices;
+export default ConsultantManagerStack;
 
 const styles = StyleSheet.create({
   container: {
@@ -147,7 +146,7 @@ const styles = StyleSheet.create({
 
   addButton: {
     margin: 10,
-    backgroundColor: "#696cff",
+    backgroundColor: "#B76E79",
     padding: 12,
     borderRadius: 5,
     width: "50%",

@@ -247,8 +247,8 @@ const EditCompanyDetails = ({ navigation, route }) => {
       // validateCm(companyData.consultantManager) &&
       // validateConsultant(companyData.consultant) &&
       // validateContractor(companyData.contractor) &&
-      validateCountry(companyData.country) &&
-      validateState(companyData.state) &&
+      // validateCountry(companyData.country) &&
+      // validateState(companyData.state) &&
       validateZipcode(companyData.zip_code)
     ) {
       try {
@@ -317,12 +317,12 @@ const EditCompanyDetails = ({ navigation, route }) => {
       validateAddress(companyData.address);
       // validateVat(companyData.vat_number);
       // validateEmail(companyData.email);
-      validateCm(companyData.consultantManager);
-      validateConsultant(companyData.consultant);
-      validateContractor(companyData.contractor);
-      validateCountry(companyData.country);
+      // validateCm(companyData.consultantManager);
+      // validateConsultant(companyData.consultant);
+      // validateContractor(companyData.contractor);
+      // validateCountry(companyData.country);
+      // validateState(companyData.state);
       validateZipcode(companyData.zip_code);
-      validateState(companyData.state);
       // validatePhone(companyData.phoneNo);
     }
   };
@@ -345,19 +345,6 @@ const EditCompanyDetails = ({ navigation, route }) => {
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
           {/*
-          <Text style={styles.fieldName}>VAT Number:</Text>
-          <TextInput
-            style={styles.input}
-            name="vat_number"
-            value={companyData.vat_number}
-            onChangeText={(text) => {
-              setCompanyData({ ...companyData, vat_number: text });
-              setVatError(null);
-            }}
-            placeholder="VAT Number"
-          />
-          {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
-           
           <Text style={styles.fieldName}>Email:</Text>
           <TextInput
             style={styles.input}
