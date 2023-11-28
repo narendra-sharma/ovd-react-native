@@ -235,29 +235,29 @@ const EditQuote = ({ navigation, route }) => {
       });
       setCompanyList([...tempCompanies]);
 
-      const tempCms = res.data.consManager.map((cm) => {
-        return { label: cm.name, value: cm.id };
-      });
-      setConsultantManagerList([...tempCms]);
+      // const tempCms = res.data.consManager.map((cm) => {
+      //   return { label: cm.name, value: cm.id };
+      // });
+      // setConsultantManagerList([...tempCms]);
 
       setItemsList([...res?.data?.quotes?.quotes_items]);
     };
     getAllData();
   }, []);
 
-  useEffect(() => {
-    const getConsultantData = async () => {
-      const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
-      // console.log("consultants", res.data);
+  // useEffect(() => {
+  //   const getConsultantData = async () => {
+  //     const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
+  //     // console.log("consultants", res.data);
 
-      const tempConsultants = res.data.data.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
-      });
-      setConsultantList([...tempConsultants]);
-    };
+  //     const tempConsultants = res.data.data.map((consultant) => {
+  //       return { label: consultant.name, value: consultant.id };
+  //     });
+  //     setConsultantList([...tempConsultants]);
+  //   };
 
-    getConsultantData();
-  }, [formData.consultant_manager]);
+  //   getConsultantData();
+  // }, [formData.consultant_manager]);
 
   //validation functions
   const validateTitle = (name) => {
@@ -643,7 +643,7 @@ const EditQuote = ({ navigation, route }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -653,9 +653,9 @@ const EditQuote = ({ navigation, route }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
 
-          <Text style={styles.fieldName}>Assign Consultant:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant:</Text>
           <DropdownMenu
             data={consultantList}
             placeholder="Select Consultant"
@@ -667,7 +667,7 @@ const EditQuote = ({ navigation, route }) => {
           />
           {consultantError ? (
             <Text style={styles.errorText}>{consultantError}</Text>
-          ) : null}
+          ) : null} */}
 
           {/* <Text style={styles.fieldName}>Customer:</Text>
           <DropdownMenu

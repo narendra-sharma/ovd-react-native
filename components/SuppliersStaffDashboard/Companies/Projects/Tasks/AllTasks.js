@@ -16,7 +16,7 @@ const AllTasks = ({ navigation, projectId }) => {
   return (
     <View style={styles.container}>
       <TasksList navigation={navigation} projectId={projectId} />
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Task", { id: projectId });
@@ -25,9 +25,8 @@ const AllTasks = ({ navigation, projectId }) => {
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> Add New Task
         </Text>
-      </Pressable>
+      </Pressable> */}
 
-      {/* <TasksList  navigation={navigation} /> */}
     </View>
   );
 };

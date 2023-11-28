@@ -98,7 +98,7 @@ const AllCustomers = ({ navigation }) => {
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Customer");
@@ -108,7 +108,7 @@ const AllCustomers = ({ navigation }) => {
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> Add New
         </Text>
-      </Pressable>
+      </Pressable> */}
 
       {/* SEARCHBOX CONTAINER */}
       <View style={styles.searchboxContainer}>
@@ -175,7 +175,7 @@ const AllCustomers = ({ navigation }) => {
                   <Text style={styles.item}>{item.name}</Text>
                 </Pressable>
 
-                <View style={styles.iconsContainer}>
+                {/* <View style={styles.iconsContainer}>
                   <TouchableNativeFeedback
                     onPress={() => {
                       setRippleColor(randomHexColor());
@@ -218,7 +218,7 @@ const AllCustomers = ({ navigation }) => {
                       </Text>
                     </View>
                   </TouchableNativeFeedback>
-                </View>
+                </View> */}
               </Pressable>
             </>
           )}

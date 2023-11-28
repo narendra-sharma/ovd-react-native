@@ -283,7 +283,7 @@ const ProjectsList = ({ navigation, companyId }) => {
                 </TouchableOpacity> */}
                 </View>
 
-                <View>
+                {/* <View>
                   <Text
                     style={[
                       styles.item,
@@ -296,9 +296,9 @@ const ProjectsList = ({ navigation, companyId }) => {
                   >
                     EDIT
                   </Text>
-                </View>
+                </View> */}
 
-                <View>
+                {/* <View>
                   <Text
                     style={[
                       styles.item,
@@ -311,7 +311,7 @@ const ProjectsList = ({ navigation, companyId }) => {
                   >
                     DELETE
                   </Text>
-                </View>
+                </View> */}
               </View>
             </View>
           }
@@ -337,18 +337,18 @@ const ProjectsList = ({ navigation, companyId }) => {
                     size={22}
                     color="#444"
                   />
-                  <Icon
+                  {/* <Icon
                     onPress={() => navigation.navigate("Edit Project", item)}
                     name="pen"
                     size={22}
                     color="#444"
-                  />
-                  <Icon
+                  /> */}
+                  {/* <Icon
                     onPress={() => handleDelete(item.project_name, item.id)}
                     name="trash-alt"
                     size={22}
                     color="#444"
-                  />
+                  /> */}
                 </View>
               </Pressable>
             </>

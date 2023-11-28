@@ -19,6 +19,7 @@ import {
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialFormData = {
   name: "",
@@ -232,36 +233,41 @@ const AddQuote = ({ navigation }) => {
   useEffect(() => {
     const getAllData = async () => {
       const res = await apiGetCreateQuoteDropdownData();
-      // console.log("dropdown api", res.data);
+      console.log("dropdown api", res.data);
       const tempCompanies = res.data.company.map((company) => {
         return { label: company.name, value: company.id };
       });
       setCompanyList([...tempCompanies]);
 
-      const tempCms = res.data.consultant_manager.map((cm) => {
-        return { label: cm.name, value: cm.id };
-      });
-      setConsultantManagerList([...tempCms]);
+      // const tempCms = res.data.consultant_manager.map((cm) => {
+      //   return { label: cm.name, value: cm.id };
+      // });
+      // setConsultantManagerList([...tempCms]);
 
       //   setCustomerList([...]);
       //   setProjectList([...]);
     };
     getAllData();
+
+    (async() => {
+      const user = await AsyncStorage.getItem("profile")
+      setFormData({...formData, consultant: JSON.parse(user).id })
+    })();
   }, []);
 
-  useEffect(() => {
-    const getConsultantData = async () => {
-      const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
-      // console.log("consultants", res.data);
+  // useEffect(() => {
+  //   const getConsultantData = async () => {
+  //     const res = await apiGetConsultantsForQuotes(formData.consultant_manager);
+  //     // console.log("consultants", res.data);
 
-      const tempConsultants = res.data.data.map((consultant) => {
-        return { label: consultant.name, value: consultant.id };
-      });
-      setConsultantList([...tempConsultants]);
-    };
+  //     const tempConsultants = res.data.data.map((consultant) => {
+  //       return { label: consultant.name, value: consultant.id };
+  //     });
+  //     setConsultantList([...tempConsultants]);
+  //   };
 
-    getConsultantData();
-  }, [formData.consultant_manager]);
+  //   getConsultantData();
+  // }, [formData.consultant_manager]);
 
   //validation functions
   const validateTitle = (name, label = "Name") => {
@@ -482,7 +488,7 @@ const AddQuote = ({ navigation }) => {
       validateCompanyName(formData.company) &&
       // validateCustomer(formData.customer) &&
       // validateProject(formData.project) &&
-      validateCm(formData.consultant_manager) &&
+      // validateCm(formData.consultant_manager) &&
       // validateConsultant(formData.consultant) &&
       validateTitle(formData.name, "Title") &&
       // validateCost(formData.cost) &&
@@ -573,7 +579,7 @@ const AddQuote = ({ navigation }) => {
       validateCompanyName(formData.company);
       // validateCustomer(formData.customer);
       // validateProject(formData.project);
-      validateCm(formData.consultant_manager);
+      // validateCm(formData.consultant_manager);
       // validateConsultant(formData.consultant);
       // validateQuantity(formData.quantity);
       // validateCost(formData.cost);
@@ -646,7 +652,7 @@ const AddQuote = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -656,9 +662,9 @@ const AddQuote = ({ navigation }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
 
-          <Text style={styles.fieldName}>Assign Consultant:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant:</Text>
           <DropdownMenu
             data={consultantList}
             placeholder="Select Consultant"
@@ -670,7 +676,7 @@ const AddQuote = ({ navigation }) => {
           />
           {consultantError ? (
             <Text style={styles.errorText}>{consultantError}</Text>
-          ) : null}
+          ) : null} */}
 
           {/* <Text style={styles.fieldName}>Customer:</Text>
           <DropdownMenu
@@ -752,36 +758,6 @@ const AddQuote = ({ navigation }) => {
             placeholder="Tax"
           />
           {taxError ? <Text style={styles.errorText}>{taxError}</Text> : null} */}
-
-          {/* <Text style={styles.fieldName}>Discount:</Text>
-          <TextInput
-            style={styles.input}
-            name="discount"
-            value={formData.discount}
-            onChangeText={(text) => {
-              setFormData({ ...formData, discount: text });
-              setDiscountError(null);
-            }}
-            placeholder="Discount"
-          />
-          {discountError ? (
-            <Text style={styles.errorText}>{discountError}</Text>
-          ) : null} */}
-
-          {/* <Text style={styles.fieldName}>Total Amount:</Text>
-          <TextInput
-            style={styles.input}
-            name="total_amount"
-            value={formData.total_amount}
-            onChangeText={(text) => {
-              setFormData({ ...formData, total_amount: text });
-              setTotalAmountError(null);
-            }}
-            placeholder="Total Amount"
-          />
-          {totalAmountError ? (
-            <Text style={styles.errorText}>{totalAmountError}</Text>
-          ) : null} */}
 
           <Text style={styles.fieldName}>Description:</Text>
           <TextInput

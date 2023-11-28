@@ -75,9 +75,9 @@ const EditConsultant = ({ navigation, route }) => {
       //     (user) => user.user_type == 3
       //   );
 
-      // const tempConsultantManager = res.data.managers.map((manager) => {
-      //   return { label: manager.name, value: manager.id };
-      // });
+      const tempConsultantManager = res.data.managers.map((manager) => {
+        return { label: manager.name, value: manager.id };
+      });
 
       setConsultantManagerList([...tempConsultantManager]);
     };

@@ -14,6 +14,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
 import { apiGetAllUsers } from "../../../../../apis/companies";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CONSULTANT_USER_TYPE = 4;
 
@@ -61,19 +62,22 @@ const AddConsultant = ({ navigation }) => {
         (user) => user.user_type == 3
       );
 
-      const tempConsultantManager = consultantManager.map((manager) => {
-        return { label: manager.name, value: manager.id };
-      });
+      // const tempConsultantManager = consultantManager.map((manager) => {
+      //   return { label: manager.name, value: manager.id };
+      // });
 
-      setConsultantManagerList([...tempConsultantManager]);
+      // setConsultantManagerList([...tempConsultantManager]);
 
-      (async () => {
-        const user = await AsyncStorage.getItem("profile");
-        setFormData({ ...formData, parent_id: JSON.parse(user).id });
-      })();
+      
+        (async() => {
+          const user = await AsyncStorage.getItem("profile")
+          setFormData({...formData, parent_id: JSON.parse(user).id })
+        })();
+      
     };
     getAllUsers();
   }, []);
+  
 
   //validation functions
   const validateName = (name) => {
@@ -194,7 +198,7 @@ const AddConsultant = ({ navigation }) => {
       // validateOrg(formData.org) &&
       validateCommission(formData.commission) &&
       validatePhone(formData.phone_number) &&
-      validateCm(formData.parent_id) &&
+      // validateCm(formData.parent_id) &&
       validateAddress(formData.address) &&
       // validateCountry(formData.country) &&
       // validateState(formData.state) &&
