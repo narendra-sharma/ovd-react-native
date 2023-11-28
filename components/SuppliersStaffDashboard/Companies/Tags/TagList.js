@@ -6,9 +6,8 @@ import {
   View,
   Pressable,
   Alert,
-  ActivityIndicator 
+  ActivityIndicator,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteTag, apiGetAllTags } from "../../../../apis/tags";
@@ -29,11 +28,11 @@ const TagsList = ({ navigation }) => {
       const getAllTasks = async () => {
         setIsLoading(true);
         try {
-        const res = await apiGetAllTags();
-        console.log("tags", res.data);
+          const res = await apiGetAllTags();
+          console.log("tags", res.data);
 
-        setTagsList([...res.data.tags]);
-        setAllList([...res.data.tags]);
+          setTagsList([...res.data.tags]);
+          setAllList([...res.data.tags]);
           setIsLoading(false);
         } catch (error) {
           console.log(error);
@@ -79,10 +78,10 @@ const TagsList = ({ navigation }) => {
     ]);
   };
   const handleSearch = (text) => {
-    let filteredData = [...allList]
+    let filteredData = [...allList];
     if (text && text.length > 0) {
       filteredData = filteredData.filter((item) =>
-      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+        item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setTagsList([...filteredData]);
@@ -134,55 +133,57 @@ const TagsList = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
+          <ActivityIndicator color="#B76E79" size="large" />
         </View>
-      ) : (tagsList.length>0) ? <FlatList
-        // data={tagsList.sort(sortTasks)}
-        data={tagsList}
-        renderItem={({ item }) => (
-          <Pressable
-            onPress={() => {
-              navigation.navigate("Tag Details", item);
-            }}
-            style={styles.listItem}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
+      ) : tagsList.length > 0 ? (
+        <FlatList
+          // data={tagsList.sort(sortTasks)}
+          data={tagsList}
+          renderItem={({ item }) => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Tag Details", item);
               }}
+              style={styles.listItem}
             >
-              <Icon
-                style={{ marginRight: 8, transform: "rotateZ(90deg)" }}
-                name="tag"
-                size={18}
-                color="#444"
-              />
-              <View>
-                <Text style={styles.item}>Name: {item.name}</Text>
-                {/* <Text style={styles.subText}>Status: {item.status}</Text> */}
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Icon
+                  style={{ marginRight: 8, transform: "rotateZ(90deg)" }}
+                  name="tag"
+                  size={18}
+                  color="#444"
+                />
+                <View>
+                  <Text style={styles.item}>Name: {item.name}</Text>
+                  {/* <Text style={styles.subText}>Status: {item.status}</Text> */}
+                </View>
               </View>
-            </View>
-            <View style={styles.iconsContainer}>
-              <Icon
-                onPress={() => navigation.navigate("Edit Tag", item)}
-                name="pen"
-                size={18}
-                color="#444"
-              />
-              <Icon
-                onPress={() => handleDelete(item.name, item.id)}
-                name="trash-alt"
-                size={18}
-                color="#444"
-              />
-            </View>
-          </Pressable>
-        )}
-      />: (
+              <View style={styles.iconsContainer}>
+                <Icon
+                  onPress={() => navigation.navigate("Edit Tag", item)}
+                  name="pen"
+                  size={18}
+                  color="#444"
+                />
+                <Icon
+                  onPress={() => handleDelete(item.name, item.id)}
+                  name="trash-alt"
+                  size={18}
+                  color="#444"
+                />
+              </View>
+            </Pressable>
+          )}
+        />
+      ) : (
         <View style={styles.container}>
-          <Text style={{ fontWeight: "bold"}}>No Tags Available!</Text>
+          <Text style={{ fontWeight: "bold" }}>No Tags Available!</Text>
         </View>
       )}
     </View>

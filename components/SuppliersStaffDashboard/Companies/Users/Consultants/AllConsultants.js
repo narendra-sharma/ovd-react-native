@@ -9,9 +9,8 @@ import {
   TouchableNativeFeedback,
   Modal,
   TouchableOpacity,
-  ActivityIndicator 
+  ActivityIndicator,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
@@ -129,10 +128,10 @@ const AllConsultants = ({ navigation }) => {
     }
   };
   const handleSearch = (text) => {
-    let filteredData = [...allList]
+    let filteredData = [...allList];
     if (text && text.length > 0) {
       filteredData = filteredData.filter((item) =>
-      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+        item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setConsultantList([...filteredData]);
@@ -196,94 +195,96 @@ const AllConsultants = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
+          <ActivityIndicator color="#B76E79" size="large" />
         </View>
-      ) : (consultantList.length>0) ?<FlatList
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-        // style={{ height: 100 }}
-        data={consultantList}
-        renderItem={({ item }) => (
-          <>
-            <Pressable style={styles.listItem}>
-              <Pressable
-                style={{ width: "72%" }}
-                onPress={() => {
-                  navigation.navigate("Consultant Details", { id: item.id });
-                  // navigation.setOptions({ title: "Updated!" });
-                }}
-              >
-                <Text style={styles.item}>{item.name}</Text>
+      ) : consultantList.length > 0 ? (
+        <FlatList
+          contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+          // style={{ height: 100 }}
+          data={consultantList}
+          renderItem={({ item }) => (
+            <>
+              <Pressable style={styles.listItem}>
+                <Pressable
+                  style={{ width: "72%" }}
+                  onPress={() => {
+                    navigation.navigate("Consultant Details", { id: item.id });
+                    // navigation.setOptions({ title: "Updated!" });
+                  }}
+                >
+                  <Text style={styles.item}>{item.name}</Text>
+                </Pressable>
+
+                <View style={styles.iconsContainer}>
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      navigation.navigate("Edit Consultant", {
+                        id: item.id,
+                      });
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon
+                          name="pen"
+                          size={18}
+                          color={"#444"}
+                          // color="blue"
+                        />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      handleDelete(item.name, item.id);
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="trash-alt" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      // setRippleOverflow(!rippleOverflow);
+                      // console.log("clicked!");
+                      handleClicked(item.name, item.id);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="user-edit" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                </View>
               </Pressable>
-
-              <View style={styles.iconsContainer}>
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    navigation.navigate("Edit Consultant", {
-                      id: item.id,
-                    });
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon
-                        name="pen"
-                        size={18}
-                        color={"#444"}
-                        // color="blue"
-                      />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    handleDelete(item.name, item.id);
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="#444" />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    // setRippleOverflow(!rippleOverflow);
-                    // console.log("clicked!");
-                    handleClicked(item.name, item.id);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon name="user-edit" size={18} color="#444" />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </Pressable>
-          </>
-        )}
-      />: (
+            </>
+          )}
+        />
+      ) : (
         <View style={styles.container}>
-          <Text style={{ fontWeight: "bold"}}>No Consultants Available!</Text>
+          <Text style={{ fontWeight: "bold" }}>No Consultants Available!</Text>
         </View>
       )}
 

@@ -67,16 +67,13 @@ const AddConsultant = ({ navigation }) => {
 
       setConsultantManagerList([...tempConsultantManager]);
 
-      
-        (async() => {
-          const user = await AsyncStorage.getItem("profile")
-          setFormData({...formData, parent_id: JSON.parse(user).id })
-        })();
-      
+      (async () => {
+        const user = await AsyncStorage.getItem("profile");
+        setFormData({ ...formData, parent_id: JSON.parse(user).id });
+      })();
     };
     getAllUsers();
   }, []);
-  
 
   //validation functions
   const validateName = (name) => {
@@ -339,7 +336,7 @@ const AddConsultant = ({ navigation }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -349,7 +346,7 @@ const AddConsultant = ({ navigation }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
 
           <Text style={styles.fieldName}>Commision: </Text>
           <Dropdown

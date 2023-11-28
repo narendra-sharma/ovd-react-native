@@ -7,9 +7,8 @@ import {
   View,
   Alert,
   TouchableNativeFeedback,
-  ActivityIndicator 
+  ActivityIndicator,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -36,12 +35,12 @@ const AllCustomers = ({ navigation }) => {
       const getCustomers = async () => {
         setIsLoading(true);
         try {
-        const res = await apiGetUsersFromUsers();
-        console.log(res.data);
-        // console.log(res.data.data);
+          const res = await apiGetUsersFromUsers();
+          console.log(res.data);
+          // console.log(res.data.data);
 
-        setCustomersList([...res.data.customers]);
-        setAllList([...res.data.customers]);
+          setCustomersList([...res.data.customers]);
+          setAllList([...res.data.customers]);
           setIsLoading(false);
         } catch (error) {
           console.log(error);
@@ -89,10 +88,10 @@ const AllCustomers = ({ navigation }) => {
     ]);
   };
   const handleSearch = (text) => {
-    let filteredData = [...allList]
+    let filteredData = [...allList];
     if (text && text.length > 0) {
       filteredData = filteredData.filter((item) =>
-      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+        item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setCustomersList([...filteredData]);
@@ -156,75 +155,77 @@ const AllCustomers = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
+          <ActivityIndicator color="#B76E79" size="large" />
         </View>
-      ) : (customersList.length>0) ?<FlatList
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-        // style={{ height: 100 }}
-        data={customersList}
-        renderItem={({ item }) => (
-          <>
-            <Pressable style={styles.listItem}>
-              <Pressable
-                style={{ width: "76%" }}
-                onPress={() => {
-                  navigation.navigate("Customer Details", { id: item.id });
-                  // navigation.setOptions({ title: "Updated!" });
-                }}
-              >
-                <Text style={styles.item}>{item.name}</Text>
+      ) : customersList.length > 0 ? (
+        <FlatList
+          contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+          // style={{ height: 100 }}
+          data={customersList}
+          renderItem={({ item }) => (
+            <>
+              <Pressable style={styles.listItem}>
+                <Pressable
+                  style={{ width: "76%" }}
+                  onPress={() => {
+                    navigation.navigate("Customer Details", { id: item.id });
+                    // navigation.setOptions({ title: "Updated!" });
+                  }}
+                >
+                  <Text style={styles.item}>{item.name}</Text>
+                </Pressable>
+
+                <View style={styles.iconsContainer}>
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      navigation.navigate("Edit Customer", {
+                        id: item.id,
+                      });
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon
+                          name="pen"
+                          size={18}
+                          color={"#444"}
+                          // color="blue"
+                        />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      handleDelete(item.name, item.id);
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="trash-alt" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                </View>
               </Pressable>
-
-              <View style={styles.iconsContainer}>
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    navigation.navigate("Edit Customer", {
-                      id: item.id,
-                    });
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon
-                        name="pen"
-                        size={18}
-                        color={"#444"}
-                        // color="blue"
-                      />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    handleDelete(item.name, item.id);
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="#444" />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </Pressable>
-          </>
-        )}
-      />: (
+            </>
+          )}
+        />
+      ) : (
         <View style={styles.container}>
-          <Text style={{ fontWeight: "bold"}}>No Customers Available!</Text>
+          <Text style={{ fontWeight: "bold" }}>No Customers Available!</Text>
         </View>
       )}
       {/* <Signature /> */}

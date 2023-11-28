@@ -67,16 +67,13 @@ const AddConsultant = ({ navigation }) => {
 
       setConsultantManagerList([...tempConsultantManager]);
 
-      
-        (async() => {
-          const user = await AsyncStorage.getItem("profile")
-          setFormData({...formData, parent_id: JSON.parse(user).id })
-        })();
-      
+      (async () => {
+        const user = await AsyncStorage.getItem("profile");
+        setFormData({ ...formData, parent_id: JSON.parse(user).id });
+      })();
     };
     getAllUsers();
   }, []);
-  
 
   //validation functions
   const validateName = (name) => {

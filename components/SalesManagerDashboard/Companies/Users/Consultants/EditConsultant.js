@@ -75,9 +75,9 @@ const EditConsultant = ({ navigation, route }) => {
       //     (user) => user.user_type == 3
       //   );
 
-      const tempConsultantManager = res.data.managers.map((manager) => {
-        return { label: manager.name, value: manager.id };
-      });
+      // const tempConsultantManager = res.data.managers.map((manager) => {
+      //   return { label: manager.name, value: manager.id };
+      // });
 
       setConsultantManagerList([...tempConsultantManager]);
     };
@@ -340,7 +340,7 @@ const EditConsultant = ({ navigation, route }) => {
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
 
-          <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
+          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
           <DropdownMenu
             data={consultantManagerList}
             placeholder="Select Consultant Manager"
@@ -350,7 +350,7 @@ const EditConsultant = ({ navigation, route }) => {
             originalObj={formData}
             setErrorState={setCmError}
           />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
+          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null} */}
 
           <Text style={styles.fieldName}>Commision: </Text>
           <Dropdown

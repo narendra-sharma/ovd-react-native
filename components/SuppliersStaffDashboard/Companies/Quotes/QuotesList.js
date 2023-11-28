@@ -8,9 +8,8 @@ import {
   TouchableNativeFeedback,
   Alert,
   Linking,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import { MockQuotes } from "./MockQuotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -41,26 +40,26 @@ const QuotesList = ({ navigation, companyId }) => {
 
       const getAllQuotes = async () => {
         setIsLoading(true);
-        try{
-        const res = await apiGetAllQuotes();
-        // console.log(res.data.quotations);
-        //listing of quotes for a specific company
-        if (companyId) {
-          const quotes = res.data.quotations.filter(
-            (quote) => quote.company_id == companyId
-          );
-          setQuotesList([...quotes]);
-          setAllList([...quotes]);
-        } else {
-          //listing all quotes
-          setQuotesList([...res.data.quotations]);
-          setAllList([...res.data.quotations]);
+        try {
+          const res = await apiGetAllQuotes();
+          // console.log(res.data.quotations);
+          //listing of quotes for a specific company
+          if (companyId) {
+            const quotes = res.data.quotations.filter(
+              (quote) => quote.company_id == companyId
+            );
+            setQuotesList([...quotes]);
+            setAllList([...quotes]);
+          } else {
+            //listing all quotes
+            setQuotesList([...res.data.quotations]);
+            setAllList([...res.data.quotations]);
+          }
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
         }
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
       };
 
       getAllQuotes();
@@ -139,10 +138,10 @@ const QuotesList = ({ navigation, companyId }) => {
     }
   };
   const handleSearch = (text) => {
-    let filteredData = [...allList]
+    let filteredData = [...allList];
     if (text && text.length > 0) {
       filteredData = filteredData.filter((item) =>
-      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+        item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setQuotesList([...filteredData]);
@@ -194,97 +193,91 @@ const QuotesList = ({ navigation, companyId }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
+          <ActivityIndicator color="#B76E79" size="large" />
         </View>
-      ) : (quotesList.length>0) ? <FlatList
-        // style={{ height: 100 }}
-        data={quotesList}
-        renderItem={({ item }) => (
-          <>
-            <Pressable style={styles.listItem}>
-              <Pressable
-                style={{ width: "70%" }}
-                onPress={() => {
-                  navigation.navigate("Quote Details", item);
-                }}
-              >
-                <Text style={styles.item}>{item.name}</Text>
+      ) : quotesList.length > 0 ? (
+        <FlatList
+          // style={{ height: 100 }}
+          data={quotesList}
+          renderItem={({ item }) => (
+            <>
+              <Pressable style={styles.listItem}>
+                <Pressable
+                  style={{ width: "70%" }}
+                  onPress={() => {
+                    navigation.navigate("Quote Details", item);
+                  }}
+                >
+                  <Text style={styles.item}>{item.name}</Text>
+                </Pressable>
+
+                <View style={styles.iconsContainer}>
+                  {/* Edit the quotation */}
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      navigation.navigate("Edit Quote", {
+                        company: item,
+                        id: item.id,
+                      });
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="pen" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+
+                  {/* Download the quotation pdf */}
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      handleDownloadQuotation(item.id);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="download" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+
+                  {/* Delete the quotation */}
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      handleDelete(item.id);
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="trash-alt" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                </View>
               </Pressable>
-
-              <View style={styles.iconsContainer}>
-                {/* Edit the quotation */}
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    navigation.navigate("Edit Quote", {
-                      company: item,
-                      id: item.id,
-                    });
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon
-                        name="pen"
-                        size={18}
-                        color="#444"
-                      />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-
-                {/* Download the quotation pdf */}
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    handleDownloadQuotation(item.id);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon
-                        name="download"
-                        size={18}
-                        color="#444"
-                      />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-
-                {/* Delete the quotation */}
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    handleDelete(item.id);
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="#444" />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </Pressable>
-          </>
-        )}
-      />: (
+            </>
+          )}
+        />
+      ) : (
         <View style={styles.container}>
-          <Text style={{ fontWeight: "bold"}}>No Quotes Available!</Text>
+          <Text style={{ fontWeight: "bold" }}>No Quotes Available!</Text>
         </View>
       )}
       {/* <Text>{JSON.stringify(tempState)}</Text> */}

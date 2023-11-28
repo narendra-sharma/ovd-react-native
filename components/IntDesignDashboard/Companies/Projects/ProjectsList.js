@@ -8,7 +8,7 @@ import {
   Alert,
   Modal,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
@@ -21,7 +21,6 @@ import {
   apiGetAllProjects,
 } from "../../../../apis/projects";
 import { Dropdown } from "react-native-element-dropdown";
-import { TextInput } from "react-native-gesture-handler";
 
 const ProjectsList = ({ navigation, companyId }) => {
   const [projectsList, setProjectsList] = useState([]);
@@ -37,21 +36,21 @@ const ProjectsList = ({ navigation, companyId }) => {
 
       const getAllProjects = async () => {
         setIsLoading(true);
-        try{
-        const res = await apiGetAllProjects();
-        // console.log("projects", res.data.projects);
-        //listing of quotes for a specific company
-        if (companyId) {
-          const projects = res.data.projects.filter(
-            (project) => project.company_id == companyId
-          );
-          setProjectsList([...projects]);
-          setAllList([...projects]);
-        } else {
-          //listing all projects
-          setProjectsList([...res.data.projects]);
-          setAllList([...res.data.projects]);
-        }
+        try {
+          const res = await apiGetAllProjects();
+          // console.log("projects", res.data.projects);
+          //listing of quotes for a specific company
+          if (companyId) {
+            const projects = res.data.projects.filter(
+              (project) => project.company_id == companyId
+            );
+            setProjectsList([...projects]);
+            setAllList([...projects]);
+          } else {
+            //listing all projects
+            setProjectsList([...res.data.projects]);
+            setAllList([...res.data.projects]);
+          }
           setIsLoading(false);
         } catch (error) {
           console.log(error);
@@ -150,10 +149,13 @@ const ProjectsList = ({ navigation, companyId }) => {
     }
   };
   const handleSearch = (text) => {
-    let filteredData = [...allList]
+    let filteredData = [...allList];
     if (text && text.length > 0) {
       filteredData = filteredData.filter((item) =>
-      item?.project_name.trim().toLowerCase().includes(text.trim().toLowerCase())
+        item?.project_name
+          .trim()
+          .toLowerCase()
+          .includes(text.trim().toLowerCase())
       );
     }
     setProjectsList([...filteredData]);
@@ -205,42 +207,43 @@ const ProjectsList = ({ navigation, companyId }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
+          <ActivityIndicator color="#B76E79" size="large" />
         </View>
-      ) : (projectsList.length>0) ? <FlatList
-        ListHeaderComponent={
-          <View
-            style={[
-              styles.listItem,
-              {
-                backgroundColor: "#d9d9d9",
-                justifyContent: "space-between",
-              },
-            ]}
-          >
+      ) : projectsList.length > 0 ? (
+        <FlatList
+          ListHeaderComponent={
             <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                width: "55%",
-                // backgroundColor: "yellow",
-              }}
+              style={[
+                styles.listItem,
+                {
+                  backgroundColor: "#d9d9d9",
+                  justifyContent: "space-between",
+                },
+              ]}
             >
-              <Text
-                style={[
-                  styles.item,
-                  {
-                    fontSize: 12.5,
-                    fontWeight: "bold",
-                    textDecorationLine: "underline",
-                    marginRight: 4,
-                  },
-                ]}
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "55%",
+                  // backgroundColor: "yellow",
+                }}
               >
-                NAME
-              </Text>
-              {/* <TouchableOpacity
+                <Text
+                  style={[
+                    styles.item,
+                    {
+                      fontSize: 12.5,
+                      fontWeight: "bold",
+                      textDecorationLine: "underline",
+                      marginRight: 4,
+                    },
+                  ]}
+                >
+                  NAME
+                </Text>
+                {/* <TouchableOpacity
                 onPress={() => {
                   setSortLabel("title");
                   changeSortOrder();
@@ -248,29 +251,29 @@ const ProjectsList = ({ navigation, companyId }) => {
               >
                 <MaterialCommunityIcons size={25} name="sort" />
               </TouchableOpacity> */}
-            </View>
+              </View>
 
-            <View style={styles.iconsContainer}>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={[
-                    styles.item,
-                    {
-                      fontSize: 12.5,
-                      fontWeight: "bold",
-                      textDecorationLine: "underline",
-                    },
-                  ]}
+              <View style={styles.iconsContainer}>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
                 >
-                  STATUS
-                </Text>
-                {/* <TouchableOpacity
+                  <Text
+                    style={[
+                      styles.item,
+                      {
+                        fontSize: 12.5,
+                        fontWeight: "bold",
+                        textDecorationLine: "underline",
+                      },
+                    ]}
+                  >
+                    STATUS
+                  </Text>
+                  {/* <TouchableOpacity
                   onPress={() => {
                     setSortLabel("job_date");
                     changeSortOrder();
@@ -278,81 +281,82 @@ const ProjectsList = ({ navigation, companyId }) => {
                 >
                   <MaterialCommunityIcons size={25} name="sort" />
                 </TouchableOpacity> */}
-              </View>
+                </View>
 
-              <View>
-                <Text
-                  style={[
-                    styles.item,
-                    {
-                      fontSize: 12.5,
-                      fontWeight: "bold",
-                      textDecorationLine: "underline",
-                    },
-                  ]}
-                >
-                  EDIT
-                </Text>
-              </View>
+                <View>
+                  <Text
+                    style={[
+                      styles.item,
+                      {
+                        fontSize: 12.5,
+                        fontWeight: "bold",
+                        textDecorationLine: "underline",
+                      },
+                    ]}
+                  >
+                    EDIT
+                  </Text>
+                </View>
 
-              <View>
-                <Text
-                  style={[
-                    styles.item,
-                    {
-                      fontSize: 12.5,
-                      fontWeight: "bold",
-                      textDecorationLine: "underline",
-                    },
-                  ]}
-                >
-                  DELETE
-                </Text>
+                <View>
+                  <Text
+                    style={[
+                      styles.item,
+                      {
+                        fontSize: 12.5,
+                        fontWeight: "bold",
+                        textDecorationLine: "underline",
+                      },
+                    ]}
+                  >
+                    DELETE
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        }
-        stickyHeaderIndices={[0]}
-        // style={{ height: 100 }}
-        data={projectsList}
-        renderItem={({ item }) => (
-          <>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Project Details", item);
-                // navigation.setOptions({ title: "Updated!" });
-              }}
-              style={styles.listItem}
-            >
-              <Text style={styles.item}>{item.project_name}</Text>
-              <View style={styles.iconsContainer}>
-                <Icon
-                  onPress={() =>
-                    handleClicked(item.project_name, item.id, item.status)
-                  }
-                  name="check-square"
-                  size={22}
-                  color="#444"
-                />
-                <Icon
-                  onPress={() => navigation.navigate("Edit Project", item)}
-                  name="pen"
-                  size={22}
-                  color="#444"
-                />
-                <Icon
-                  onPress={() => handleDelete(item.project_name, item.id)}
-                  name="trash-alt"
-                  size={22}
-                  color="#444"
-                />
-              </View>
-            </Pressable>
-          </>
-        )}
-      />: (
+          }
+          stickyHeaderIndices={[0]}
+          // style={{ height: 100 }}
+          data={projectsList}
+          renderItem={({ item }) => (
+            <>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("Project Details", item);
+                  // navigation.setOptions({ title: "Updated!" });
+                }}
+                style={styles.listItem}
+              >
+                <Text style={styles.item}>{item.project_name}</Text>
+                <View style={styles.iconsContainer}>
+                  <Icon
+                    onPress={() =>
+                      handleClicked(item.project_name, item.id, item.status)
+                    }
+                    name="check-square"
+                    size={22}
+                    color="#444"
+                  />
+                  <Icon
+                    onPress={() => navigation.navigate("Edit Project", item)}
+                    name="pen"
+                    size={22}
+                    color="#444"
+                  />
+                  <Icon
+                    onPress={() => handleDelete(item.project_name, item.id)}
+                    name="trash-alt"
+                    size={22}
+                    color="#444"
+                  />
+                </View>
+              </Pressable>
+            </>
+          )}
+        />
+      ) : (
         <View style={styles.container}>
-          <Text style={{ fontWeight: "bold"}}>No Projects Available!</Text>
+          <Text style={{ fontWeight: "bold" }}>No Projects Available!</Text>
         </View>
       )}
 
