@@ -37,13 +37,17 @@ const DashboardProjects = ({ navigation, route }) => {
 
       const getAllProjects = async () => {
         const res = await apiGetAllDashboardData();
+        console.log(
+          "project near deadline: ",
+          res?.data?.totalNearDeadlineProjects
+        );
         console.log("dashboard projects", res?.data);
 
         if (route?.params?.active)
           setProjectsList(res?.data?.totalActiveProjects?.data);
 
         if (route?.params?.nearDeadline)
-          setProjectsList(res?.data?.totalNearDeadlineProjects?.data);
+          setProjectsList(res?.data?.totalNearDeadlineProjects);
       };
 
       getAllProjects();

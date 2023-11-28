@@ -12,6 +12,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiGetAllDashboardData } from "../../../apis/dashboard";
+import { apiDeleteTask } from "../../../apis/tasks";
 
 const DashboardTasks = ({ navigation, route }) => {
   const [taskList, setTasksList] = useState([]);
@@ -30,10 +31,10 @@ const DashboardTasks = ({ navigation, route }) => {
         console.log("tasks", res?.data?.totalNearDeadlineProjects?.data);
 
         if (route?.params?.nearDeadline)
-          setTasksList(res?.data?.totalNearDeadlineProjects?.data);
+          setTasksList(res?.data?.totalTaskWithNearbyDeadline?.data);
 
         if (route?.params?.completed)
-          setTasksList(res?.data?.totalTaskCompleted?.data);
+          setTasksList(res?.data?.totalTaskCompleted);
       };
 
       getAllTasks();

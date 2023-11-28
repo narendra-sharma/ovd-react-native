@@ -12,11 +12,11 @@ import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import IntDesignDashScreen from "./screens/IntDesignDashScreen";
 import SupplierStaffScreen from "./screens/SupplierStaffScreen";
 import SalesManagerScreen from "./screens/SalesManagerScreen";
-import CustomerScreen from "./screens/CustomerScreen";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FirstLoginScreen from "./screens/FirstLoginScreen";
 import { ActiveScreenProvider } from "./Contexts/ActiveScreenContext";
+import CustomerDashboardScreen from "./screens/CustomerDashboardScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -91,7 +91,7 @@ export default function App() {
             {/* Customer Stack */}
             <Stack.Screen
               name="Customer Dashboard"
-              component={CustomerScreen}
+              component={CustomerDashboardScreen}
               options={({ navigation }) => ({
                 title: "Dashboard",
                 headerShown: false,

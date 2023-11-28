@@ -143,7 +143,13 @@ const AuthScreen = ({ navigation }) => {
         return;
 
       case 5:
+        //userCode: 5 => Contractor / Supplier Staff Dashboard
         navigation.navigate("Supplier Staff Dashboard");
+        return;
+
+      case 6:
+        //userCode: 6 => Customer
+        navigation.navigate("Customer Dashboard");
         return;
 
       default:
