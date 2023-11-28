@@ -14,6 +14,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
 import { apiGetAllUsers } from "../../../../../apis/companies";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CONTRACTOR_USER_TYPE = 5;
 
@@ -50,11 +51,11 @@ const AddContractor = ({ navigation }) => {
   const [responseError, setResponseError] = useState(null);
 
   useEffect(() => {
-    (async() => {
-      const user = await AsyncStorage.getItem("profile")
-      setFormData({...formData, parent_id: JSON.parse(user).id })
+    (async () => {
+      const user = await AsyncStorage.getItem("profile");
+      setFormData({ ...formData, parent_id: JSON.parse(user).id });
     })();
-  }, [])
+  }, []);
 
   //validation functions
   const validateName = (name) => {
@@ -159,8 +160,8 @@ const AddContractor = ({ navigation }) => {
       // validateOrg(formData.org) &&
       validatePhone(formData.phone_number) &&
       validateAddress(formData.address) &&
-      validateCountry(formData.country) &&
-      validateState(formData.state) &&
+      // validateCountry(formData.country) &&
+      // validateState(formData.state) &&
       validateZipcode(formData.zip_code) &&
       validateEmail(formData.email)
     ) {
@@ -224,8 +225,8 @@ const AddContractor = ({ navigation }) => {
       // validateOrg(formData.org);
       validatePhone(formData.phone_number);
       validateAddress(formData.address);
-      validateCountry(formData.country);
-      validateState(formData.state);
+      // validateCountry(formData.country);
+      // validateState(formData.state);
       validateZipcode(formData.zip_code);
       validateEmail(formData.email);
     }

@@ -98,3 +98,16 @@ export const apiChangeProjectStatus = async (formData, id) => {
   });
   return response;
 };
+
+export const apiChangeProjectApprovalStatus = async (formData, id) => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    method: "put",
+    path: `auth/project-change-approve-status/${id}`,
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};

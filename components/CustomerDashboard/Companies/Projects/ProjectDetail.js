@@ -30,6 +30,7 @@ const ProjectDetail = ({ navigation, route }) => {
       const getAllData = async () => {
         try {
           const res = await apiGetPreFilledProjectDetails(route.params.id);
+          console.log("project data: ", res?.data);
           setProjectData({
             ...res?.data?.project,
             totalCost: res?.data?.totalCost,
@@ -152,11 +153,11 @@ const ProjectDetail = ({ navigation, route }) => {
             </Text>
           </View>
 
-          <View style={[styles.fieldContainer]}>
+          {/* <View style={[styles.fieldContainer]}>
             <Text style={styles.fieldName}>Project Cost</Text>
             <Text style={styles.span}>:</Text>
             <Text style={styles.fieldContent}>{projectData?.totalCost}</Text>
-          </View>
+          </View> */}
 
           {/* <View style={styles.fieldContainer}>
           <Text style={styles.fieldName}>Billing Type</Text>
@@ -178,7 +179,7 @@ const ProjectDetail = ({ navigation, route }) => {
         </View>
         <InvoiceLayout navigation={navigation} projectId={route?.params?.id} />
 
-        <View style={styles.buttonsContainer}>
+        {/* <View style={styles.buttonsContainer}>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             // onPress={() => setIsCompanyEditOn(true)}
@@ -198,7 +199,7 @@ const ProjectDetail = ({ navigation, route }) => {
           >
             <Text style={styles.textStyle}>Delete Project</Text>
           </Pressable>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );

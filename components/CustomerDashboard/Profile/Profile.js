@@ -112,12 +112,12 @@ const Profile = ({ navigation }) => {
             <Text style={styles.fielContent}> {userData.zip_code} </Text>
           </View>
         </View>
-        {/* <Pressable
+        <Pressable
           onPress={() => navigation.navigate("Edit Profile")}
           style={styles.submitButton}
         >
           <Text style={styles.submitText}>Edit</Text>
-        </Pressable> */}
+        </Pressable>
       </>
     </View>
   );
