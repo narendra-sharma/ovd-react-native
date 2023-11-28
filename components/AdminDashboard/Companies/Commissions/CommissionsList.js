@@ -86,7 +86,9 @@ const CommissionsList = ({ navigation }) => {
       )} */}
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#B76E79" size="large" style={{marginBottom:'90%',marginTop:"50%" }}/>
+        <View style={styles.container}>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
       ) : (commissionsList.length>0) ? <FlatList
         // style={{ height: 100 }}
         data={commissionsList}
@@ -118,7 +120,9 @@ const CommissionsList = ({ navigation }) => {
           </>
         )}
       />: (
-        <Text style={{ fontWeight: "bold",marginBottom:'100%',marginTop:"40%" }}>No Commissions Available!</Text>
+        <View style={styles.container}>
+          <Text style={{ fontWeight: "bold"}}>No Commissions Available!</Text>
+        </View>
       )}
     </View>
   );
