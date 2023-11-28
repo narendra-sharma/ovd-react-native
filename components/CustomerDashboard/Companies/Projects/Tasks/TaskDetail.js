@@ -288,7 +288,7 @@ const TaskDetail = ({ navigation, route }) => {
           ))}
 
         {/* BUTTONS SECTION */}
-        <View style={styles.buttonsContainer}>
+        {/* <View style={styles.buttonsContainer}>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             // onPress={() => setIsCompanyEditOn(true)}
@@ -308,7 +308,7 @@ const TaskDetail = ({ navigation, route }) => {
           >
             <Text style={styles.textStyle}>Delete Task</Text>
           </Pressable>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );

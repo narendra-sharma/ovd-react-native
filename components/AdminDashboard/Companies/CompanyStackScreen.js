@@ -91,7 +91,7 @@ const CompanyStackScreen = ({ navigation }) => {
               style={{ marginRight: 30 }}
             />
           ),
-          headerRight: () => <DropdownMenu navigation={navigation} />,
+          // headerRight: () => <DropdownMenu navigation={navigation} />,
         })}
       />
       <Stack.Screen
@@ -110,7 +110,7 @@ const CompanyStackScreen = ({ navigation }) => {
         options={({ navigation }) => ({
           title: "Company Details",
           // headerShown: false,
-          headerRight: () => <DropdownMenu navigation={navigation} />,
+          // headerRight: () => <DropdownMenu navigation={navigation} />,
           // headerRight: () => <MaterialIcon name="dots-vertical" size={30} />,
         })}
       />

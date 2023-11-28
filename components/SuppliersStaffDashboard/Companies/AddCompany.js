@@ -347,89 +347,6 @@ const AddCompany = ({ navigation }) => {
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-          {/*<Text style={styles.fieldName}>VAT Number:</Text>
-          <TextInput
-            style={styles.input}
-            name="vat"
-            value={newCompanyData.vatNumber}
-            onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, vatNumber: text });
-              setVatError(null);
-            }}
-            placeholder="VAT Number"
-          />
-          {vatError ? <Text style={styles.errorText}>{vatError}</Text> : null}
-
-           <Text style={styles.fieldName}>Email:</Text>
-          <TextInput
-            style={styles.input}
-            name="email"
-            placeholder="Email"
-            value={newCompanyData.email}
-            onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, email: text });
-              setEmailError(null);
-            }}
-          />
-          {emailError ? (
-            <Text style={styles.errorText}>{emailError}</Text>
-          ) : null}
-
-          <Text style={styles.fieldName}>Phone Number:</Text>
-          <TextInput
-            style={styles.input}
-            name="phonenumber"
-            placeholder="Phone Number"
-            value={newCompanyData.phoneNo}
-            onChangeText={(text) => {
-              setNewCompanyData({ ...newCompanyData, phoneNo: text });
-              setPhoneError(null);
-            }}
-          />
-          {phoneError ? (
-            <Text style={styles.errorText}>{phoneError}</Text>
-          ) : null} */}
-
-          {/* <Text style={styles.fieldName}>Assign Consultant Manager:</Text>
-          <DropdownMenu
-            data={consultantManagerList}
-            placeholder="Select Consultant Manager"
-            value={newCompanyData.consultantManager}
-            setValue={setNewCompanyData}
-            label="consultantManager"
-            originalObj={newCompanyData}
-            setErrorState={setCmError}
-          />
-          {cmError ? <Text style={styles.errorText}>{cmError}</Text> : null}
-
-          <Text style={styles.fieldName}>Assign Consultant:</Text>
-          <DropdownMenu
-            data={consultantList}
-            placeholder="Select Consultant"
-            value={newCompanyData.consultant}
-            setValue={setNewCompanyData}
-            label="consultant"
-            originalObj={newCompanyData}
-            setErrorState={setConsultantError}
-          />
-          {consultantError ? (
-            <Text style={styles.errorText}>{consultantError}</Text>
-          ) : null} */}
-
-          {/* <Text style={styles.fieldName}>Assign Contractor:</Text>
-          <DropdownMenu
-            data={contractorsList}
-            placeholder="Select Contractor"
-            value={newCompanyData.contractor}
-            setValue={setNewCompanyData}
-            label="contractor"
-            originalObj={newCompanyData}
-            setErrorState={setContractorError}
-          />
-          {contractorError ? (
-            <Text style={styles.errorText}>{contractorError}</Text>
-          ) : null} */}
-
           <Text style={styles.fieldName}>Assign Customer:</Text>
           <DropdownMenu
             style={[styles.dropdown]}
@@ -447,7 +364,7 @@ const AddCompany = ({ navigation }) => {
 
           <Text style={styles.fieldName}>Address:</Text>
           <GooglePlacesAutocomplete
-            style={styles.input}
+            // style={styles.input}
             placeholder="Search"
             autoFocus={true}
             listViewDisplayed="auto"
@@ -673,17 +590,17 @@ const DropdownMenu = ({
 
 const placesStyle = StyleSheet.create({
   textInputContainer: {
-    // backgroundColor: "rgba(0,0,0,0)",
     borderTopWidth: 0,
     borderBottomWidth: 0,
     // maxWidth: "100%",
     // minWidth: "90%",
-    borderColor: "gray",
     width: "100%",
+    borderColor: "gray",
+    // borderRadius: 5,
   },
   textInput: {
     backgroundColor: "transparent",
-    height: 44,
+    height: 45,
     color: "#5d5d5d",
     fontSize: 16,
     borderWidth: 0.5,

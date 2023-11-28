@@ -10,7 +10,11 @@ import {
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { Dropdown } from "react-native-element-dropdown";
+import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
+import { apiGetAllUsers } from "../../../../../apis/companies";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CUSTOMER_USER_TYPE = 6;
 
@@ -18,7 +22,7 @@ const initialFormData = {
   name: "",
   // username: "",
   email: "",
-  parent_id: 2,
+  parent_id: 1,
   org: "",
   phone_number: "",
   address: "",

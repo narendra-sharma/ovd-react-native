@@ -75,9 +75,10 @@ const AddTag = ({ navigation }) => {
   const handleSubmit = async () => {
     if (
       validateTagName(formData.name) &&
-      validateDescription(formData.description) &&
-      validateCost(formData.total_cost) &&
-      validateEndDate(formData.deadline)
+      validateDescription(formData.description)
+      // &&
+      // validateCost(formData.total_cost) &&
+      // validateEndDate(formData.deadline)
     ) {
       try {
         const res = await apiAddNewTag({ ...formData, status: 1 });
@@ -128,8 +129,8 @@ const AddTag = ({ navigation }) => {
     } else {
       validateTagName(formData.name);
       validateDescription(formData.description);
-      validateCost(formData.total_cost);
-      validateEndDate(formData.deadline);
+      // validateCost(formData.total_cost);
+      // validateEndDate(formData.deadline);
     }
   };
 

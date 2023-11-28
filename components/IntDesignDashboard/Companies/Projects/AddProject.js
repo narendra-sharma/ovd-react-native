@@ -440,7 +440,7 @@ const AddProject = ({ navigation }) => {
               setFormData({ ...formData, description: text });
               setDescriptionError(null);
             }}
-            placeholder="Task Description"
+            placeholder="Project Description"
           />
           {descriptionError ? (
             <Text style={styles.errorText}>{descriptionError}</Text>

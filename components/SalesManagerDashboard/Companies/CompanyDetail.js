@@ -27,131 +27,6 @@ const initialCompanyData = {
   address: "Indian bank, jhujhar nagar",
 };
 
-const CompanyInfo = ({
-  companyData,
-  navigation,
-  consultantManager,
-  consultant,
-  contractor,
-  customerData,
-}) => {
-  // console.log(navigation);
-
-  const handleDeleteCompany = async () => {
-    const deleteCompany = async () => {
-      try {
-        const res = await apiDeleteCompany(route.params.id);
-        console.log(res.data);
-        if (res.data.message == "Deleted successfully") {
-          Toast.show("Company Deleted Successfully", {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-          });
-          navigation.navigate("All Companies");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    Alert.alert(
-      `Delete ${companyData.name}`,
-      `Are you sure you want to delete ${companyData.name}?`,
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        { text: "OK", onPress: () => deleteCompany() },
-      ]
-    );
-  };
-
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
-      <View style={{width: "90%", marginHorizontal: "auto"}}>
-        {/* <Text style={styles.heading}>{companyData?.name}</Text> */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Name</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}>{companyData?.name}</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>VAT Number</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}>{companyData?.vat_number}</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Email</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}>{companyData?.email}</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Phone Number</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}>{companyData?.phoneNo}</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Customer</Text>
-          <Text style={styles.span}>:</Text>
-          {customerData?.name !== "" && <Text style={styles.fielContent}>{customerData?.name}</Text>}
-        </View>
-        {/* <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Consultant Manager: </Text>
-          <Text>{consultantManager}</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Consultant: </Text>
-          <Text>{consultant}</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Contractor: </Text>
-          <Text>{contractor}</Text>
-        </View> */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Address</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}> {companyData?.address} </Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>State/UT</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}> {companyData?.state} </Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Country</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}> {companyData?.country} </Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Zip Code</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fielContent}> {companyData?.zip_code} </Text>
-        </View>
-      </View>
-
-      <View style={styles.buttonsContainer}>
-        <Pressable
-          style={[styles.button, styles.buttonClose]}
-          onPress={() =>
-            navigation.navigate("Edit Company Details", companyData)
-          }
-          // onPress={() => setIsCompanyEditOn(true)}
-        >
-          <Text style={styles.textStyle}>Edit Company Details</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={handleDeleteCompany}>
-          <Text style={styles.textStyle}>Delete Company</Text>
-        </Pressable>
-      </View>
-    </View>
-  );
-};
-
 const CompanyDetail = ({ navigation, route }) => {
   const [companyData, setCompanyData] = useState({});
   const [customerData, setCustomerData] = useState({});
@@ -160,24 +35,7 @@ const CompanyDetail = ({ navigation, route }) => {
   const [consultant, setConsultant] = useState("");
   const [contractor, setContractor] = useState("");
   const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const tempCmObj = {
-      ...users[users.findIndex((obj) => obj.user_type == 3)],
-    };
-    setConsultantManager(tempCmObj.name);
-
-    const tempConsultObj = {
-      ...users[users.findIndex((obj) => obj.user_type == 4)],
-    };
-    setConsultant(tempConsultObj.name);
-
-    const tempContractObj = {
-      ...users[users.findIndex((obj) => obj.user_type == 5)],
-    };
-    setContractor(tempContractObj.name);
-    console.log("c m: ", consultantManager);
-  }, [users]);
+  const [customerList, setCustomerList] = useState([]);
 
   const renderUserTypes = () => {
     switch (userData.user_type) {
@@ -197,7 +55,7 @@ const CompanyDetail = ({ navigation, route }) => {
     }
   };
 
-  console.log("customer: ", customerData);
+  // console.log("customer: ", customerData);
 
   useFocusEffect(
     useCallback(() => {
@@ -206,6 +64,7 @@ const CompanyDetail = ({ navigation, route }) => {
       const getCompanyDetails = async () => {
         try {
           const res = await apiGetCompanyDetails(route.params.id);
+          console.log("company details", res.data);
           navigation.setOptions({
             title: res.data.data.name,
           });
@@ -215,6 +74,8 @@ const CompanyDetail = ({ navigation, route }) => {
           );
           // console.log("customer res: ", res.data.customers);
           setCustomerData(customer[0]);
+
+          setCustomerList(res.data.customers);
 
           // setUsers([...res.data.users]);
         } catch (error) {
@@ -301,11 +162,43 @@ const CompanyDetail = ({ navigation, route }) => {
     }
   };
 
-  // console.log(route.params);
+  const handleDeleteCompany = async () => {
+    const deleteCompany = async () => {
+      try {
+        const res = await apiDeleteCompany(route.params.id);
+        console.log(res.data);
+        if (res.data.message == "Deleted successfully") {
+          Toast.show("Company Deleted Successfully", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+          });
+          navigation.navigate("All Companies");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Alert.alert(
+      `Delete ${companyData.name}`,
+      `Are you sure you want to delete ${companyData.name}?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => deleteCompany() },
+      ]
+    );
+  };
 
   return (
     <View style={styles.centeredView}>
-      <View style={styles.scrollBoxContainer}>
+      {/* <View style={styles.scrollBoxContainer}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           horizontal={true}
@@ -329,11 +222,98 @@ const CompanyDetail = ({ navigation, route }) => {
         <Text style={styles.angleRight}>
           <Icon name="angle-right" size={20} />
         </Text>
-      </View>
+      </View> */}
 
-      {/* <View style={styles.innerContainer}> */}
-      {renderTabOptions()}
-      {/* </View> */}
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ width: "90%", marginHorizontal: "auto" }}>
+          {/* <Text style={styles.heading}>{companyData?.name}</Text> */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Name</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}>{companyData?.name}</Text>
+          </View>
+          {/* <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>VAT Number</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{companyData?.vat_number}</Text>
+        </View> */}
+          {/* <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Email</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{companyData?.email}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Phone Number</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}>{companyData?.phoneNo}</Text>
+        </View> */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Customer</Text>
+            <Text style={styles.span}>:</Text>
+            <Text>
+              {
+                customerList.find(
+                  (obj, idx) => obj.id == companyData?.customer_id
+                )?.name
+              }
+            </Text>
+          </View>
+          {/* <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Consultant Manager: </Text>
+          <Text>{consultantManager}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Consultant: </Text>
+          <Text>{consultant}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Contractor: </Text>
+          <Text>{contractor}</Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>State/UT</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {companyData?.state} </Text>
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.fieldName}>Country</Text>
+          <Text style={styles.span}>:</Text>
+          <Text style={styles.fielContent}> {companyData?.country} </Text>
+        </View>
+         */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Address</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {companyData?.address} </Text>
+          </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldName}>Zip Code</Text>
+            <Text style={styles.span}>:</Text>
+            <Text style={styles.fielContent}> {companyData?.zip_code} </Text>
+          </View>
+        </View>
+
+        <View style={styles.buttonsContainer}>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            onPress={() =>
+              navigation.navigate("Edit Company Details", companyData)
+            }
+            // onPress={() => setIsCompanyEditOn(true)}
+          >
+            <Text style={styles.textStyle}>Edit Company Details</Text>
+          </Pressable>
+          <Pressable style={styles.button} onPress={handleDeleteCompany}>
+            <Text style={styles.textStyle}>Delete Company</Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
 };
@@ -384,7 +364,7 @@ const styles = StyleSheet.create({
     width: "40%",
     fontWeight: "bold",
     fontSize: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
 
   fielContent: {
@@ -392,7 +372,7 @@ const styles = StyleSheet.create({
   },
 
   span: {
-    width: "10%"
+    width: "10%",
   },
 
   scrollBox: {

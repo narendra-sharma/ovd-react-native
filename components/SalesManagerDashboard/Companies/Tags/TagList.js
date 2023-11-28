@@ -13,6 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteTag, apiGetAllTags } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
 import { TextInput } from "react-native-gesture-handler";
+
 const TagsList = ({ navigation }) => {
   const [tagsList, setTagsList] = useState([]);
   const [deleteFlag, setDeleteFlag] = useState(false);
@@ -26,14 +27,14 @@ const TagsList = ({ navigation }) => {
 
       const getAllTasks = async () => {
         setIsLoading(true);
-        try {
+        try{
         const res = await apiGetAllTags();
         console.log("tags", res.data);
 
         setTagsList(res.data.tags);
-        setAllList([...res.data.tags])
+        setAllList(res.data.tags);
         setIsLoading(false);
-      }catch(error){
+      } catch (error) {
         console.log(error);
         setIsLoading(false);
       }
@@ -79,8 +80,8 @@ const TagsList = ({ navigation }) => {
   const handleSearch = (text) => {
     let filteredData = [...allList]
     if (text && text.length > 0) {
-      filteredData = filteredData.filter((item) =>
-      item?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
+      filteredData = filteredData.filter((tag) =>
+      tag?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
       );
     }
     setTagsList([...filteredData]);
@@ -132,9 +133,9 @@ const TagsList = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
-        </View>
-      ) : (tagsList.length>0) ?<FlatList
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
+      ) : (tagsList.length>0)?<FlatList
         // data={tagsList.sort(sortTasks)}
         data={tagsList}
         renderItem={({ item }) => (
@@ -242,6 +243,7 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 12,
   },
+
   searchboxContainer: {
     backgroundColor: "#EDEDED",
     marginBottom: 16,

@@ -16,9 +16,9 @@ import ProjectDetail from "./Projects/ProjectDetail";
 // import TaskDetail from "./Projects/Tasks/TaskDetail";
 // import EditTask from "./Projects/Tasks/EditTask";
 import AddCompany from "./AddCompany";
-// import ViewCommissions from "./Commissions/ViewCommissions";
-// import CommissionDetail from "./Commissions/CommissionDetail";
-// import EditCommission from "./Commissions/EditCommission";
+import ViewCommissions from "./Commissions/ViewCommissions";
+import CommissionDetail from "./Commissions/CommissionDetail";
+import EditCommission from "./Commissions/EditCommission";
 import ViewUsers from "./Users/ViewUsers";
 import UserDetail from "./Users/UserDetails";
 import EditUser from "./Users/EditUser";
@@ -38,7 +38,7 @@ const DropdownMenu = ({ navigation }) => {
     { label: "Projects", value: "View Projects" },
     { label: "View Quotes", value: "View Quotes" },
     { label: "All Tasks", value: "All Tasks" },
-    // { label: "Commissions", value: "Commissions" },
+    { label: "Commissions", value: "Commissions" },
     { label: "View Users", value: "View Users" },
     { label: "View Projects", value: "View Projects" },
   ];
@@ -91,7 +91,7 @@ const CompanyStackScreen = ({ navigation }) => {
               style={{ marginRight: 30 }}
             />
           ),
-          headerRight: () => <DropdownMenu navigation={navigation} />,
+          // headerRight: () => <DropdownMenu navigation={navigation} />,
         })}
       />
       <Stack.Screen
@@ -110,7 +110,7 @@ const CompanyStackScreen = ({ navigation }) => {
         options={({ navigation }) => ({
           title: "Company Details",
           // headerShown: false,
-          headerRight: () => <DropdownMenu navigation={navigation} />,
+          // headerRight: () => <DropdownMenu navigation={navigation} />,
           // headerRight: () => <MaterialIcon name="dots-vertical" size={30} />,
         })}
       />
@@ -189,9 +189,9 @@ const CompanyStackScreen = ({ navigation }) => {
           title: "Quote Detail",
         })}
       />
-      {/* <Stack.Screen name="Commissions" component={ViewCommissions} />
+      <Stack.Screen name="Commissions" component={ViewCommissions} />
       <Stack.Screen name="Commission Details" component={CommissionDetail} />
-      <Stack.Screen name="Edit Commission" component={EditCommission} /> */}
+      <Stack.Screen name="Edit Commission" component={EditCommission} />
       <Stack.Screen
         name="View Users"
         component={ViewUsers}

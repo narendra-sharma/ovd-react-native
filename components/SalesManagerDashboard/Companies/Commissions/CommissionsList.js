@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, Text, View, Pressable, ActivityIndicator } from "
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { apiGetAllCommissions } from "../../../../apis/commisions";
 import { TextInput } from "react-native-gesture-handler";
+
 const CommissionsList = ({ navigation }) => {
   const [commissionsList, setCommissionsList] = useState([]);
   const [allList, setAllList] = useState([]);
@@ -17,8 +18,8 @@ const CommissionsList = ({ navigation }) => {
         setIsLoading(true);
         try {
           const res = await apiGetAllCommissions();
-          console.log("commissions: ", res.data);
-          setCommissionsList([...res?.data?.data]);
+          console.log("commissions: ", res.data.data);
+          setCommissionsList([...res.data.data]);
           setAllList([...res.data.data]);
           setIsLoading(false);
         } catch (error) {
@@ -86,8 +87,8 @@ const CommissionsList = ({ navigation }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
-        </View>
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
       ) : (commissionsList.length>0) ? <FlatList
         // style={{ height: 100 }}
         data={commissionsList}
@@ -101,7 +102,7 @@ const CommissionsList = ({ navigation }) => {
               style={styles.listItem}
             >
               <Text style={styles.item}>{item.project_name}</Text>
-              {/* <View style={styles.iconsContainer}>
+              <View style={styles.iconsContainer}>
                 <Icon
                   onPress={() => navigation.navigate("Edit Commission", item)}
                   name="pen"
@@ -114,7 +115,7 @@ const CommissionsList = ({ navigation }) => {
                   size={22}
                   color="#444"
                 />
-              </View> */}
+              </View>
             </Pressable>
           </>
         )}

@@ -48,15 +48,6 @@ const ProjectDetail = ({ navigation, route }) => {
     }, [])
   );
 
-  // useEffect(() => {
-  //   setProjectData({
-  //     ...projectData,
-  //     company: company,
-  //     customer: customer,
-  //     consultant: consultant,
-  //   });
-  // }, [company, customer, consultant]);
-
   return (
     <View
       style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}
@@ -71,16 +62,6 @@ const ProjectDetail = ({ navigation, route }) => {
               {projectData?.project_name}{" "}
             </Text>
           </View>
-          {/* <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Consultant</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}> {projectData.consultant} </Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldName}>Customer</Text>
-          <Text style={styles.span}>:</Text>
-          <Text style={styles.fieldContent}> {consultant} </Text>
-        </View> */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldName}>Company</Text>
             <Text style={styles.span}>:</Text>

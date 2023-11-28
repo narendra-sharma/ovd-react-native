@@ -114,7 +114,7 @@ const ConsultantDetails = ({ navigation, route }) => {
           <Text
             style={styles.textStyle}
             onPress={() =>
-              navigation.navigate("Edit Consultant Manager", {
+              navigation.navigate("Edit Consultant", {
                 id: userData.id,
               })
             }

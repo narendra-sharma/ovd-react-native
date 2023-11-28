@@ -45,17 +45,17 @@ const ProjectsList = ({ navigation, companyId }) => {
             (project) => project.company_id == companyId
           );
           setProjectsList(projects);
-          setAllList([...projects])
+          setAllList([...projects]);
         } else {
           //listing all projects
           setProjectsList(res.data.projects);
           setAllList([...res.data.projects]);
         }
         setIsLoading(false);
-      }catch(error){
-        console.log(error);
-        setIsLoading(false);
-      }
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
+        }
       };
 
       getAllProjects();
@@ -204,9 +204,9 @@ const ProjectsList = ({ navigation, companyId }) => {
       </View>
       {isLoading ? (
         <View style={styles.container}>
-          <ActivityIndicator color="#B76E79" size="large"/>
-        </View>
-      ) : (projectsList.length>0) ?<FlatList
+<ActivityIndicator color="#B76E79" size="large"/>
+</View>
+      ) : (projectsList.length>0)?<FlatList
         ListHeaderComponent={
           <View
             style={[

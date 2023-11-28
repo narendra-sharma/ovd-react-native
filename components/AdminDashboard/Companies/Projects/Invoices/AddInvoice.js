@@ -893,7 +893,7 @@ const AddInvoice = ({ navigation, route }) => {
               </Text>
             ) : (
               <Text style={{ color: "#A9A9AC", marginLeft: 10 }}>
-                Start Date
+                Select Date
               </Text>
             )}
           </Pressable>
