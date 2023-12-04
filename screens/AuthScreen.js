@@ -34,7 +34,7 @@ const AuthScreen = ({ navigation }) => {
       const profile = await AsyncStorage.getItem("profile");
       const firstLogin = await AsyncStorage.getItem("firstLogin");
       const parsedProfile = JSON.parse(profile);
-      console.log(parsedProfile.user_type);
+      console.log("define User type",parsedProfile.user_type);
 
       if (parsedProfile.user_type) {
         setUserType(parsedProfile.user_type); // Set the user type in the state

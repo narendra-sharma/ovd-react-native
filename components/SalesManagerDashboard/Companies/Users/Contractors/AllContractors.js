@@ -97,7 +97,7 @@ const AllContractors = ({ navigation }) => {
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Contractor");
@@ -107,7 +107,7 @@ const AllContractors = ({ navigation }) => {
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> Add New
         </Text>
-      </Pressable>
+      </Pressable> */}
 {/* SEARCHBOX CONTAINER */}
 <View style={styles.searchboxContainer}>
         <Icon

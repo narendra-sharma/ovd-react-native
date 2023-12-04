@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
+//import { ovdmanage } from "../../../permissions/rules";
 import {
   View,
   Text,
@@ -271,6 +272,7 @@ const Home = ({ navigation }) => {
           labels={supplierLabels}
           data={supplierData}
           bottomTitle="Supplier Projects"
+          style={{paddingTop: 2}}
         />
       </ScrollView>
     </SafeAreaView>

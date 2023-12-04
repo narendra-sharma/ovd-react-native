@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
+//import { err } from "react-native-svg/lib/typescript/xml";
 const randomHexColor = () => {
   return "#b7d0d1";
 };
@@ -28,6 +29,29 @@ const AllCompanies = ({ navigation }) => {
   const [allList, setAllList] = useState([]);
   const [searchTerm, setSearchTerm] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+//  const [managedcompanies,setManagedcompanies] = useState([]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const getallManagedCompanies = async () => {
+  //       setIsLoading(true);
+  //       try {
+  //         const res = await apiGetAllCompanies();
+  //         setManagedcompanies([...res.data])
+  //         console.log("Quatation user",managedcompanies);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     };
+  //     getallManagedCompanies();
+
+  //     return () => {
+  //       isActive = false;
+  //     };
+  //   })
+  // )
+
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -113,7 +137,7 @@ const AllCompanies = ({ navigation }) => {
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Company");
@@ -121,9 +145,9 @@ const AllCompanies = ({ navigation }) => {
         }}
       >
         <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New
+          <Icon name="plus-circle" /> Add New 
         </Text>
-      </Pressable>
+      </Pressable> */}
       {/* SEARCHBOX CONTAINER */}
       <View style={styles.searchboxContainer}>
         <Icon

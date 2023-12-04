@@ -5,6 +5,7 @@ import { apiChangePasswordFromDashboard } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
 // import { apiChangePasswordFromDashboard } from "../../../apis/auth";
+import { roleType } from '../permissions/rules';
 
 const passwords = {
   oldPassword: "",
@@ -30,7 +31,7 @@ const FirstLoginScreen = ({ navigation }) => {
       const profile = await AsyncStorage.getItem("profile");
       const parsedProfile = JSON.parse(profile);
 
-      console.log(parsedProfile.user_type);
+      console.log("My Login hree",parsedProfile.user_type);
 
       if (parsedProfile.user_type) {
         setUserType(parsedProfile.user_type); // Set the user type in the state
@@ -198,6 +199,7 @@ const FirstLoginScreen = ({ navigation }) => {
           });
           const profile = await AsyncStorage.getItem("profile");
           const parsedProfile = JSON.parse(profile);
+          console.log( "My User Type",parsedProfile.user_type)
           handleUserType(parsedProfile.user_type);
         }
       } catch (error) {
