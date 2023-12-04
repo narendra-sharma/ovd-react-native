@@ -201,7 +201,7 @@ const ProjectDetail = ({ navigation, route }) => {
         <InvoiceLayout navigation={navigation} projectId={route?.params?.id} />
 
         <View style={styles.buttonsContainer}>
-          <Pressable
+          {/* <Pressable
             style={[styles.button, styles.buttonClose]}
             // onPress={() => setIsCompanyEditOn(true)}
           >
@@ -213,7 +213,7 @@ const ProjectDetail = ({ navigation, route }) => {
             >
               Edit Project Details
             </Text>
-          </Pressable>
+          </Pressable> */}
           <Pressable
             style={styles.button}
             onPress={() =>

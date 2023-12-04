@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+//import { ovdmanage,roleType,home } from "../../../permissions/rules";
 import {
   Pressable,
   SafeAreaView,
@@ -103,6 +104,7 @@ const RightDrawer = ({ navigation }) => {
     }, [userData])
   );
 
+
   const { activeScreen, setActiveScreen } = useCustomActiveScreenStatus();
   // console.log("active screen in drawer: ", activeScreen);
 
@@ -170,6 +172,7 @@ const RightDrawer = ({ navigation }) => {
 
               <ScrollView>
                 {/* Custom Home */}
+                
                 <Pressable
                   onPress={() => {
                     props.navigation.navigate("Home");
