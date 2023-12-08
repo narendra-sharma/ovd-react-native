@@ -24,6 +24,7 @@ import {
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import * as DocumentPicker from "expo-document-picker";
 import { url } from "../../../../constants";
+import { handlererrors } from "../../../../apis/auth";
 
 const initialFormData = {
   name: "",
@@ -331,6 +332,7 @@ const EditProject = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

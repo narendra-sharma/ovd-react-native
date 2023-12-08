@@ -14,6 +14,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
 import { apiGetAllUsers } from "../../../../../apis/companies";
+import { handlererrors } from "../../../../../apis/auth";
 
 const CONSULTANT_USER_TYPE = 4;
 
@@ -237,6 +238,7 @@ const AddConsultant = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

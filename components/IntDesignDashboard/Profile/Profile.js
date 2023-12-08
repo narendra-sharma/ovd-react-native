@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet, Pressable } from "react-native";
-import { apiGetProfileDetails, apiUpdateProfile } from "../../../apis/auth";
+import { apiGetProfileDetails, apiUpdateProfile, handlererrors } from "../../../apis/auth";
 import { useFocusEffect } from "@react-navigation/native";
 
 // import { launchCamera, launchImageLibrary } from "react-native-image-picker";
@@ -26,6 +26,7 @@ const Profile = ({ navigation }) => {
           // });
         } catch (err) {
           console.log(err);
+          handlererrors(err,navigation)
         }
       };
 

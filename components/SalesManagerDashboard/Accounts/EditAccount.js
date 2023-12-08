@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
 import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
-import { apiUpdateProfile } from "../../../apis/auth";
+import { apiUpdateProfile, handlererrors } from "../../../apis/auth";
 
 const EditAccount = () => {
   const [userData, setUserData] = useState(initialUserData);
@@ -34,6 +34,7 @@ const EditAccount = () => {
         // console.log(userData);
       } catch (err) {
         console.log(err);
+        handlererrors(err,navigation)
       }
     };
 
@@ -76,6 +77,7 @@ const EditAccount = () => {
       //   console.log(res.data);
     } catch (error) {
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
 

@@ -1,6 +1,5 @@
 import { request } from "./index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 export const apiAuth = async (formData) => {
   const response = await request({
     path: "auth/login",
@@ -20,6 +19,33 @@ export const apiLogout = async () => {
     },
   });
   return response;
+};
+
+// export const checktoken = async (latesttoken,navigation) => {
+//     console.log("Latest Token",latesttoken)
+//     const storedtoken = await AsyncStorage.getItem("token");
+//     if (storedtoken !== latesttoken){
+//       await AsyncStorage.removeItem("profile")
+//       await navigation.navigate("Login")
+//     }
+// }
+
+export const handlererrors = async (codeissue, navigation) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+
+    if (codeissue.message === "Request failed with status code 401" || codeissue.response.status === 401) {
+      await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("profile");
+      navigation.navigate("Login");
+      console.log("My Error Status", codeissue.response.status)
+    } else {
+      console.log("My Error Status", codeissue.response.status);
+      console.log("My Error Data", codeissue.response.data);
+    }
+  } catch (gettingerror) {
+    console.error("Error handling failed:", gettingerror);
+  }
 };
 
 export const apiUpdateProfile = async (userData) => {

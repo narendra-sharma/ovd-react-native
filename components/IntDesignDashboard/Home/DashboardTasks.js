@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiGetAllDashboardData } from "../../../apis/dashboard";
 import { apiDeleteTask } from "../../../apis/tasks";
+import { handlererrors } from "../../../apis/auth";
 
 const DashboardTasks = ({ navigation, route }) => {
   const [taskList, setTasksList] = useState([]);
@@ -64,6 +65,7 @@ const DashboardTasks = ({ navigation, route }) => {
         setDeleteFlag((prev) => !prev);
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [

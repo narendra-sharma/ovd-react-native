@@ -26,6 +26,7 @@ import {
   apiUpdateTaskDetails,
 } from "../../../../../apis/tasks";
 import { url } from "../../../../../constants";
+import { handlererrors } from "../../../../../apis/auth";
 
 const EditTask = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});
@@ -339,6 +340,7 @@ const EditTask = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 
@@ -412,6 +414,7 @@ const EditTask = ({ navigation, route }) => {
     } catch (error) {
       console.log(error);
       console.log(error?.response?.data);
+      handlererrors(error,navigation)
     }
   };
 

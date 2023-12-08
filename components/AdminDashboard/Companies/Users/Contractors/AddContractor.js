@@ -15,6 +15,7 @@ import { Country, State, City } from "country-state-city";
 import { apiCreateNewUser } from "../../../../../apis/users";
 import { apiGetAllUsers } from "../../../../../apis/companies";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handlererrors } from "../../../../../apis/auth";
 
 const CONTRACTOR_USER_TYPE = 5;
 
@@ -198,6 +199,7 @@ const AddContractor = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

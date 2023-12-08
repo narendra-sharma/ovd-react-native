@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import RolesDropdown from "./RolesDropdown";
+import { handlererrors } from "../../../../apis/auth";
 
 const DropdownMenu = ({ navigation }) => {
   const [value, setValue] = useState(null);
@@ -59,6 +60,7 @@ const EditUser = ({ navigation }) => {
     try {
     } catch (error) {
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
 

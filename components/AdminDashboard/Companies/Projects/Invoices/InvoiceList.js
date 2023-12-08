@@ -18,6 +18,7 @@ import {
   apiDeleteInvoice,
   apiGetAllInvoices,
 } from "../../../../../apis/invoices";
+import { handlererrors } from "../../../../../apis/auth";
 
 const randomHexColor = () => {
   return "#b7d0d1";
@@ -85,6 +86,7 @@ const InvoiceList = ({ navigation, companyId, projectId }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(
@@ -116,6 +118,7 @@ const InvoiceList = ({ navigation, companyId, projectId }) => {
     } catch (error) {
       console.log(error);
       console.log("errors: ", error?.response?.data);
+      handlererrors(error,navigation)
 
       let msg = "";
 

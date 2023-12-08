@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { apiChangePasswordFromDashboard } from "../../../apis/auth";
+import { apiChangePasswordFromDashboard, handlererrors } from "../../../apis/auth";
 import Toast from "react-native-root-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
@@ -157,6 +157,7 @@ const ChangePassword = ({ navigation }) => {
           delay: 0,
         });
         console.log(error);
+        handlererrors(error,navigation)
       }
     } else {
       validateOldPassword(formData.oldPassword);

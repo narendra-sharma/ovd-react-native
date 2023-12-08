@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Keyboard,
 } from "react-native";
-import { apiVerifyOtp } from "../../apis/auth";
+import { apiVerifyOtp, handlererrors } from "../../apis/auth";
 import Countdown from "./ResendOtp";
 import ResendOtp from "./ResendOtp";
 import Toast from "react-native-root-toast";
@@ -98,6 +98,7 @@ const OtpInput = ({
         delay: 0,
       });
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
 

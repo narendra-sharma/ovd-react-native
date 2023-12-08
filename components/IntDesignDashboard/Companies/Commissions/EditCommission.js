@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+import { handlererrors } from "../../../../apis/auth";
 
 const initialCommissionData = {
   customerName: "",
@@ -23,6 +24,7 @@ const EditCommission = ({ navigation }) => {
     try {
     } catch (error) {
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
 

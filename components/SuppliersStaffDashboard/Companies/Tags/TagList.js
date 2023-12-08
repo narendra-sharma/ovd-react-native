@@ -13,6 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteTag, apiGetAllTags } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
 import { TextInput } from "react-native-gesture-handler";
+import { handlererrors } from "../../../../apis/auth";
 
 const TagsList = ({ navigation }) => {
   const [tagsList, setTagsList] = useState([]);
@@ -37,6 +38,7 @@ const TagsList = ({ navigation }) => {
         } catch (error) {
           console.log(error);
           setIsLoading(false);
+          handlererrors(error,navigation)
         }
       };
 
@@ -66,6 +68,7 @@ const TagsList = ({ navigation }) => {
         setDeleteFlag((prev) => !prev);
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [

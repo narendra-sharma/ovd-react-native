@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, Text, View, Pressable , ActivityIndicator } from 
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { apiGetAllCommissions } from "../../../../apis/commisions";
 import { TextInput } from "react-native-gesture-handler";
+import { handlererrors } from "../../../../apis/auth";
 
 const CommissionsList = ({ navigation }) => {
   const [commissionsList, setCommissionsList] = useState([]);
@@ -25,6 +26,7 @@ const CommissionsList = ({ navigation }) => {
         } catch (error) {
           console.log(error);
           setIsLoading(false);
+          handlererrors(error,navigation)
         }
       })();
 

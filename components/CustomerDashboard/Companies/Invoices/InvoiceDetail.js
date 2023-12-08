@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { useFocusEffect } from "@react-navigation/native";
+import { handlererrors } from "../../../../apis/auth";
 
 const itemsForm = {
   itemName: "",
@@ -141,6 +142,7 @@ const InvoiceDetail = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete Quote`, `Are you sure you want to delete this quote?`, [

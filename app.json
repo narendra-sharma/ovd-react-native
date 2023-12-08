@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "NewNativeApp",
+    "name": "OVD",
     "slug": "NewNativeApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
     ],
     "splash": {
       "image": "./assets/ovdSplash.png",
-      "resizeMode": "cover"
+      "resizeMode": "cover",
+      "backgroundColor": "#5D3FD3"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -25,8 +26,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/ovdIcon.png",
+        "backgroundColor": "#0096FF"
       },
       "package": "com.manyavv.NewNativeApp"
     },

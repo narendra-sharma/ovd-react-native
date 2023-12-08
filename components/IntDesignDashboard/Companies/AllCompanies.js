@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { apiDeleteCompany, apiGetAllCompanies } from "../../../apis/companies";
 import { useFocusEffect } from "@react-navigation/native";
+import { handlererrors } from "../../../apis/auth";
 const randomHexColor = () => {
   return "#b7d0d1";
 };
@@ -44,6 +45,7 @@ const AllCompanies = ({ navigation }) => {
         } catch (err) {
           console.log(err);
           setIsLoading(false);
+          handlererrors(err,navigation)
         }
       };
 
@@ -88,6 +90,7 @@ const AllCompanies = ({ navigation }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(

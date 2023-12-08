@@ -21,6 +21,7 @@ import {
   apiAddNewTask,
   apiGetTasksDropdownData,
 } from "../../../../../apis/tasks";
+import { handlererrors } from "../../../../../apis/auth";
 
 const AddTask = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});
@@ -288,6 +289,8 @@ const AddTask = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
+
 
         let msg = "";
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View, StyleSheet } from "react-native";
-import { apiSendForgotPasswordCode } from "../../apis/auth";
+import { apiSendForgotPasswordCode, handlererrors } from "../../apis/auth";
 import Toast from "react-native-root-toast";
 
 const ResendOtp = ({ email }) => {
@@ -37,6 +37,7 @@ const ResendOtp = ({ email }) => {
     } catch (error) {
       timerRef.current = 0;
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
 

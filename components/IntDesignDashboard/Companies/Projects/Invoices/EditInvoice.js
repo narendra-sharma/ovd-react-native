@@ -21,6 +21,7 @@ import * as DocumentPicker from "expo-document-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import { url } from "../../../../../constants";
+import { handlererrors } from "../../../../../apis/auth";
 
 const initialFormData = {
   // name: "",
@@ -278,6 +279,8 @@ const EditInvoice = ({ navigation, route }) => {
     } catch (error) {
       console.log(error);
       console.log(error?.response?.data);
+      handlererrors(error,navigation)
+
     }
   }, []);
 
@@ -630,6 +633,8 @@ const EditInvoice = ({ navigation, route }) => {
     } catch (error) {
       console.log(error);
       console.log("errors: ", error?.response?.data);
+      handlererrors(error,navigation)
+
 
       let msg = "";
 

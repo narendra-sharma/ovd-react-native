@@ -13,6 +13,7 @@ import moment from "moment";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Toast from "react-native-root-toast";
 import { apiAddNewTag, apiGetPreFilledTagDetails } from "../../../../apis/tags";
+import { handlererrors } from "../../../../apis/auth";
 
 const AddTag = ({ navigation }) => {
   const [formData, setFormData] = useState({});
@@ -106,6 +107,7 @@ const AddTag = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 
