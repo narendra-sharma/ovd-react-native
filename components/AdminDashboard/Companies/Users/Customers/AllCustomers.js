@@ -104,7 +104,7 @@ const AllCustomers = ({ navigation }) => {
       <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
-          navigation.navigate("Add Customer");
+          navigation.navigate("LoginZeroAccountScreen");
           // setAddCompanyModalVisible(true);
         }}
       >

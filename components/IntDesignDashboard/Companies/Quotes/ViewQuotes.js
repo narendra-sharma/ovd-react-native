@@ -31,7 +31,7 @@ const QuotesLayout = ({ navigation }) => {
         }}
       >
         <Text style={styles.addText}>
-          <Icon name="plus-circle" /> Add New Quote
+          <Icon name="plus-circle" /> Add New
         </Text>
       </Pressable>
 

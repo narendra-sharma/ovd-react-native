@@ -127,7 +127,7 @@ const DashboardProjects = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.addButton]}
         onPress={() => {
           navigation.navigate("Add Project");
@@ -136,7 +136,7 @@ const DashboardProjects = ({ navigation, route }) => {
         <Text style={styles.addText}>
           <Icon name="plus-circle" /> Add New
         </Text>
-      </Pressable>
+      </Pressable> */}
 
       <View style={styles.container}>
         <FlatList

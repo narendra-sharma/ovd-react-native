@@ -157,6 +157,56 @@ const RightDrawer = ({ navigation }) => {
                   {/* <Icon name="home" size={30} /> */}
                   <Text style={styles.menuItemText}>Home</Text>
                 </Pressable>
+                {/* {users} */}
+                <Pressable
+                  onPress={() => {
+                    setIsUsersSubMenuOpen(!isUsersSubMenuOpen);
+                    setIsCompaniesSubMenuOpen(false);
+                  }}
+                  style={styles.subMenuButton}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="people"
+                    size={30}
+                  />
+                  <Text style={styles.menuItemText}>
+                    Users{" "}
+                    {isUsersSubMenuOpen ? (
+                      <Icon
+                        style={{ marginLeft: 8 }}
+                        name="angle-up"
+                        size={16}
+                      />
+                    ) : (
+                      <Icon
+                        style={{ marginLeft: 8 }}
+                        name="angle-down"
+                        size={16}
+                      />
+                    )}
+                  </Text>
+                </Pressable>
+                {isUsersSubMenuOpen && (
+                  <View>
+                    <View>
+                      <Pressable
+                        onPress={() => {
+                          props.navigation.navigate("Customers");
+                          setActiveScreen("Customers");
+                          // Handle sub-menu item click here
+                        }}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreen == "Customers" && styles.activeSubMenu,
+                        ]}
+                      >
+                        <Text style={styles.menuItemText}>Customers</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                )}
+                
 
                 {/* Accounts/Users Sub-Menu */}
                 {/* <Pressable
@@ -412,6 +462,16 @@ const RightDrawer = ({ navigation }) => {
         }}
         name="Profile"
         component={ProfileStackScreen}
+      />
+
+      {/* {Customer Screens} */}
+      <Drawer.Screen
+        name="Customers"
+        component={CustomerStack}
+        options={({ navigation }) => ({
+          title: "Customers",
+          headerShown: false,
+        })}
       />
 
       {/* Project Screens */}

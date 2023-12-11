@@ -10,6 +10,7 @@ import ProjectDetail from "../Companies/Projects/ProjectDetail";
 import DashboardTasks from "./DashboardTasks";
 import { useCustomActiveScreenStatus } from "../../../Contexts/ActiveScreenContext";
 import { useIsFocused } from "@react-navigation/native";
+import AddProject from "../Companies/Projects/AddProject";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +62,13 @@ const HomeStackScreen = ({ navigation, route }) => {
           title: "Active Projects",
           // headerShown: false,
           unmountOnBlur: shouldReset,
+        })}
+      />
+      <Stack.Screen
+        name="Add Project"
+        component={AddProject}
+        options={({ navigation }) => ({
+          unmountOnBlur: shouldReset
         })}
       />
       <Stack.Screen

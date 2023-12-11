@@ -19,6 +19,7 @@ import EditCustomer from "./EditCustomer";
 import CustomerDetails from "./CustomerDetails";
 import { useIsFocused } from "@react-navigation/native";
 import { useCustomActiveScreenStatus } from "../../../../../Contexts/ActiveScreenContext";
+import LoginZeroAccountScreen from "./LoginZeroAccountScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,7 +52,8 @@ const CustomerStack = ({ navigation }) => {
       <Stack.Screen name="Customer Details" component={CustomerDetails} />
       <Stack.Screen name="Add Customer" component={AddCustomer} />
       <Stack.Screen name="Edit Customer" component={EditCustomer} />
-    </Stack.Navigator>
+      <Stack.Screen name="LoginZeroAccountScreen" component={LoginZeroAccountScreen} />
+    </Stack.Navigator> 
   );
 };
 
