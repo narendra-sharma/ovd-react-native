@@ -1,11 +1,21 @@
 import Toast from 'react-native-root-toast';
+import { apiGetZeroAuth } from '../../../../../apis/users';
+import { useEffect } from 'react';
+
 
 const LoginZeroAccountScreen = ({navigation}) => {
-
-      const checkurl = checkLoginZeroAccountStatus();
+     
+  useEffect(() => {
+    const fetchdata = async () => {
       try {
-        if(checkurl){
-          Toast.show("Please Contact the Admin for this problem,while we add new customer", {
+        const res = await apiGetZeroAuth();
+        const checkdata = res.data;
+        console.log("Response Data 111===>" ,checkdata);
+        if (checkdata.status === "true" || checkdata.message === "You are connect with xero.") {
+          navigation.navigate("Add Customer")
+       } else if(checkdata.status === "false" || checkdata.message === "Unauthenticated"){
+          const errorMessage = "Please Contact the Admin for this problem";
+          Toast.show(errorMessage, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
             shadow: true,
@@ -15,34 +25,17 @@ const LoginZeroAccountScreen = ({navigation}) => {
           });
           navigation.navigate("Home");
         } else {
-          navigation.navigate("Add Customer")
+          console.log("Something Went Wrong");
         } 
         }
       catch (error) {
         console.log("Error is occuring ====>",error);
       }
-};
+    };
+    fetchdata();
+  },[navigation]);
 
-const checkLoginZeroAccountStatus = async () => {
-    try {
-      const response = await fetch('https://ovd.dev.visionvivante.com/api/auth/xero-auth', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-  
-      if (data.status == "false" || data.message == "Unauthenticated") {
-         return false 
-      } else if (data.status == "true") {
-        return true 
-     } else {
-        console.log("Something is Went Wrong");
-      }
-    } catch (error) {
-      console.error('Error checking login zero account status:', error);
-    }
-  };
+      return null;
+};
 
 export default LoginZeroAccountScreen;

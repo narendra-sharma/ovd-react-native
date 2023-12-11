@@ -76,3 +76,13 @@ export const apiChangeConsultantRole = async (formData, id) => {
   });
   return response;
 };
+export const apiGetZeroAuth = async () => {
+  const token = await AsyncStorage.getItem("token");
+  const response = await request({
+    path: "auth/xero-auth",
+    headers: {
+      Authorization: `Bearer ${JSON.parse(token)}`,
+    },
+  });
+  return response;
+};
