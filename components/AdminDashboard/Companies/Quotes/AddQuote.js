@@ -19,6 +19,7 @@ import {
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { handlererrors } from "../../../../apis/auth";
 
 const initialFormData = {
   name: "",
@@ -549,6 +550,7 @@ const AddQuote = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(err,navigation)
 
         let msg = "";
 

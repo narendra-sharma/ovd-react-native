@@ -20,6 +20,7 @@ import {
 } from "../../../../apis/quotes";
 import { useFocusEffect } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
+import { handlererrors } from "../../../../apis/auth";
 
 const randomHexColor = () => {
   return "#b7d0d1";
@@ -59,6 +60,7 @@ const QuotesList = ({ navigation, companyId }) => {
         } catch (error) {
           console.log(error);
           setIsLoading(false);
+          handlererrors(error,navigation)
         }
       };
 
@@ -109,6 +111,7 @@ const QuotesList = ({ navigation, companyId }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete Quote`, `Are you sure you want to delete this quote?`, [
@@ -135,6 +138,7 @@ const QuotesList = ({ navigation, companyId }) => {
       Linking.openURL(res.config.url);
     } catch (error) {
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
   const handleSearch = (text) => {

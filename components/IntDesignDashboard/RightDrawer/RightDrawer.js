@@ -14,7 +14,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { apiLogout } from "../../../apis/auth";
+import { apiLogout, handlererrors } from "../../../apis/auth";
 import CompanyStackScreen from "../Companies/CompanyStackScreen";
 import ProfileStackScreen from "../Profile/ProfileStackScreen";
 import { useFocusEffect } from "@react-navigation/native";
@@ -51,7 +51,9 @@ const RightDrawer = ({ navigation }) => {
         await AsyncStorage.removeItem("profile");
         navigation.navigate("Login");
       } catch (err) {
-        console.log(err);
+        console.log("Logout Error",err);
+        handlererrors(err,navigation);
+        console.log("Logout Error",err.message);
       }
     };
 
@@ -77,6 +79,7 @@ const RightDrawer = ({ navigation }) => {
           // console.log("we at local storage: ", userData);
         } catch (err) {
           console.log(err);
+          handlererrors(err,navigation);
         }
       };
 

@@ -18,6 +18,7 @@ import {
   apiGetPreFilledTagDetails,
   apiUpdateTagDetails,
 } from "../../../../apis/tags";
+import { handlererrors } from "../../../../apis/auth";
 
 const AddTag = ({ navigation, route }) => {
   const [formData, setFormData] = useState({});
@@ -40,6 +41,7 @@ const AddTag = ({ navigation, route }) => {
         setFormData({ ...res.data.tag });
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
 
@@ -127,6 +129,7 @@ const AddTag = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

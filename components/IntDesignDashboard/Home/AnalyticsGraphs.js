@@ -81,9 +81,6 @@ const AnalyticsGraphs = ({ title, labels, data, bottomTitle }) => {
         style={{
           color: "#697a8d",
           textAlign: "center",
-          position: "absolute",
-          bottom: 35,
-          left: 130,
         }}
       >
         {bottomTitle}

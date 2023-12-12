@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Keyboard,
 } from "react-native";
-import { apiSendForgotPasswordCode } from "../apis/auth";
+import { apiSendForgotPasswordCode, handlererrors } from "../apis/auth";
 import Toast from "react-native-root-toast";
 
 const ForgotPasswordScreen = ({ navigation }) => {
@@ -74,6 +74,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           delay: 0,
         });
         console.log(error.response.data);
+        handlererrors(error,navigation)
       }
     }
   };

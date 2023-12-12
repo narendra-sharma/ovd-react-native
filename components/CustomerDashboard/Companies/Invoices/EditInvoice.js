@@ -21,6 +21,7 @@ import {
   apiGetConsultantsForQuotes,
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
+import { handlererrors } from "../../../../apis/auth";
 
 const initialFormData = {
   name: "",
@@ -547,6 +548,7 @@ const EditInvoice = ({ navigation, route }) => {
           delay: 0,
         });
         console.log(error);
+        handlererrors(error,navigation)
       }
       // setFormData(initialFormData);
     } else {

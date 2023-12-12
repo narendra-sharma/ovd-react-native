@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { apiChangePasswordFromDashboard } from "../apis/auth";
+import { apiChangePasswordFromDashboard, handlererrors } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
 // import { apiChangePasswordFromDashboard } from "../../../apis/auth";
@@ -212,6 +212,7 @@ const FirstLoginScreen = ({ navigation }) => {
           delay: 0,
         });
         console.log(error);
+        handlererrors(error,navigation)
       }
     } else {
       validateOldPassword(formData.oldPassword);
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
 
   submitButton: {
     margin: 10,
-    backgroundColor: "#B76E79",
+    backgroundColor: "#696cff",
     padding: 12,
     borderRadius: 5,
     width: "80%",

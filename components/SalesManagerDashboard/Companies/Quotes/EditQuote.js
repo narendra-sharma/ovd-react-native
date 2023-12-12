@@ -22,6 +22,7 @@ import {
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handlererrors } from "../../../../apis/auth";
 
 const initialFormData = {
   name: "",
@@ -556,6 +557,7 @@ const EditQuote = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

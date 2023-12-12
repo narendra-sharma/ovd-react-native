@@ -19,6 +19,7 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
 import { apiGetProjectsDropdownData } from "../../../apis/projects";
+import { handlererrors } from "../../../apis/auth";
 
 const initialFormData = {
   companyName: "",
@@ -289,6 +290,7 @@ const AddCompany = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

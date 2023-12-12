@@ -21,6 +21,7 @@ import {
   apiGetAllProjects,
 } from "../../../../apis/projects";
 import { Dropdown } from "react-native-element-dropdown";
+import { handlererrors } from "../../../../apis/auth";
 
 const ProjectsList = ({ navigation, companyId }) => {
   const [projectsList, setProjectsList] = useState([]);
@@ -55,6 +56,7 @@ const ProjectsList = ({ navigation, companyId }) => {
         } catch (error) {
           console.log(error);
           setIsLoading(false);
+          handlererrors(error,navigation)
         }
       };
 
@@ -84,6 +86,7 @@ const ProjectsList = ({ navigation, companyId }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [
@@ -127,6 +130,7 @@ const ProjectsList = ({ navigation, companyId }) => {
     } catch (error) {
       console.log(error);
       console.log("errors: ", error?.response?.data);
+      handlererrors(error,navigation)
 
       let msg = "";
 

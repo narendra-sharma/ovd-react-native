@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import RolesDropdown from "./RolesDropdown";
+import { handlererrors } from "../../../../apis/auth";
 
 const initialFormData = {
   companyName: "",
@@ -20,7 +21,9 @@ const AddUser = ({ navigation }) => {
 
   const handleNewUserSubmit = async () => {
     try {
-    } catch (error) {}
+    } catch (error) {
+      handlererrors(error,navigation)
+    }
   };
 
   return (

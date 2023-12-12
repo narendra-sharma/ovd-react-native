@@ -14,6 +14,7 @@ import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { handlererrors } from "../../../../apis/auth";
 
 const randomHexColor = () => {
   return "#b7d0d1";
@@ -65,6 +66,7 @@ const InvoiceList = ({ navigation, companyId }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete Quote`, `Are you sure you want to delete this quote?`, [
@@ -91,6 +93,7 @@ const InvoiceList = ({ navigation, companyId }) => {
       Linking.openURL(res.config.url);
     } catch (error) {
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
 

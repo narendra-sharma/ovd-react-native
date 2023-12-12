@@ -12,6 +12,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import moment from "moment";
 import AllTasks from "./Tasks/AllTasks";
 import InvoiceLayout from "./Invoices/ViewInvoices";
+import { handlererrors } from "../../../../apis/auth";
 
 const ProjectDetail = ({ navigation, route }) => {
   const [projectData, setProjectData] = useState({});
@@ -40,6 +41,7 @@ const ProjectDetail = ({ navigation, route }) => {
           setQuotationsList([...res?.data?.quotation]);
         } catch (error) {
           console.log(error);
+          handlererrors(error,navigation)
         }
       };
 

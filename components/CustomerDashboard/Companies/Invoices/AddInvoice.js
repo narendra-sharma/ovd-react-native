@@ -19,6 +19,7 @@ import {
   apiGetCreateQuoteDropdownData,
 } from "../../../../apis/quotes";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { handlererrors } from "../../../../apis/auth";
 
 const initialFormData = {
   name: "",
@@ -556,6 +557,7 @@ const AddInvoice = ({ navigation }) => {
           delay: 0,
         });
         console.log(error);
+        handlererrors(error,navigation)
       }
     } else {
       validateCompanyName(formData.company);

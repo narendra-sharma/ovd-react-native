@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import { apiAuth } from "../apis/auth";
+import { apiAuth, handlererrors } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Toast from "react-native-root-toast";
@@ -189,6 +189,7 @@ const AuthScreen = ({ navigation }) => {
           delay: 0,
         });
         console.log(error);
+        handlererrors(error,navigation)
       }
 
       // window.localStorage.setItem("token", JSON.stringify(res.data.token));

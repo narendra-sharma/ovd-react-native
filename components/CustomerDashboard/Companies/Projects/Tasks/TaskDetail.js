@@ -18,6 +18,7 @@ import {
 import { url } from "../../../../../constants";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView } from "react-native-gesture-handler";
+import { handlererrors } from "../../../../../apis/auth";
 
 const TaskDetail = ({ navigation, route }) => {
   const [taskData, setTaskData] = useState({});
@@ -102,6 +103,7 @@ const TaskDetail = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [

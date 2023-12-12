@@ -14,7 +14,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { apiLogout } from "../../../apis/auth";
+import { apiLogout, handlererrors } from "../../../apis/auth";
 import CompanyStackScreen from "../Companies/CompanyStackScreen";
 import ProfileStackScreen from "../Profile/ProfileStackScreen";
 import { useFocusEffect } from "@react-navigation/native";
@@ -50,6 +50,7 @@ const RightDrawer = ({ navigation }) => {
         navigation.navigate("Login");
       } catch (err) {
         console.log(err);
+        handlererrors(err,navigation)
       }
     };
 
@@ -75,6 +76,7 @@ const RightDrawer = ({ navigation }) => {
           // console.log("we at local storage: ", userData);
         } catch (err) {
           console.log(err);
+          handlererrors(err,navigation)
         }
       };
 
@@ -155,6 +157,56 @@ const RightDrawer = ({ navigation }) => {
                   {/* <Icon name="home" size={30} /> */}
                   <Text style={styles.menuItemText}>Home</Text>
                 </Pressable>
+                {/* {users} */}
+                <Pressable
+                  onPress={() => {
+                    setIsUsersSubMenuOpen(!isUsersSubMenuOpen);
+                    setIsCompaniesSubMenuOpen(false);
+                  }}
+                  style={styles.subMenuButton}
+                >
+                  <MaterialIcons
+                    style={styles.drawerIcon}
+                    name="people"
+                    size={30}
+                  />
+                  <Text style={styles.menuItemText}>
+                    Users{" "}
+                    {isUsersSubMenuOpen ? (
+                      <Icon
+                        style={{ marginLeft: 8 }}
+                        name="angle-up"
+                        size={16}
+                      />
+                    ) : (
+                      <Icon
+                        style={{ marginLeft: 8 }}
+                        name="angle-down"
+                        size={16}
+                      />
+                    )}
+                  </Text>
+                </Pressable>
+                {isUsersSubMenuOpen && (
+                  <View>
+                    <View>
+                      <Pressable
+                        onPress={() => {
+                          props.navigation.navigate("Customers");
+                          setActiveScreen("Customers");
+                          // Handle sub-menu item click here
+                        }}
+                        style={[
+                          styles.subMenuItem,
+                          activeScreen == "Customers" && styles.activeSubMenu,
+                        ]}
+                      >
+                        <Text style={styles.menuItemText}>Customers</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                )}
+                
 
                 {/* Accounts/Users Sub-Menu */}
                 {/* <Pressable
@@ -410,6 +462,16 @@ const RightDrawer = ({ navigation }) => {
         }}
         name="Profile"
         component={ProfileStackScreen}
+      />
+
+      {/* {Customer Screens} */}
+      <Drawer.Screen
+        name="Customers"
+        component={CustomerStack}
+        options={({ navigation }) => ({
+          title: "Customers",
+          headerShown: false,
+        })}
       />
 
       {/* Project Screens */}

@@ -19,6 +19,7 @@ import {
   apiGetAllProjects,
 } from "../../../apis/projects";
 import { apiGetAllDashboardData } from "../../../apis/dashboard";
+import { handlererrors } from "../../../apis/auth";
 
 const DashboardProjects = ({ navigation, route }) => {
   const [projectsList, setProjectsList] = useState([]);
@@ -77,6 +78,7 @@ const DashboardProjects = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [
@@ -119,6 +121,7 @@ const DashboardProjects = ({ navigation, route }) => {
       }
     } catch (error) {
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
 

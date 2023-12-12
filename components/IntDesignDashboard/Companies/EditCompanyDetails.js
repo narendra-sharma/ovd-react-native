@@ -16,6 +16,7 @@ import {
 } from "../../../apis/companies";
 import { Dropdown } from "react-native-element-dropdown";
 import { Country, State, City } from "country-state-city";
+import { handlererrors } from "../../../apis/auth";
 
 const initialCompanyData = {
   name: "",
@@ -292,6 +293,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

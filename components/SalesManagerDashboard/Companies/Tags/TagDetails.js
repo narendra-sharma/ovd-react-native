@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { apiDeleteTag, apiGetPreFilledTagDetails } from "../../../../apis/tags";
 import Toast from "react-native-root-toast";
 import TasksList from "../Projects/Tasks/TaskList";
+import { handlererrors } from "../../../../apis/auth";
 
 const TagDetails = ({ navigation, route }) => {
   const [tagData, setTagData] = useState({});
@@ -15,6 +16,7 @@ const TagDetails = ({ navigation, route }) => {
         setTagData({ ...res.data.tag });
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
 
@@ -39,6 +41,7 @@ const TagDetails = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [

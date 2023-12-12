@@ -21,6 +21,7 @@ import {
 } from "../../../../../apis/users";
 import Toast from "react-native-root-toast";
 import { Dropdown } from "react-native-element-dropdown";
+import { handlererrors } from "../../../../../apis/auth";
 
 const randomHexColor = () => {
   return "#b7d0d1";
@@ -56,6 +57,7 @@ const AllConsultants = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         setIsLoading(false);
+        handlererrors(error,navigation)
       }
       };
 
@@ -96,6 +98,7 @@ const AllConsultants = ({ navigation }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${user}`, `Are you sure you want to delete ${user}?`, [
@@ -125,6 +128,7 @@ const AllConsultants = ({ navigation }) => {
       setModalVisible(false);
     } catch (error) {
       console.log(error);
+      handlererrors(error,navigation)
     }
   };
   const handleSearch = (text) => {

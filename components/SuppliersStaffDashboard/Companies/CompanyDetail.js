@@ -19,6 +19,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import CommissionsList from "./Commissions/CommissionsList";
 import UsersList from "./Users/UserList";
+import { handlererrors } from "../../../apis/auth";
 
 const initialCompanyData = {
   companyName: "",
@@ -80,6 +81,7 @@ const CompanyDetail = ({ navigation, route }) => {
           // setUsers([...res.data.users]);
         } catch (error) {
           console.log(error);
+          handlererrors(error,navigation)
         }
       };
       getCompanyDetails();
@@ -180,6 +182,7 @@ const CompanyDetail = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(

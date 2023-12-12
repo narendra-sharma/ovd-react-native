@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
-import { apiResetPassword } from "../apis/auth";
+import { apiResetPassword, handlererrors } from "../apis/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Toast from "react-native-root-toast";
@@ -108,6 +108,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     }
     if (

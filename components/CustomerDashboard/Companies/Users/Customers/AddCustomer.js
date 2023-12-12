@@ -11,6 +11,7 @@ import {
 import Toast from "react-native-root-toast";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { apiCreateNewUser } from "../../../../../apis/users";
+import { handlererrors } from "../../../../../apis/auth";
 
 const CUSTOMER_USER_TYPE = 6;
 
@@ -194,6 +195,7 @@ const AddCustomer = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

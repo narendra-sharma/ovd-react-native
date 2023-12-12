@@ -18,6 +18,7 @@ import {
   apiGetUserDetails,
   apiUpdateUserDetails,
 } from "../../../../../apis/users";
+import { handlererrors } from "../../../../../apis/auth";
 
 const CONSULTANT_MANAGER_USER_TYPE = 3;
 
@@ -200,6 +201,7 @@ const EditConsultantManager = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
+        handlererrors(error,navigation)
 
         let msg = "";
 

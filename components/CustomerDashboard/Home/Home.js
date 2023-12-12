@@ -15,6 +15,7 @@ import {
 } from "../../../apis/dashboard";
 import { useRoute } from "@react-navigation/native";
 import AnalyticsGraphs from "./AnalyticsGraphs";
+import { handlererrors } from "../../../apis/auth";
 
 const Home = ({ navigation }) => {
   const [countsObj, setCountsObj] = useState({
@@ -110,6 +111,7 @@ const Home = ({ navigation }) => {
           // setAllGraphData(graphres);
         } catch (error) {
           console.log(error);
+          handlererrors(error,navigation)
         }
       })();
 

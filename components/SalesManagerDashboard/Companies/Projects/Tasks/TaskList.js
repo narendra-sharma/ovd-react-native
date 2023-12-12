@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 import { apiDeleteTask, apiGetAllTasks } from "../../../../../apis/tasks";
+import { handlererrors } from "../../../../../apis/auth";
 
 const TasksList = ({ navigation, route, tagId = null, projectId = null }) => {
   const [taskList, setTasksList] = useState([]);
@@ -61,6 +62,7 @@ const TasksList = ({ navigation, route, tagId = null, projectId = null }) => {
         setDeleteFlag((prev) => !prev);
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${name}`, `Are you sure you want to delete ${name}?`, [

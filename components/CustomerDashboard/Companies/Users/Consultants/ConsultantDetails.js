@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Pressable, Alert } from "react-native";
 import Toast from "react-native-root-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteUser, apiGetUserDetails } from "../../../../../apis/users";
+import { handlererrors } from "../../../../../apis/auth";
 
 const ConsultantDetails = ({ navigation, route }) => {
   const [userData, setUserData] = useState({});
@@ -42,6 +43,7 @@ const ConsultantDetails = ({ navigation, route }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${user}`, `Are you sure you want to delete ${user}?`, [

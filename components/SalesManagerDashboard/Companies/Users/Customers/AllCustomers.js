@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiDeleteUser, apiGetUsersFromUsers } from "../../../../../apis/users";
+import { handlererrors } from "../../../../../apis/auth";
 
 const randomHexColor = () => {
   return "#b7d0d1";
@@ -45,6 +46,7 @@ const AllCustomers = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         setIsLoading(false);
+        handlererrors(error,navigation)
       }
       };
 
@@ -76,6 +78,7 @@ const AllCustomers = ({ navigation }) => {
         }
       } catch (error) {
         console.log(error);
+        handlererrors(error,navigation)
       }
     };
     Alert.alert(`Delete ${user}`, `Are you sure you want to delete ${user}?`, [

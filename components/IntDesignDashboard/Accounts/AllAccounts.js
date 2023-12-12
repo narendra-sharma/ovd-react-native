@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { apiGetAllUsers } from "../../../apis/companies";
 import AccountsList from "./AccountsList";
+import { handlererrors } from "../../../apis/auth";
 
 const AllAccounts = ({ navigation }) => {
   const [consultantsList, setConsultantsList] = useState([]);
@@ -38,6 +39,7 @@ const AllAccounts = ({ navigation }) => {
           setUsers([...res.data.data]);
         } catch (err) {
           console.log(err);
+          handlererrors(err,navigation)
         }
       };
 
