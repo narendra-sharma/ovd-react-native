@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "OVD",
-    "slug": "NewNativeApp",
+    "name": "ovdapp",
+    "slug": "ovdproject",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/ovdIcon.png",
@@ -19,24 +19,26 @@
       "resizeMode": "cover",
       "backgroundColor": "#5D3FD3"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.manyavv.NewNativeApp"
+      "bundleIdentifier": "com.ovdapp.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/ovdIcon.png",
         "backgroundColor": "#0096FF"
       },
-      "package": "com.manyavv.NewNativeApp"
+      "package": "com.taran_9125.ovdproject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "d4b41683-9b94-42ce-a22c-7ba64f068662"
+        "projectId": "eab30f67-a81b-4083-9a73-a098d7450731"
       }
     }
   }
