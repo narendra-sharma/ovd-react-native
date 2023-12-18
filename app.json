@@ -2,7 +2,7 @@
   "expo": {
     "name": "ovdapp",
     "slug": "ovdproject",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/ovdIcon.png",
     "userInterfaceStyle": "light",
@@ -19,12 +19,11 @@
       "resizeMode": "cover",
       "backgroundColor": "#5D3FD3"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ovdapp.app"
+      "bundleIdentifier": "com.ovdapp.app",
+      "buildNumber": "1.0.1"
     },
     "android": {
       "adaptiveIcon": {
