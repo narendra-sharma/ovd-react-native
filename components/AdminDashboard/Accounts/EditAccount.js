@@ -34,7 +34,7 @@ const EditAccount = () => {
         // console.log(userData);
       } catch (err) {
         console.log(err);
-        handlererrors(err,navigation)
+        handlererrors(err, navigation);
       }
     };
 
@@ -77,7 +77,7 @@ const EditAccount = () => {
       //   console.log(res.data);
     } catch (error) {
       console.log(error);
-      handlererrors(error,navigation)
+      handlererrors(error, navigation);
     }
   };
 
@@ -132,8 +132,12 @@ const EditAccount = () => {
             fetchDetails={true}
             textInputProps={{
               value: userData.address,
-              onChangeText: (text) => {
-                setUserData({ ...userData, address: text });
+              onkeypress: (text) => {
+                if (typeof text !== Object)
+                  setUserData({
+                    ...userData,
+                    address: typeof text == "string" ? text : null,
+                  });
               },
             }}
             onPress={(data, details = null) => {

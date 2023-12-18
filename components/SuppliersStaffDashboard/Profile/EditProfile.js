@@ -12,7 +12,11 @@ import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { apiGetProfileDetails, apiUpdateProfile, handlererrors } from "../../../apis/auth";
+import {
+  apiGetProfileDetails,
+  apiUpdateProfile,
+  handlererrors,
+} from "../../../apis/auth";
 
 // import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
@@ -57,7 +61,7 @@ const EditProfile = ({ navigation }) => {
         // console.log(userData);
       } catch (err) {
         console.log(err);
-        handlererrors(err,navigation)
+        handlererrors(err, navigation);
       }
     };
 
@@ -190,7 +194,7 @@ const EditProfile = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -323,12 +327,16 @@ const EditProfile = ({ navigation }) => {
             fetchDetails={true}
             textInputProps={{
               value: userData.address,
-              onChangeText: (text) => {
+              onKeyPress: (text) => {
                 setAddressError(null);
                 setCountryError(null);
                 setStateError(null);
                 setZipcodeError(null);
-                setUserData({ ...userData, address: text });
+                if (typeof text !== Object)
+                  setUserData({
+                    ...userData,
+                    address: typeof text == "string" ? text : null,
+                  });
               },
             }}
             onPress={(data, details = null) => {

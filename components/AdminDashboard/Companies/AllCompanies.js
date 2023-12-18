@@ -8,7 +8,7 @@ import {
   Alert,
   TouchableNativeFeedback,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import Toast from "react-native-root-toast";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -44,7 +44,7 @@ const AllCompanies = ({ navigation }) => {
         } catch (err) {
           console.log(err);
           setIsLoading(false);
-          handlererrors(err,navigation)
+          handlererrors(err, navigation);
         }
       };
 
@@ -89,7 +89,7 @@ const AllCompanies = ({ navigation }) => {
         }
       } catch (error) {
         console.log(error);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
       }
     };
     Alert.alert(
@@ -106,7 +106,7 @@ const AllCompanies = ({ navigation }) => {
     );
   };
   const handleSearch = (text) => {
-    let filteredData = [...allList]
+    let filteredData = [...allList];
     if (text && text.length > 0) {
       filteredData = filteredData.filter((user) =>
         user?.name.trim().toLowerCase().includes(text.trim().toLowerCase())
@@ -173,76 +173,74 @@ const AllCompanies = ({ navigation }) => {
       {/* SCROLLABLE LIST */}
       {isLoading ? (
         <View style={styles.container}>
-<ActivityIndicator color="#B76E79" size="large"/>
-</View>
-      ) : (companiesList.length>0)?<FlatList
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-        // style={{ height: 100 }}
-        data={companiesList}
-        renderItem={({ item }) => (
-          <>
-            <Pressable style={styles.listItem}>
-              <Pressable
-                style={{ width: "76%" }}
-                onPress={() => {
-                  navigation.navigate("Company Details", { id: item.id });
-                  // navigation.setOptions({ title: "Updated!" });
-                }}
-              >
-                <Text style={styles.item}>{item.name}</Text>
+          <ActivityIndicator color="#B76E79" size="large" />
+        </View>
+      ) : companiesList.length > 0 ? (
+        <FlatList
+          contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+          // style={{ height: 100 }}
+          data={companiesList}
+          renderItem={({ item }) => (
+            <>
+              <Pressable style={styles.listItem}>
+                <Pressable
+                  style={{ width: "76%" }}
+                  onPress={() => {
+                    navigation.navigate("Company Details", { id: item.id });
+                    // navigation.setOptions({ title: "Updated!" });
+                  }}
+                >
+                  <Text style={styles.item}>{item.name}</Text>
+                </Pressable>
+
+                <View style={styles.iconsContainer}>
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      navigation.navigate("Edit Company Details", {
+                        company: item,
+                        id: item.id,
+                      });
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="pen" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+
+                  <TouchableNativeFeedback
+                    onPress={() => {
+                      setRippleColor(randomHexColor());
+                      handleDeleteCompany(item.name, item.id);
+                      // setRippleOverflow(!rippleOverflow);
+                    }}
+                    background={TouchableNativeFeedback.Ripple(
+                      rippleColor,
+                      rippleOverflow
+                    )}
+                  >
+                    <View style={styles.touchable}>
+                      <Text style={styles.text}>
+                        <Icon name="trash-alt" size={18} color="#444" />
+                      </Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                </View>
               </Pressable>
-
-              <View style={styles.iconsContainer}>
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    navigation.navigate("Edit Company Details", {
-                      company: item,
-                      id: item.id,
-                    });
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon
-                        name="pen"
-                        size={18}
-                        color="#444"
-                      />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    setRippleColor(randomHexColor());
-                    handleDeleteCompany(item.name, item.id);
-                    // setRippleOverflow(!rippleOverflow);
-                  }}
-                  background={TouchableNativeFeedback.Ripple(
-                    rippleColor,
-                    rippleOverflow
-                  )}
-                >
-                  <View style={styles.touchable}>
-                    <Text style={styles.text}>
-                      <Icon name="trash-alt" size={18} color="#444" />
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </Pressable>
-          </>
-        )}
-      />: (
+            </>
+          )}
+        />
+      ) : (
         <View style={styles.container}>
-          <Text style={{ fontWeight: "bold"}}>No Companies Available!</Text>
-          </View>
+          <Text style={{ fontWeight: "bold" }}>No Companies Available!</Text>
+        </View>
       )}
       {/* <Signature /> */}
     </ScrollView>
@@ -337,5 +335,4 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 4,
   },
-
 });

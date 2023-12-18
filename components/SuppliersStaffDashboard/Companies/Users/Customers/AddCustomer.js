@@ -52,11 +52,11 @@ const AddCustomer = ({ navigation }) => {
   const [responseError, setResponseError] = useState(null);
 
   useEffect(() => {
-    (async() => {
-      const user = await AsyncStorage.getItem("profile")
-      setFormData({...formData, parent_id: JSON.parse(user).id })
+    (async () => {
+      const user = await AsyncStorage.getItem("profile");
+      setFormData({ ...formData, parent_id: JSON.parse(user).id });
     })();
-  }, [])
+  }, []);
 
   //validation functions
   const validateName = (name) => {
@@ -199,7 +199,7 @@ const AddCustomer = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -322,8 +322,11 @@ const AddCustomer = ({ navigation }) => {
             fetchDetails={true}
             textInputProps={{
               value: formData.address,
-              onChangeText: (text) => {
-                setFormData({ ...formData, address: text });
+              onKeyPress: (text) => {
+                setFormData({
+                  ...formData,
+                  address: typeof text == "string" ? text : null,
+                });
                 setAddressError(null);
                 setCountryError(null);
                 setStateError(null);

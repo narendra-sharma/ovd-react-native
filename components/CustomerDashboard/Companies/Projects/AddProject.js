@@ -295,7 +295,7 @@ const AddProject = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -572,7 +572,7 @@ const AddProject = ({ navigation }) => {
             fetchDetails={true}
             textInputProps={{
               value: formData.address,
-              onChangeText: (text) => {
+              onKeyPress: (text) => {
                 setFormData({ ...formData, address: text });
                 setAddressError(null);
               },

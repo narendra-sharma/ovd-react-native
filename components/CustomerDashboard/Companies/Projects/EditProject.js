@@ -332,7 +332,7 @@ const EditProject = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -603,8 +603,12 @@ const EditProject = ({ navigation, route }) => {
             fetchDetails={true}
             textInputProps={{
               value: formData.address,
-              onChangeText: (text) => {
-                setFormData({ ...formData, address: text });
+              onKeyPress: (text) => {
+                if (typeof text !== Object)
+                  setFormData({
+                    ...formData,
+                    address: typeof text == "string" ? text : null,
+                  });
                 setAddressError(null);
               },
             }}
