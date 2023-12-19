@@ -293,7 +293,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -440,8 +440,12 @@ const EditCompanyDetails = ({ navigation, route }) => {
             fetchDetails={true}
             textInputProps={{
               value: companyData.address,
-              onChangeText: (text) => {
-                setCompanyData({ ...companyData, address: text });
+              onKeyPress: (text) => {
+                if (typeof text !== Object)
+                  setCompanyData({
+                    ...companyData,
+                    address: typeof text == "string" ? text : null,
+                  });
                 setAddressError(null);
               },
             }}

@@ -121,6 +121,8 @@ const AddCompany = ({ navigation }) => {
     getAllData();
   }, []);
 
+  // useEffect(() => {}, [newCompanyData]);
+
   //validation functions
   const validateCompanyName = (name) => {
     if (name == "") {
@@ -134,6 +136,9 @@ const AddCompany = ({ navigation }) => {
     if (address == "") {
       setAddressError("Address is required*");
       return false;
+    }
+    if (address.length > 1) {
+      setAddressError(null);
     }
     return true;
   };
@@ -229,6 +234,9 @@ const AddCompany = ({ navigation }) => {
       setZipcodeError("Zipcode is required*");
       return false;
     }
+    if (zipcode.length > 2) {
+      setZipcodeError(null);
+    }
     return true;
   };
 
@@ -242,6 +250,7 @@ const AddCompany = ({ navigation }) => {
 
   //handle new company submit
   const handleNewCompanySubmit = async () => {
+    console.log("++++++++++", newCompanyData);
     if (
       validateCompanyName(newCompanyData.companyName) &&
       validateAddress(newCompanyData.address) &&
@@ -290,7 +299,7 @@ const AddCompany = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -326,6 +335,10 @@ const AddCompany = ({ navigation }) => {
       // validateEmail(newCompanyData.email);
       // validatePhone(newCompanyData.phoneNo);
     }
+  };
+
+  const handleTextChange = (text) => {
+    setNewCompanyData({ ...newCompanyData, address: text });
   };
 
   return (
@@ -375,11 +388,7 @@ const AddCompany = ({ navigation }) => {
             textInputProps={{
               value: newCompanyData.address,
               onChangeText: (text) => {
-                setNewCompanyData({ ...newCompanyData, address: text });
-                setAddressError(null);
-                setCountryError(null);
-                setStateError(null);
-                setZipcodeError(null);
+                if (text !== newCompanyData.address) handleTextChange(text);
               },
             }}
             onPress={(data, details = null) => {

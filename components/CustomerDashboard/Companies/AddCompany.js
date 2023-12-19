@@ -290,7 +290,7 @@ const AddCompany = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -457,7 +457,7 @@ const AddCompany = ({ navigation }) => {
             fetchDetails={true}
             textInputProps={{
               value: newCompanyData.address,
-              onChangeText: (text) => {
+              onKeyPress: (text) => {
                 setNewCompanyData({ ...newCompanyData, address: text });
                 setAddressError(null);
                 setCountryError(null);

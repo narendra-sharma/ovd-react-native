@@ -68,16 +68,13 @@ const AddConsultant = ({ navigation }) => {
 
       setConsultantManagerList([...tempConsultantManager]);
 
-      
-        (async() => {
-          const user = await AsyncStorage.getItem("profile")
-          setFormData({...formData, parent_id: JSON.parse(user).id })
-        })();
-      
+      (async () => {
+        const user = await AsyncStorage.getItem("profile");
+        setFormData({ ...formData, parent_id: JSON.parse(user).id });
+      })();
     };
     getAllUsers();
   }, []);
-  
 
   //validation functions
   const validateName = (name) => {
@@ -238,7 +235,7 @@ const AddConsultant = ({ navigation }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -404,7 +401,7 @@ const AddConsultant = ({ navigation }) => {
             fetchDetails={true}
             textInputProps={{
               value: formData.address,
-              onChangeText: (text) => {
+              onKeyPress: (text) => {
                 setFormData({ ...formData, address: text });
                 setAddressError(null);
                 setCountryError(null);

@@ -122,7 +122,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
   };
 
   const validateAddress = (address) => {
-    if (address == "" || address == null) {
+    if (address === null || address === "" || address.length <= 0) {
       setAddressError("Address is required*");
       return false;
     }
@@ -237,8 +237,11 @@ const EditCompanyDetails = ({ navigation, route }) => {
     }
     return true;
   };
-
-  const handleSubmit = async () => {
+  const getAddress = (text) => {
+    return text;
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (
       validateCompanyName(companyData.name) &&
       validateAddress(companyData.address) &&
@@ -293,7 +296,7 @@ const EditCompanyDetails = ({ navigation, route }) => {
       } catch (error) {
         console.log(error);
         console.log("errors: ", error?.response?.data);
-        handlererrors(error,navigation)
+        handlererrors(error, navigation);
 
         let msg = "";
 
@@ -329,6 +332,17 @@ const EditCompanyDetails = ({ navigation, route }) => {
     }
   };
 
+  useEffect(() => {
+    console.log("companyData.address:", companyData.address);
+    setCompanyData((prevData) => ({
+      ...prevData,
+      address: companyData.address,
+    }));
+  }, [companyData.address]);
+
+  const setAddress = (text) => {
+    setnewAdd(text);
+  };
   return (
     <View style={styles.centeredView}>
       <ScrollView keyboardShouldPersistTaps="handled">
@@ -425,15 +439,21 @@ const EditCompanyDetails = ({ navigation, route }) => {
             listViewDisplayed="auto"
             returnKeyType={"search"}
             fetchDetails={true}
+            setValue={companyData}
             textInputProps={{
               value: companyData.address,
-              onChangeText: (text) => {
-                setCompanyData({ ...companyData, address: text });
+              onKeyPress: (text) => {
+                console.log("+++++++++++", text);
+                if (typeof text !== Object)
+                  setCompanyData((prevData) => ({
+                    ...prevData,
+                    address: typeof text == "string" ? text : null,
+                  }));
                 setAddressError(null);
               },
             }}
             onPress={(data, details = null) => {
-              // console.log("details: ", details);
+              console.log("details: ", details);
               console.log(
                 "details.address_components: ",
                 details.address_components
@@ -589,7 +609,11 @@ const EditCompanyDetails = ({ navigation, route }) => {
         </View>
 
         <View style={styles.bothButtons}>
-          <Pressable style={styles.submitButton} onPress={handleSubmit}>
+          <Pressable
+            style={styles.submitButton}
+            onPress={(e) => handleSubmit(e)}
+            disabled={companyData?.address?.length <= 0 ? true : false}
+          >
             <Text style={{ color: "#ffff" }}>Submit</Text>
           </Pressable>
           <Pressable
